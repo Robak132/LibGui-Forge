@@ -128,7 +128,7 @@ public class WTiledSprite extends WSprite {
 		return this;
 	}
 
-	@Environment(EnvType.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	@Override
 	public void paintFrame(DrawContext context, int x, int y, Texture texture) {
 		// Y Direction (down)

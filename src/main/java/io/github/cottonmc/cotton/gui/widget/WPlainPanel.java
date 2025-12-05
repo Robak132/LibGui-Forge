@@ -25,7 +25,6 @@ public class WPlainPanel extends WPanelWithInsets {
 		}
 		
 		expandToFit(w, insets);
-		//valid = false;
 	}
 
 	/**
@@ -46,7 +45,6 @@ public class WPlainPanel extends WPanelWithInsets {
 		}
 
 		expandToFit(w, insets);
-		//valid = false;
 	}
 
 	public WPlainPanel setInsets(Insets insets) {

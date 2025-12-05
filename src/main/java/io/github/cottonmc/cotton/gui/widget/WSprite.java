@@ -180,7 +180,7 @@ public class WSprite extends WWidget {
 		return true;
 	}
 
-	@Environment(EnvType.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	@Override
 	public void paint(DrawContext context, int x, int y, int mouseX, int mouseY) {
 		if (singleImage) {
@@ -221,7 +221,7 @@ public class WSprite extends WWidget {
 	 * @param y       the Y coordinate to draw it at
 	 * @param texture the texture to draw
 	 */
-	@Environment(EnvType.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	protected void paintFrame(DrawContext context, int x, int y, Texture texture) {
 		ScreenDrawing.texturedRect(context, x, y, getWidth(), getHeight(), texture, tint);
 	}

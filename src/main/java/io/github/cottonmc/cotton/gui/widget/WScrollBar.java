@@ -1,18 +1,12 @@
 package io.github.cottonmc.cotton.gui.widget;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
-import net.minecraft.client.gui.screen.narration.NarrationPart;
-import net.minecraft.util.Identifier;
 
 import io.github.cottonmc.cotton.gui.client.BackgroundPainter;
-import io.github.cottonmc.cotton.gui.impl.LibGuiCommon;
-import io.github.cottonmc.cotton.gui.impl.client.NarrationMessages;
-import io.github.cottonmc.cotton.gui.impl.client.NinePatchTextureRendererImpl;
-import io.github.cottonmc.cotton.gui.widget.data.Axis;
+import io.github.cottonmc.cotton.gui.client.NarrationMessages;
+import io.github.cottonmc.cotton.gui.client.NinePatchTextureRendererImpl;
 import io.github.cottonmc.cotton.gui.widget.data.InputResult;
+import io.github.cottonmc.cotton.gui.widget.data.WidgetAxis;
+import io.github.cottonmc.cotton.gui.widget.data.WidgetDirection;
 import juuxel.libninepatch.NinePatch;
 
 import static io.github.cottonmc.cotton.gui.client.BackgroundPainter.createNinePatch;
@@ -20,7 +14,7 @@ import static io.github.cottonmc.cotton.gui.client.BackgroundPainter.createNineP
 public class WScrollBar extends WWidget {
 	private static final int SCROLLING_SPEED = 4;
 
-	protected Axis axis = Axis.HORIZONTAL;
+	protected WidgetAxis axis = WidgetAxis.HORIZONTAL;
 	protected int value;
 	protected int maxValue = 100;
 	protected int window = 16;
@@ -44,7 +38,7 @@ public class WScrollBar extends WWidget {
 		this.axis = axis;
 	}
 
-	@Environment(EnvType.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	@Override
 	public void paint(DrawContext context, int x, int y, int mouseX, int mouseY) {
 		var matrices = context.getMatrices();
@@ -164,14 +158,14 @@ public class WScrollBar extends WWidget {
 		return InputResult.PROCESSED;
 	}
 
-	@Environment(EnvType.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	@Override
 	public InputResult onMouseDrag(int x, int y, int button, double deltaX, double deltaY) {
 		adjustSlider(x, y);
 		return InputResult.PROCESSED;
 	}
 
-	@Environment(EnvType.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	@Override
 	public InputResult onMouseUp(int x, int y, int button) {
 		//TODO: Clicking before or after the handle should jump instead of scrolling
@@ -183,16 +177,16 @@ public class WScrollBar extends WWidget {
 
 	@Override
 	public InputResult onKeyPressed(int ch, int key, int modifiers) {
-		WAbstractSlider.Direction direction = axis == Axis.HORIZONTAL
-				? WAbstractSlider.Direction.RIGHT
-				: WAbstractSlider.Direction.DOWN;
+		WidgetDirection sliderDirection = axis == WidgetAxis.HORIZONTAL
+				? WidgetDirection.RIGHT
+				: WidgetDirection.DOWN;
 
-		if (WAbstractSlider.isIncreasingKey(ch, direction)) {
+		if (WAbstractSlider.isIncreasingKey(ch, sliderDirection)) {
 			if (value < getMaxScrollValue()) {
 				value++;
 			}
 			return InputResult.PROCESSED;
-		} else if (WAbstractSlider.isDecreasingKey(ch, direction)) {
+		} else if (WAbstractSlider.isDecreasingKey(ch, sliderDirection)) {
 			if (value > 0) {
 				value--;
 			}
@@ -202,7 +196,7 @@ public class WScrollBar extends WWidget {
 		return InputResult.IGNORED;
 	}
 
-	@Environment(EnvType.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	@Override
 	public InputResult onMouseScroll(int x, int y, double amount) {
 		setValue(getValue() + (int) -amount * SCROLLING_SPEED);
@@ -249,14 +243,14 @@ public class WScrollBar extends WWidget {
 		if (this.value<0) this.value = 0;
 	}
 
-	@Environment(EnvType.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	@Override
 	public void addNarrations(NarrationMessageBuilder builder) {
 		builder.put(NarrationPart.TITLE, NarrationMessages.SCROLL_BAR_TITLE);
 		builder.put(NarrationPart.USAGE, NarrationMessages.SLIDER_USAGE);
 	}
 
-	@Environment(EnvType.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	static final class Painters {
 		static final NinePatch<Identifier> SCROLL_BAR = NinePatch.builder(new Identifier(LibGuiCommon.MOD_ID, "textures/widget/scroll_bar/scroll_bar_light.png")).cornerSize(4).cornerUv(0.25f).build();
 		static final NinePatch<Identifier> SCROLL_BAR_DARK = NinePatch.builder(new Identifier(LibGuiCommon.MOD_ID, "textures/widget/scroll_bar/scroll_bar_dark.png")).cornerSize(4).cornerUv(0.25f).build();

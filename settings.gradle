@@ -1,11 +1,11 @@
 pluginManagement {
-    repositories {
-        maven {
-            name = 'Fabric'
-            url = 'https://maven.fabricmc.net/'
-        }
-        gradlePluginPortal()
-    }
+	repositories {
+		maven { url = 'https://maven.minecraftforge.net' }
+		maven { url = "https://maven.shedaniel.me/" }
+		maven { url = 'https://maven.parchmentmc.org' }
+		mavenCentral()
+		gradlePluginPortal()
+	}
 }
 
-rootProject.name = 'LibGui'
+rootProject.name = 'LibGui-Forgified'

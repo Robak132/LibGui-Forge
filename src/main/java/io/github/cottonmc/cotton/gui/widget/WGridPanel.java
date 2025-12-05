@@ -1,6 +1,6 @@
 package io.github.cottonmc.cotton.gui.widget;
 
-import io.github.cottonmc.cotton.gui.impl.VisualLogger;
+import io.github.cottonmc.cotton.gui.VisualLogger;
 import io.github.cottonmc.cotton.gui.widget.data.Insets;
 
 /**

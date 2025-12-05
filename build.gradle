@@ -1,197 +1,128 @@
 plugins {
-	id 'fabric-loom' version '1.1.+'
-	id 'io.github.juuxel.loom-quiltflower' version '1.8.0'
+	id 'idea'
+	id 'java'
+	id 'java-library'
 	id 'maven-publish'
-	id 'checkstyle'
-}
-
-archivesBaseName = project.archives_base_name
-version = "$project.mod_version+$project.minecraft_version"
-group = project.maven_group
-
-sourceSets {
-	javadoc {
-	}
-
-	testMod {
-		compileClasspath += main.compileClasspath
-		runtimeClasspath += main.runtimeClasspath
-	}
-}
-
-loom {
-	createRemapConfigurations(sourceSets.testMod)
-
-	runs {
-		testModClient {
-			client()
-			name = 'Test Mod Client'
-			source sourceSets.testMod
-		}
-
-		testModServer {
-			server()
-			name = 'Test Mod Server'
-			source sourceSets.testMod
-		}
-	}
-}
-
-// Work around https://github.com/FabricMC/fabric-loom/issues/890.
-afterEvaluate {
-	for (def config : [configurations.apiElements, configurations.runtimeElements]) {
-		def parents = new HashSet<>(config.extendsFrom)
-		parents.removeIf { it.name.startsWith 'modTestMod' }
-		config.extendsFrom = parents
-	}
+	id 'net.minecraftforge.gradle' version '6.0.+'
+	id 'org.parchmentmc.librarian.forgegradle' version '1.+'
+	id 'org.spongepowered.mixin' version '0.7.+'
 }
 
 repositories {
-	maven {
-		url "https://server.bbkr.space/artifactory/libs-release"
-		content {
-			includeGroup "io.github.cottonmc"
+	maven { url "https://maven.juuxel.me/" }
+	maven { url "https://maven.shedaniel.me/" }
+	maven { url "https://maven.minecraftforge.net" }
+	mavenCentral()
+}
+
+version = project.mod_version
+group = project.maven_group
+
+base {
+	archivesName = project.archives_base_name
+}
+
+println "Java: ${System.getProperty 'java.version'}, JVM: ${System.getProperty 'java.vm.version'} (${System.getProperty 'java.vendor'}), Arch: ${System.getProperty 'os.arch'}"
+
+minecraft {
+	// Use Parchment mappings that match the Forge/Minecraft version (1.20.1)
+	mappings channel: 'parchment', version: '2023.09.03-1.20.1'
+	copyIdeResources = true
+	generateRunFolders = true
+	accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
+
+	runs {
+		configureEach {
+			workingDirectory project.file('run')
+			property 'forge.logging.markers', 'REGISTRIES'
+			property 'forge.logging.console.level', 'debug'
+
+			mods {
+				"${mod_id}" {
+					source sourceSets.main
+				}
+			}
 		}
-	}
-	maven {
-		url = "https://maven.terraformersmc.com/releases"
-		content {
-			includeGroup "com.terraformersmc"
+
+		client {
+			property 'mixin.env.remapRefMap', 'true'
+			property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
+			property 'forge.enabledGameTestNamespaces', mod_id
+		}
+
+		server {
+			property 'mixin.env.remapRefMap', 'true'
+			property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
+			property 'forge.enabledGameTestNamespaces', mod_id
+		}
+
+		gameTestServer {
+			property 'mixin.env.remapRefMap', 'true'
+			property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
+			property 'forge.enabledGameTestNamespaces', mod_id
+		}
+
+		data {
+			workingDirectory project.file('run-data')
+
+			args '--mod', mod_id, '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
 		}
 	}
 }
+
+sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 dependencies {
-	minecraft "com.mojang:minecraft:${project.minecraft_version}"
-	mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
-	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+	implementation 'org.projectlombok:lombok:1.18.38'
+    minecraft "net.minecraftforge:forge:1.20.1-47.4.13"
+	implementation "me.shedaniel.cloth:cloth-config-forge:11.1.136"
+	api "io.github.juuxel:libninepatch:1.2.0"
 
-	// True: module classes are used in public API classes/methods/fields
-	def fabricApiModules = [
-			'fabric-api-base': true,
-			'fabric-lifecycle-events-v1': false,
-			'fabric-networking-api-v1': true,
-			'fabric-rendering-v1': false,
-	]
-	fabricApiModules.forEach { module, api ->
-		def dependency = fabricApi.module(module, project.fabric_version)
+    compileOnly("org.projectlombok:lombok:1.18.42")
+    annotationProcessor("org.projectlombok:lombok:1.18.42")
 
-		if (api) {
-			modApi dependency
-		} else {
-			modImplementation dependency
-		}
-	}
+    testCompileOnly("org.projectlombok:lombok:1.18.42")
+    testAnnotationProcessor("org.projectlombok:lombok:1.18.42")
 
-	modImplementation "io.github.cottonmc:Jankson-Fabric:${project.jankson_version}"
-	include "io.github.cottonmc:Jankson-Fabric:${project.jankson_version}"
-
-	include api("io.github.juuxel:libninepatch:${project.libninepatch_version}")
-
-	modCompileOnly("com.terraformersmc:modmenu:$project.modmenu_version") {
-		exclude group: 'net.fabricmc.fabric-api'
-		exclude group: 'net.fabricmc', module: 'fabric-loader'
-	}
-
-	// Test mod dependencies
-	testModImplementation sourceSets.main.output
-	modTestModImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
-	modTestModRuntimeOnly("com.terraformersmc:modmenu:$project.modmenu_version") {
-		exclude group: 'net.fabricmc.fabric-api'
-		exclude group: 'net.fabricmc', module: 'fabric-loader'
-	}
-}
-
-processResources {
-	inputs.property "version", project.version
-
-	filesMatching("fabric.mod.json") {
-		expand "version": project.version
-	}
+	annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 }
 
 java {
-	withSourcesJar()
-	withJavadocJar()
-
+	// Ensure source uses Java 21 features and bytecode targets Java 17
 	sourceCompatibility = JavaVersion.VERSION_17
 	targetCompatibility = JavaVersion.VERSION_17
+	toolchain { languageVersion = JavaLanguageVersion.of(17) }
 }
 
-tasks.withType(JavaCompile) {
-	// ensure that the encoding is set to UTF-8, no matter what the system default is
-	// this fixes some edge cases with special characters not displaying correctly
-	// see http://yodaconditions.net/blog/fix-for-java-file-encoding-problems-with-gradle.html
-	options.encoding = "UTF-8"
-	options.release.set 17
+mixin {
+	// MixinGradle Settings
+	add sourceSets.main, 'mixins.mcrgb_forge.refmap.json'
+	config 'mixins.mcrgb_forge.json'
+
+	debug.verbose = true
+	debug.export = true
 }
 
-jar {
-	from "CREDITS.txt", "LICENSE"
+tasks.withType(JavaCompile).configureEach {
+	options.encoding = 'UTF-8'
+	options.release = 17
 }
 
-checkstyle {
-	configFile = rootProject.file('checkstyle.xml')
-	configProperties = [suppressions: rootProject.file('checkstyle.suppressions.xml').absolutePath]
-	toolVersion = '10.9.2'
-}
-
-def javadocBuildJar = tasks.register('javadocBuildJar', Jar) {
-	destinationDirectory = file('build/devlibs')
-	archiveClassifier = 'javadoc-build'
-	from sourceSets.javadoc.output
-}
-
-javadoc {
-	dependsOn javadocBuildJar
-
-	options {
-		links "https://maven.fabricmc.net/docs/yarn-$project.yarn_mappings"
-		links 'https://javadoc.io/doc/org.jetbrains/annotations/19.0.0'
-		taglets 'io.github.cottonmc.cotton.gui.jd.ExperimentalTaglet',
-				'io.github.cottonmc.cotton.gui.jd.PropertyTaglet'
-		tagletPath javadocBuildJar.get().archiveFile.get().asFile
+tasks.named('jar', Jar).configure {
+	manifest {
+		attributes([
+			'Specification-Title'     : mod_id,
+			'Specification-Vendor'    : mod_authors,
+			'Specification-Version'   : '1',
+			'Implementation-Title'    : project.name,
+			'Implementation-Version'  : project.jar.archiveVersion,
+			'Implementation-Vendor'   : mod_authors,
+			'Implementation-Timestamp': new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+		])
 	}
-
-	exclude("**/impl/**")
+	finalizedBy 'reobfJar'
 }
 
-// configure the maven publication
-publishing {
-	publications {
-		maven(MavenPublication) {
-			from components.java
-			pom {
-				name = "LibGui"
-				description = "Minecraft GUI Library"
-				url = "https://github.com/CottonMC/LibGui"
-				licenses {
-					license {
-						name = "MIT"
-						url = "https://github.com/CottonMC/LibGui/blob/HEAD/LICENSE"
-					}
-				}
-				developers {
-					developer {
-						name = "CottonMC"
-						url = "https://github.com/CottonMC"
-					}
-				}
-			}
-		}
-	}
-
-	// select the repositories you want to publish to
-	repositories {
-		def env = System.getenv()
-		if (env.MAVEN_URL) {
-			maven {
-				url = env.MAVEN_URL
-				credentials {
-					username = env.MAVEN_USERNAME
-					password = env.MAVEN_PASSWORD
-				}
-			}
-		}
-	}
+tasks.register('cleanJar') {
+	delete 'build/libs'
 }

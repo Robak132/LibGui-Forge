@@ -1,12 +1,13 @@
 package io.github.cottonmc.cotton.gui.widget;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.minecraft.client.gui.DrawContext;
-
 import io.github.cottonmc.cotton.gui.GuiDescription;
 import io.github.cottonmc.cotton.gui.client.BackgroundPainter;
 import io.github.cottonmc.cotton.gui.widget.data.Insets;
+
+import net.minecraft.client.gui.GuiGraphics;
+
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.AbstractList;
 import java.util.ArrayList;
@@ -24,7 +25,7 @@ public abstract class WPanel extends WWidget {
 	 * <p>The list is mutable.
 	 */
 	protected final List<WWidget> children = new WidgetList(this, new ArrayList<>());
-	@Environment(EnvType.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	private BackgroundPainter backgroundPainter;
 
 	/**
@@ -47,7 +48,7 @@ public abstract class WPanel extends WWidget {
 	 * @param painter the new painter
 	 * @return this panel
 	 */
-	@Environment(EnvType.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	public WPanel setBackgroundPainter(BackgroundPainter painter) {
 		this.backgroundPainter = painter;
 		return this;
@@ -58,7 +59,7 @@ public abstract class WPanel extends WWidget {
 	 *
 	 * @return the painter
 	 */
-	@Environment(EnvType.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	public BackgroundPainter getBackgroundPainter() {
 		return this.backgroundPainter;
 	}
@@ -68,7 +69,9 @@ public abstract class WPanel extends WWidget {
 	 */
 	public void layout() {
 		for(WWidget child : children) {
-			if (child instanceof WPanel) ((WPanel) child).layout();
+			if (child instanceof WPanel wPanel) {
+				wPanel.layout();
+			}
 			expandToFit(child);
 		}
 	}
@@ -136,9 +139,9 @@ public abstract class WPanel extends WWidget {
 		}
 	}
 
-	@Environment(EnvType.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	@Override
-	public void paint(DrawContext context, int x, int y, int mouseX, int mouseY) {
+	public void paint(GuiGraphics context, int x, int y, int mouseX, int mouseY) {
 		if (backgroundPainter!=null) backgroundPainter.paintBackground(context, x, y, this);
 
 		for(WWidget child : children) {
@@ -149,7 +152,7 @@ public abstract class WPanel extends WWidget {
 	/**
 	 * Ticks all children of this panel.
 	 */
-	@Environment(EnvType.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	@Override
 	public void tick() {
 		for(WWidget child : children) child.tick();
@@ -178,7 +181,7 @@ public abstract class WPanel extends WWidget {
 	 *
 	 * @since 3.0.0
 	 */
-	@Environment(EnvType.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	@Override
 	public void addPainters() {
 		for (WWidget child : children) {

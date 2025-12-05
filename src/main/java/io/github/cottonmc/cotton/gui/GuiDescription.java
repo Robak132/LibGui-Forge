@@ -1,15 +1,17 @@
 package io.github.cottonmc.cotton.gui;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.util.TriState;
-import net.minecraft.screen.PropertyDelegate;
-
 import io.github.cottonmc.cotton.gui.widget.WPanel;
 import io.github.cottonmc.cotton.gui.widget.WWidget;
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment;
 import io.github.cottonmc.cotton.gui.widget.data.Vec2i;
+
+import net.minecraft.world.inventory.ContainerData;
+
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Optional;
 
 /**
  * A GUI description represents a GUI without depending on screens.
@@ -21,10 +23,10 @@ import org.jetbrains.annotations.Nullable;
  * @see SyncedGuiDescription
  */
 public interface GuiDescription {
-	public WPanel getRootPanel();
-	public int getTitleColor();
+	WPanel getRootPanel();
+	int getTitleColor();
 	
-	public GuiDescription setRootPanel(WPanel panel);
+	GuiDescription setRootPanel(WPanel panel);
 
 	/**
 	 * Sets the title color of this GUI.
@@ -37,7 +39,7 @@ public interface GuiDescription {
 	 * @param color the new title color
 	 * @return this GUI
 	 */
-	public GuiDescription setTitleColor(int color);
+	GuiDescription setTitleColor(int color);
 
 	/**
 	 * Sets the light and dark title colors of this GUI.
@@ -50,31 +52,29 @@ public interface GuiDescription {
 	GuiDescription setTitleColor(int lightColor, int darkColor);
 
 	/** Sets the object which manages the integer properties used by WBars */
-	public GuiDescription setPropertyDelegate(PropertyDelegate delegate);
+	GuiDescription setPropertyDelegate(ContainerData delegate);
 	
 	/** Typical users won't call this. This adds a Slot to Container/Controller-based guis, and does nothing on lightweight guis. */
-	public void addSlotPeer(ValidatedSlot slot);
+	void addSlotPeer(ValidatedSlot slot);
 	
 	/** Guis should use this method to add clientside styles and BackgroundPainters to their controls */
-	@Environment(EnvType.CLIENT)
-	public void addPainters();
+	@OnlyIn(Dist.CLIENT)
+	void addPainters();
 	
 	/** Gets the object which manages the integer properties used by WBars and such. */
-	@Nullable
-	public PropertyDelegate getPropertyDelegate();
+	@Nullable ContainerData getPropertyDelegate();
 	
 	/** Tests whether the widget is the currently-focused one. */
-	public boolean isFocused(WWidget widget);
+	boolean isFocused(WWidget widget);
 	
 	/** Gets the currently-focused WWidget. May be null. */
-	@Nullable
-	public WWidget getFocus();
+	@Nullable WWidget getFocus();
 	
 	/** Notifies this gui that the widget wants to acquire focus. */
-	public void requestFocus(WWidget widget);
+	void requestFocus(WWidget widget);
 	
 	/** Notifies this gui that the widget wants to give up its hold over focus. */
-	public void releaseFocus(WWidget widget);
+	void releaseFocus(WWidget widget);
 
 	/**
 	 * Gets whether this GUI is fullscreen.
@@ -156,7 +156,7 @@ public interface GuiDescription {
 	 * </ul>
 	 * @since 7.1.0
 	 */
-	default TriState isDarkMode() {
-		return TriState.DEFAULT;
+	default Optional<Boolean> isDarkMode() {
+		return Optional.empty();
 	}
 }

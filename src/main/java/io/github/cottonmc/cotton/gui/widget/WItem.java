@@ -1,18 +1,19 @@
 package io.github.cottonmc.cotton.gui.widget;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemConvertible;
-import net.minecraft.item.ItemStack;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.registry.tag.TagKey;
 
 import com.google.common.collect.ImmutableList;
+import lombok.Getter;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.core.Holder;
+import net.minecraft.core.Registry;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.ItemLike;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraft.core.registries.BuiltInRegistries;
 
 import java.util.Collections;
 import java.util.List;
@@ -24,8 +25,14 @@ import java.util.Objects;
  * @since 1.8.0
  */
 public class WItem extends WWidget {
-	private List<ItemStack> items;
-	private int duration = 25;
+	@Getter
+    private List<ItemStack> items;
+    /**
+     * -- GETTER --
+     *  Returns the animation duration of this. Defaults to 25 screen ticks.
+     */
+    @Getter
+    private int duration = 25;
 	private int ticks = 0;
 	private int current = 0;
 
@@ -33,7 +40,7 @@ public class WItem extends WWidget {
 		setItems(items);
 	}
 
-	public WItem(TagKey<? extends ItemConvertible> tag) {
+	public WItem(TagKey<? extends ItemLike> tag) {
 		this(getRenderStacks(tag));
 	}
 
@@ -46,7 +53,7 @@ public class WItem extends WWidget {
 		return true;
 	}
 
-	@Environment(EnvType.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	@Override
 	public void tick() {
 		if (ticks++ >= duration) {
@@ -55,32 +62,19 @@ public class WItem extends WWidget {
 		}
 	}
 
-	@Environment(EnvType.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	@Override
-	public void paint(DrawContext context, int x, int y, int mouseX, int mouseY) {
+	public void paint(GuiGraphics context, int x, int y, int mouseX, int mouseY) {
 		RenderSystem.enableDepthTest();
-		context.drawItemWithoutEntity(items.get(current), x + getWidth() / 2 - 8, y + getHeight() / 2 - 8);
+		context.renderFakeItem(items.get(current), x + getWidth() / 2 - 8, y + getHeight() / 2 - 8);
 	}
 
-	/**
-	 * Returns the animation duration of this {@code WItem}.
-	 *
-	 * <p>Defaults to 25 screen ticks.
-	 */
-	public int getDuration() {
-		return duration;
-	}
-
-	public WItem setDuration(int duration) {
+    public WItem setDuration(int duration) {
 		this.duration = duration;
 		return this;
 	}
 
-	public List<ItemStack> getItems() {
-		return items;
-	}
-
-	/**
+    /**
 	 * Sets the item list of this {@code WItem} and resets the animation state.
 	 *
 	 * @param items the new item list
@@ -100,15 +94,15 @@ public class WItem extends WWidget {
 	}
 
 	/**
-	 * Gets the default stacks ({@link Item#getDefaultStack()} ()}) of each item in a tag.
+	 * Gets the default stacks ({@link Item#getDefaultInstance()}) of each item in a tag.
 	 */
-	@SuppressWarnings("unchecked")
-	private static List<ItemStack> getRenderStacks(TagKey<? extends ItemConvertible> tag) {
-		Registry<ItemConvertible> registry = (Registry<ItemConvertible>) Registries.REGISTRIES.get(tag.registry().getValue());
+    @SuppressWarnings("unchecked")
+    private static List<ItemStack> getRenderStacks(TagKey<? extends ItemLike> tag) {
+		Registry<ItemLike> registry = (Registry<ItemLike>) BuiltInRegistries.REGISTRY.get(tag.registry().location());
 		ImmutableList.Builder<ItemStack> builder = ImmutableList.builder();
 
-		for (RegistryEntry<ItemConvertible> item : registry.getOrCreateEntryList((TagKey<ItemConvertible>) tag)) {
-			builder.add(item.value().asItem().getDefaultStack());
+		for (Holder<ItemLike> item : registry.getOrCreateTag((TagKey<ItemLike>) tag)) {
+			builder.add(item.value().asItem().getDefaultInstance());
 		}
 
 		return builder.build();

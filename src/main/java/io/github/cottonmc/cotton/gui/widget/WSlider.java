@@ -1,14 +1,13 @@
 package io.github.cottonmc.cotton.gui.widget;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.util.Identifier;
+import io.github.cottonmc.cotton.gui.client.LibGui;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.resources.ResourceLocation;
 
 import io.github.cottonmc.cotton.gui.client.BackgroundPainter;
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
-import io.github.cottonmc.cotton.gui.impl.LibGuiCommon;
-import io.github.cottonmc.cotton.gui.widget.data.Axis;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -19,14 +18,14 @@ import org.jetbrains.annotations.Nullable;
 public class WSlider extends WAbstractSlider {
 	public static final int TRACK_WIDTH = 6;
 	public static final int THUMB_SIZE = 8;
-	public static final Identifier LIGHT_TEXTURE = new Identifier(LibGuiCommon.MOD_ID, "textures/widget/slider_light.png");
-	public static final Identifier DARK_TEXTURE = new Identifier(LibGuiCommon.MOD_ID, "textures/widget/slider_dark.png");
+	public static final ResourceLocation LIGHT_TEXTURE = ResourceLocation.tryBuild(LibGui.MOD_ID, "textures/widget/slider_light.png");
+	public static final ResourceLocation DARK_TEXTURE = ResourceLocation.tryBuild(LibGui.MOD_ID, "textures/widget/slider_dark.png");
 
-	@Environment(EnvType.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	@Nullable
 	private BackgroundPainter backgroundPainter;
 
-	public WSlider(int min, int max, Axis axis) {
+	public WSlider(int min, int max, net.minecraft.core.Direction.Plane axis) {
 		super(min, max, axis);
 	}
 
@@ -46,23 +45,24 @@ public class WSlider extends WAbstractSlider {
 	}
 
 	@SuppressWarnings("SuspiciousNameCombination")
-	@Environment(EnvType.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	@Override
-	public void paint(DrawContext context, int x, int y, int mouseX, int mouseY) {
+	public void paint(GuiGraphics context, int x, int y, int mouseX, int mouseY) {
 		if (backgroundPainter != null) {
 			backgroundPainter.paintBackground(context, x, y, this);
 		} else {
 			float px = 1 / 32f;
 			// thumbX/Y: thumb position in widget-space
-			int thumbX, thumbY;
+			int thumbX;
+            int thumbY;
 			// thumbXOffset: thumb texture x offset in pixels
 			int thumbXOffset;
-			Identifier texture = shouldRenderInDarkMode() ? DARK_TEXTURE : LIGHT_TEXTURE;
+			ResourceLocation texture = shouldRenderInDarkMode() ? DARK_TEXTURE : LIGHT_TEXTURE;
 
 			if (axis == Axis.VERTICAL) {
 				int trackX = x + width / 2 - TRACK_WIDTH / 2;
 				thumbX = width / 2 - THUMB_SIZE / 2;
-				thumbY = direction == Direction.UP
+				thumbY = widgetDirection == SliderDirection.UP
 						? (height - THUMB_SIZE) + 1 - (int) (coordToValueRatio * (value - min))
 						: Math.round(coordToValueRatio * (value - min));
 				thumbXOffset = 0;
@@ -72,7 +72,7 @@ public class WSlider extends WAbstractSlider {
 				ScreenDrawing.texturedRect(context, trackX, y + height, TRACK_WIDTH, 1, texture, 16*px, 2*px, 22*px, 3*px, 0xFFFFFFFF);
 			} else {
 				int trackY = y + height / 2 - TRACK_WIDTH / 2;
-				thumbX = direction == Direction.LEFT
+				thumbX = widgetDirection == SliderDirection.LEFT
 						? (width - THUMB_SIZE) - (int) (coordToValueRatio * (value - min))
 						: Math.round(coordToValueRatio * (value - min));
 				thumbY = height / 2 - THUMB_SIZE / 2;
@@ -85,8 +85,15 @@ public class WSlider extends WAbstractSlider {
 
 			// thumbState values:
 			// 0: default, 1: dragging, 2: hovered
-			int thumbState = dragging ? 1 : (mouseX >= thumbX && mouseX <= thumbX + THUMB_SIZE && mouseY >= thumbY && mouseY <= thumbY + THUMB_SIZE ? 2 : 0);
-			ScreenDrawing.texturedRect(context, x + thumbX, y + thumbY, THUMB_SIZE, THUMB_SIZE, texture, thumbXOffset*px, 0*px + thumbState * 8*px, (thumbXOffset + 8)*px, 8*px + thumbState * 8*px, 0xFFFFFFFF);
+			int thumbState;
+            if (dragging) {
+                thumbState = 1;
+            } else if (mouseX >= thumbX && mouseX <= thumbX + THUMB_SIZE && mouseY >= thumbY && mouseY <= thumbY + THUMB_SIZE) {
+                thumbState = 2;
+            } else {
+                thumbState = 0;
+            }
+            ScreenDrawing.texturedRect(context, x + thumbX, y + thumbY, THUMB_SIZE, THUMB_SIZE, texture, thumbXOffset*px, 0*px + thumbState * 8*px, (thumbXOffset + 8)*px, 8*px + thumbState * 8*px, 0xFFFFFFFF);
 
 			if (thumbState == 0 && isFocused()) {
 				ScreenDrawing.texturedRect(context, x + thumbX, y + thumbY, THUMB_SIZE, THUMB_SIZE, texture, 0*px, 24*px, 8*px, 32*px, 0xFFFFFFFF);
@@ -94,13 +101,13 @@ public class WSlider extends WAbstractSlider {
 		}
 	}
 
-	@Environment(EnvType.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	@Nullable
 	public BackgroundPainter getBackgroundPainter() {
 		return backgroundPainter;
 	}
 
-	@Environment(EnvType.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	public void setBackgroundPainter(@Nullable BackgroundPainter backgroundPainter) {
 		this.backgroundPainter = backgroundPainter;
 	}

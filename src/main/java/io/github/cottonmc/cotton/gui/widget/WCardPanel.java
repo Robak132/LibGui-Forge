@@ -1,8 +1,5 @@
 package io.github.cottonmc.cotton.gui.widget;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-
 import io.github.cottonmc.cotton.gui.GuiDescription;
 
 import java.util.ArrayList;
@@ -180,7 +177,7 @@ public class WCardPanel extends WPanel {
 		}
 	}
 
-	@Environment(EnvType.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	@Override
 	public void addPainters() {
 		for (WWidget card : cards) {

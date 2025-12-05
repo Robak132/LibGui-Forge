@@ -1,7 +1,5 @@
 package io.github.cottonmc.cotton.gui.widget;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.DrawContext;
 
 import io.github.cottonmc.cotton.gui.GuiDescription;
@@ -79,7 +77,7 @@ public class WListPanel<D, W extends WWidget> extends WClippedPanel {
 		scrollBar.setParent(this);
 	}
 
-	@Environment(EnvType.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	@Override
 	public void paint(DrawContext context, int x, int y, int mouseX, int mouseY) {
 		if (scrollBar.getValue()!=lastScroll) {

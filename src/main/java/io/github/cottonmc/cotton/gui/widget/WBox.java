@@ -1,9 +1,10 @@
 package io.github.cottonmc.cotton.gui.widget;
 
-import io.github.cottonmc.cotton.gui.widget.data.Axis;
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment;
 import io.github.cottonmc.cotton.gui.widget.data.Insets;
 import io.github.cottonmc.cotton.gui.widget.data.VerticalAlignment;
+import io.github.cottonmc.cotton.gui.widget.data.WidgetAxis;
+import lombok.Getter;
 
 import java.util.Objects;
 
@@ -16,12 +17,13 @@ public class WBox extends WPanelWithInsets {
 	/**
 	 * The spacing between widgets.
 	 */
-	protected int spacing = 4;
+	@Getter
+    protected int spacing = 4;
 
 	/**
 	 * The axis that the widgets are laid out on.
 	 */
-	protected Axis axis;
+	protected WidgetAxis axis;
 
 	/**
 	 * The horizontal alignment for this box's children.
@@ -43,7 +45,7 @@ public class WBox extends WPanelWithInsets {
 	 * @param axis the box axis
 	 * @throws NullPointerException if the axis is null
 	 */
-	public WBox(Axis axis) {
+	public WBox(WidgetAxis axis) {
 		this.axis = Objects.requireNonNull(axis, "axis");
 	}
 
@@ -78,7 +80,7 @@ public class WBox extends WPanelWithInsets {
 		int dimension = axis.choose(insets.left(), insets.top());
 
 		// Set position offset from alignment along the box axis
-		if (axis == Axis.HORIZONTAL) {
+		if (axis == WidgetAxis.HORIZONTAL) {
 			if (horizontalAlignment != HorizontalAlignment.LEFT) {
 				int widgetWidth = spacing * (children.size() - 1);
 				for (WWidget child : children) {
@@ -107,7 +109,7 @@ public class WBox extends WPanelWithInsets {
 		for (int i = 0; i < children.size(); i++) {
 			WWidget child = children.get(i);
 
-			if (axis == Axis.HORIZONTAL) {
+			if (axis == WidgetAxis.HORIZONTAL) {
 				int y = switch (verticalAlignment) {
 					case TOP -> insets.top();
 					case CENTER -> insets.top() + (getHeight() - insets.top() - insets.bottom() - child.getHeight()) / 2;
@@ -136,16 +138,7 @@ public class WBox extends WPanelWithInsets {
 		}
 	}
 
-	/**
-	 * Gets the spacing between widgets.
-	 *
-	 * @return the spacing
-	 */
-	public int getSpacing() {
-		return spacing;
-	}
-
-	/**
+    /**
 	 * Sets the spacing between widgets in this box.
 	 *
 	 * @param spacing the new spacing
@@ -162,7 +155,7 @@ public class WBox extends WPanelWithInsets {
 	 *
 	 * @return the axis
 	 */
-	public Axis getAxis() {
+	public WidgetAxis getAxis() {
 		return axis;
 	}
 
@@ -173,7 +166,7 @@ public class WBox extends WPanelWithInsets {
 	 * @return this box
 	 * @throws NullPointerException if the axis is null
 	 */
-	public WBox setAxis(Axis axis) {
+	public WBox setAxis(WidgetAxis axis) {
 		this.axis = Objects.requireNonNull(axis, "axis");
 		return this;
 	}

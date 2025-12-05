@@ -1,13 +1,17 @@
 package io.github.cottonmc.cotton.gui.client;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.util.Window;
+import com.mojang.blaze3d.platform.Window;
+import net.minecraft.client.Minecraft;
 
 import io.github.cottonmc.cotton.gui.widget.WWidget;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.event.RenderGuiOverlayEvent;
+import net.minecraftforge.client.gui.overlay.GuiOverlayManager;
+import net.minecraftforge.client.gui.overlay.NamedGuiOverlay;
+import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.TickEvent;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -17,32 +21,35 @@ import java.util.Set;
 /**
  * Manages widgets that are painted on the in-game HUD.
  */
-@Environment(EnvType.CLIENT)
+@OnlyIn(Dist.CLIENT)
 public final class CottonHud {
 	private static final Set<WWidget> widgets = new HashSet<>();
 	private static final Map<WWidget, Positioner> positioners = new HashMap<>();
 
-	static {
-		HudRenderCallback.EVENT.register((drawContext, tickDelta) -> {
-			Window window = MinecraftClient.getInstance().getWindow();
-			int hudWidth = window.getScaledWidth();
-			int hudHeight = window.getScaledHeight();
-			for (WWidget widget : widgets) {
-				Positioner positioner = positioners.get(widget);
-				if (positioner != null) {
-					positioner.reposition(widget, hudWidth, hudHeight);
-				}
+    static {
+        // TODO: Verify Fabric -> Forge conversion
+        MinecraftForge.EVENT_BUS.addListener((RenderGuiOverlayEvent.Post event) -> {
+            Window window = Minecraft.getInstance().getWindow();
+            int hudWidth = window.getGuiScaledWidth();
+            int hudHeight = window.getGuiScaledHeight();
+            for (WWidget widget : widgets) {
+                Positioner positioner = positioners.get(widget);
+                if (positioner != null) {
+                    positioner.reposition(widget, hudWidth, hudHeight);
+                }
 
-				widget.paint(drawContext, widget.getX(), widget.getY(), -1, -1);
-			}
-		});
+                widget.paint(event.getGuiGraphics(), widget.getX(), widget.getY(), -1, -1);
+            }
+        });
 
-		ClientTickEvents.END_CLIENT_TICK.register(client -> {
-			for (WWidget widget : widgets) {
-				widget.tick();
-			}
-		});
-	}
+        MinecraftForge.EVENT_BUS.addListener((TickEvent.ClientTickEvent event) -> {
+            if (event.phase == TickEvent.Phase.END) {
+                for (WWidget widget : widgets) {
+                    widget.tick();
+                }
+            }
+        });
+    }
 
 	/**
 	 * Adds a new widget to the HUD.
