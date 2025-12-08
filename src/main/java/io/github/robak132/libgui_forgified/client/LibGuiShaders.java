@@ -19,7 +19,8 @@ public final class LibGuiShaders {
     public static void onRegisterShaders(RegisterShadersEvent event) {
         try {
             ShaderInstance shaderInstance = new ShaderInstance(event.getResourceProvider(),
-                    new ResourceLocation(LibGui.MOD_ID, "tiled_rectangle"), DefaultVertexFormat.POSITION_COLOR_TEX);
+                    ResourceLocation.fromNamespaceAndPath(LibGui.MOD_ID, "tiled_rectangle"),
+                    DefaultVertexFormat.POSITION_COLOR_TEX);
             event.registerShader(shaderInstance, shader -> tiledRectangle = shader);
         } catch (IOException e) {
             throw new RuntimeException("Failed to register libgui:tiled_rectangle shader");
@@ -30,7 +31,6 @@ public final class LibGuiShaders {
         if (program == null) {
             throw new NullPointerException("Shader libgui:" + name + " not initialised!");
         }
-
         return program;
     }
 

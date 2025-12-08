@@ -329,19 +329,19 @@ public class WTabPanel extends WPanel {
 
         static final BackgroundPainter SELECTED_TAB = BackgroundPainter.createLightDarkVariants(
                 BackgroundPainter.createNinePatch(
-                                ResourceLocation.tryBuild(LibGui.MOD_ID, "textures/widget/tab/selected_light.png"))
+                                ResourceLocation.fromNamespaceAndPath(LibGui.MOD_ID, "textures/widget/tab/selected_light.png"))
                         .setTopPadding(2), BackgroundPainter.createNinePatch(
-                                ResourceLocation.tryBuild(LibGui.MOD_ID, "textures/widget/tab/selected_dark.png"))
+                                ResourceLocation.fromNamespaceAndPath(LibGui.MOD_ID, "textures/widget/tab/selected_dark.png"))
                         .setTopPadding(2));
         static final BackgroundPainter UNSELECTED_TAB = BackgroundPainter.createLightDarkVariants(
                 BackgroundPainter.createNinePatch(
-                        ResourceLocation.tryBuild(LibGui.MOD_ID, "textures/widget/tab/unselected_light.png")),
+                        ResourceLocation.fromNamespaceAndPath(LibGui.MOD_ID, "textures/widget/tab/unselected_light.png")),
                 BackgroundPainter.createNinePatch(
-                        ResourceLocation.tryBuild(LibGui.MOD_ID, "textures/widget/tab/unselected_dark.png")));
+                        ResourceLocation.fromNamespaceAndPath(LibGui.MOD_ID, "textures/widget/tab/unselected_dark.png")));
         static final BackgroundPainter SELECTED_TAB_FOCUS_BORDER = BackgroundPainter.createNinePatch(
-                ResourceLocation.tryBuild(LibGui.MOD_ID, "textures/widget/tab/focus.png")).setTopPadding(2);
+                ResourceLocation.fromNamespaceAndPath(LibGui.MOD_ID, "textures/widget/tab/focus.png")).setTopPadding(2);
         static final BackgroundPainter UNSELECTED_TAB_FOCUS_BORDER = BackgroundPainter.createNinePatch(
-                ResourceLocation.tryBuild(LibGui.MOD_ID, "textures/widget/tab/focus.png"));
+                ResourceLocation.fromNamespaceAndPath(LibGui.MOD_ID, "textures/widget/tab/focus.png"));
     }
 
     private final class WTab extends WWidget {

@@ -20,9 +20,9 @@ public class WSlider extends WAbstractSlider {
 
     public static final int TRACK_WIDTH = 6;
     public static final int THUMB_SIZE = 8;
-    public static final ResourceLocation LIGHT_TEXTURE = ResourceLocation.tryBuild(LibGui.MOD_ID,
+    public static final ResourceLocation LIGHT_TEXTURE = ResourceLocation.fromNamespaceAndPath(LibGui.MOD_ID,
             "textures/widget/slider_light.png");
-    public static final ResourceLocation DARK_TEXTURE = ResourceLocation.tryBuild(LibGui.MOD_ID,
+    public static final ResourceLocation DARK_TEXTURE = ResourceLocation.fromNamespaceAndPath(LibGui.MOD_ID,
             "textures/widget/slider_dark.png");
 
     @OnlyIn(Dist.CLIENT)

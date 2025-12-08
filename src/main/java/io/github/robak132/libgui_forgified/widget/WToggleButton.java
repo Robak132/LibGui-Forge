@@ -23,11 +23,11 @@ public class WToggleButton extends WWidget {
 
     // Default on/off images
     protected static final Texture DEFAULT_OFF_IMAGE = new Texture(
-            ResourceLocation.tryBuild(LibGui.MOD_ID, "textures/widget/toggle_off.png"));
+            ResourceLocation.fromNamespaceAndPath(LibGui.MOD_ID, "textures/widget/toggle_off.png"));
     protected static final Texture DEFAULT_ON_IMAGE = new Texture(
-            ResourceLocation.tryBuild(LibGui.MOD_ID, "textures/widget/toggle_on.png"));
+            ResourceLocation.fromNamespaceAndPath(LibGui.MOD_ID, "textures/widget/toggle_on.png"));
     protected static final Texture DEFAULT_FOCUS_IMAGE = new Texture(
-            ResourceLocation.tryBuild(LibGui.MOD_ID, "textures/widget/toggle_focus.png"));
+            ResourceLocation.fromNamespaceAndPath(LibGui.MOD_ID, "textures/widget/toggle_focus.png"));
 
     @Getter
     protected Texture onImage;

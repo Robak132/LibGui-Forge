@@ -77,7 +77,7 @@ public class WItemSlot extends WWidget {
      *
      * @since 6.2.0
      */
-    public static final ResourceLocation SLOT_TEXTURE = ResourceLocation.tryBuild(LibGui.MOD_ID,
+    public static final ResourceLocation SLOT_TEXTURE = ResourceLocation.fromNamespaceAndPath(LibGui.MOD_ID,
             "textures/widget/item_slot.png");
     private static final VisualLogger LOGGER = new VisualLogger(WItemSlot.class);
     private final List<ValidatedSlot> peers = new ArrayList<>();

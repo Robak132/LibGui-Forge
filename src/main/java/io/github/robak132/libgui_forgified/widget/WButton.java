@@ -22,7 +22,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class WButton extends WWidget {
 
-    private static final ResourceLocation DARK_WIDGETS_LOCATION = ResourceLocation.tryBuild(LibGui.MOD_ID,
+    private static final ResourceLocation DARK_WIDGETS_LOCATION = ResourceLocation.fromNamespaceAndPath(LibGui.MOD_ID,
             "textures/widget/dark_widgets.png");
     private static final int BUTTON_HEIGHT = 20;
     private static final int ICON_SPACING = 2;
