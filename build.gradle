@@ -132,16 +132,79 @@ tasks.named('jarJar') {
     // ...
 }
 
+project.publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            artifactId base.archivesName.get()
+            from components.java
 
-publishing {
-    repositories {
-        maven {
-            name = "OSSRH"
-            url = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
-            credentials {
-                username = System.getenv("MAVEN_USERNAME")
-                password = System.getenv("MAVEN_PASSWORD")
+            artifact(tasks.reobfJar) {
+                classifier = "all"
             }
         }
+    }
+
+    repositories {
+        if (project.hasProperty("mavenUsername") && project.hasProperty("mavenPassword") && project.hasProperty("mavenURL")) {
+            project.logger.lifecycle("Adding maven from secrets")
+
+            maven {
+                credentials {
+                    username = project.property("mavenUsername") as String
+                    password = project.property("mavenPassword") as String
+                }
+                url = URI.create(project.property("mavenURL") as String)
+            }
+        }
+
+        if (project.hasProperty("mavendir")) {
+            maven { url mavendir }
+        }
+    }
+}
+
+publishMods {
+    file = reobfJar.archiveFile
+    changelog = ChangelogText.getChangelogText(project).toString()
+    type = STABLE
+    version = "mc$minecraft_version-$mod_version"
+    displayName = "$mod_name $mod_version for mc$minecraft_version"
+    modLoaders.add("forge")
+    modLoaders.add("neoforge")
+
+    github {
+        accessToken = providers.environmentVariable("GITHUB_TOKEN")
+        repository = "Robak132/LibGui-Forgified"
+        commitish = gitHash
+        tagName = "mc$minecraft_version-$mod_version"
+        file.unset()
+        file.unsetConvention()
+
+        allowEmptyFiles = true
+    }
+}
+
+String calculateGitHash() {
+    try {
+        ExecOutput output = providers.exec {
+            commandLine("git", "rev-parse", "HEAD")
+        }
+        return output.standardOutput.asText.get().trim()
+    } catch (Throwable ignored) {
+        return "unknown"
+    }
+}
+
+boolean hasUnstaged() {
+    try {
+        ExecOutput output = providers.exec {
+            commandLine("git", "status", "--porcelain")
+        }
+        String result = output.standardOutput.asText.get().replace("/M gradlew(\\.bat)?/", "").trim()
+        if (!result.isEmpty())
+            println("Found stageable results:\n ${result}\n")
+        return !result.isEmpty()
+    } catch (Throwable ignored) {
+        return false
     }
 }
