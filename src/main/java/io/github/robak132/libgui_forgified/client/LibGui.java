@@ -23,6 +23,7 @@ public class LibGui {
                     () -> new ConfigScreenHandler.ConfigScreenFactory(
                             (client, parent) -> ClothConfigIntegration.getConfigScreen(parent)));
         }
+        LibGuiConfig.loadConfig();
     }
 
     private static boolean isClothConfigLoaded() {

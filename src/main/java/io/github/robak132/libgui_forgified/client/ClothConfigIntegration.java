@@ -22,7 +22,7 @@ public class ClothConfigIntegration {
                 .setTooltip(Component.translatable("option.libgui_forge.darkmode.desc"))
                 .build());
 
-        builder.setSavingRunnable(LibGuiConfig::save);
+        builder.setSavingRunnable(LibGuiConfig::saveConfig);
 
         return builder.build();
     }

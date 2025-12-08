@@ -11,13 +11,15 @@ import lombok.Getter;
 
 @Data
 public final class LibGuiConfig {
-
     @Getter
-    private static LibGuiConfig instance;
+    private static final LibGuiConfig instance = new LibGuiConfig();
 
     private boolean darkMode = false;
 
-    private LibGuiConfig() {
+    private LibGuiConfig() {}
+
+    void setSettings(LibGuiConfig config) {
+        this.darkMode = config.darkMode;
     }
 
     public static boolean isDarkMode() {
@@ -28,20 +30,14 @@ public final class LibGuiConfig {
         getInstance().darkMode = darkMode;
     }
 
-    public static void save() {
-        Gson gson = new Gson();
-        String blockColoursJson = gson.toJson(instance);
+    public static void saveConfig() {
+        String blockColoursJson = new Gson().toJson(instance);
         writeJson(blockColoursJson, "./config/%s/".formatted(MOD_ID), "config.json");
     }
 
-    public static void load() {
-        Gson gson = new Gson();
-        instance = gson.fromJson(readJson("./config/%s/config.json".formatted(MOD_ID)), LibGuiConfig.class);
-        if (instance == null) {
-            instance = new LibGuiConfig();
-            save();
-        }
-
+    public static void loadConfig() {
+        LibGuiConfig config = new Gson().fromJson(readJson("./config/%s/config.json".formatted(MOD_ID)), LibGuiConfig.class);
+        instance.setSettings(config);
     }
 
     public static void writeJson(String str, String path, String fileName) {
