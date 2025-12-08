@@ -1,5 +1,7 @@
 package io.github.robak132.libgui_forgified.client;
 
+import static io.github.robak132.libgui_forgified.client.LibGui.MOD_ID;
+
 import com.google.gson.Gson;
 import java.io.File;
 import java.io.FileReader;
@@ -29,12 +31,12 @@ public final class LibGuiConfig {
     public static void save() {
         Gson gson = new Gson();
         String blockColoursJson = gson.toJson(instance);
-        writeJson(blockColoursJson, "./config/mcrgb_forge/", "config.json");
+        writeJson(blockColoursJson, "./config/%s/".formatted(MOD_ID), "config.json");
     }
 
     public static void load() {
         Gson gson = new Gson();
-        instance = gson.fromJson(readJson("./config/mcrgb_forge/config.json"), LibGuiConfig.class);
+        instance = gson.fromJson(readJson("./config/%s/config.json".formatted(MOD_ID)), LibGuiConfig.class);
         if (instance == null) {
             instance = new LibGuiConfig();
             save();

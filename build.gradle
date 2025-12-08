@@ -6,6 +6,19 @@ plugins {
 	id 'net.minecraftforge.gradle' version '6.0.+'
 	id 'org.parchmentmc.librarian.forgegradle' version '1.+'
 	id 'org.spongepowered.mixin' version '0.7.+'
+    id"com.github.johnrengelman.shadow" version "8.1.1"
+}
+
+def secretsFile = rootProject.file(".secret.properties")
+ext.secrets = new Properties()
+if (secretsFile.exists()) {
+    secretsFile.withInputStream { stream ->
+        secrets.load(stream)
+    }
+}
+
+def getSecret(String key) {
+    return secrets.getProperty(key) ?: System.getenv(key)
 }
 
 repositories {
@@ -74,16 +87,12 @@ sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 dependencies {
     minecraft "net.minecraftforge:forge:1.20.1-47.4.13"
-    implementation 'org.projectlombok:lombok:1.18.38'
 	implementation "me.shedaniel.cloth:cloth-config-forge:11.1.136"
     implementation 'com.google.code.gson:gson:2.13.2'
-    api "io.github.juuxel:libninepatch:1.2.0"
+    shadow "io.github.juuxel:libninepatch:1.2.0"
 
     compileOnly("org.projectlombok:lombok:1.18.42")
     annotationProcessor("org.projectlombok:lombok:1.18.42")
-
-    testCompileOnly("org.projectlombok:lombok:1.18.42")
-    testAnnotationProcessor("org.projectlombok:lombok:1.18.42")
 
 	annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 }
@@ -105,6 +114,11 @@ mixin {
 	debug.export = true
 }
 
+configurations {
+    shadow
+    implementation.extendsFrom(shadow)
+}
+
 tasks.withType(JavaCompile).configureEach {
 	options.encoding = 'UTF-8'
 	options.release = 17
@@ -122,17 +136,31 @@ tasks.named('jar', Jar).configure {
 			'Implementation-Timestamp': new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
 		])
 	}
-	finalizedBy 'reobfJar'
 }
 
 tasks.register('cleanJar') {
 	delete 'build/libs'
 }
 
+shadowJar {
+    archiveClassifier.set('shadow')
+    configurations = [project.configurations.shadow]
+    relocate 'io.github.juuxel.libninepatch', 'io.github.robak132.libgui.shaded.libninepatch'
+}
+
+tasks.withType(net.minecraftforge.gradle.userdev.tasks.RenameJarInPlace).configureEach {
+    dependsOn tasks.shadowJar
+}
+
+
 publishing {
     publications {
         mavenJava(MavenPublication) {
-            from components.java
+            artifact(shadowJar) {
+                classifier = ''
+            }
+            artifact(tasks.sourcesJar)
+
             groupId = project.maven_group
             artifactId = project.archives_base_name
             version = project.version
@@ -144,8 +172,8 @@ publishing {
             name = "GitHubPackages"
             url = uri("https://maven.pkg.github.com/Robak132/LibGui-Forgified")
             credentials {
-                username = project.findProperty("gpr.user") ?: System.getenv("GITHUB_ACTOR")
-                password = project.findProperty("gpr.token") ?: System.getenv("GITHUB_TOKEN")
+                username = getSecret("GITHUB_ACTOR")
+                password = getSecret("GITHUB_TOKEN")
             }
         }
     }
