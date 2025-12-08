@@ -4,7 +4,7 @@
   "compatibilityLevel": "JAVA_17",
   "package": "io.github.cottonmc.cotton.gui.mixin",
   "client": [
-    "ScreenAccessor"
+    "io.github.robak132.mixin.ScreenAccessor"
   ],
   "injectors": {
     "defaultRequire": 1
