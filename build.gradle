@@ -129,28 +129,23 @@ tasks.register('cleanJar') {
 	delete 'build/libs'
 }
 
-
-project.publishing {
+publishing {
     publications {
         mavenJava(MavenPublication) {
-            groupId project.group
-            artifactId project.archivesBaseName
-            version project.version
-            artifact jar
-            artifact sourcesJar
+            from components.java
+            groupId = project.maven_group
+            artifactId = project.archives_base_name
+            version = project.version
         }
     }
 
     repositories {
-        if (project.hasProperty("mavenUsername") && project.hasProperty("mavenPassword") && project.hasProperty("mavenURL")) {
-            project.logger.lifecycle("Adding maven from secrets")
-
-            maven {
-                credentials {
-                    username = project.property("mavenUsername") as String
-                    password = project.property("mavenPassword") as String
-                }
-                url = URI.create(project.property("mavenURL") as String)
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/Robak132/LibGui-Forgified")
+            credentials {
+                username = project.findProperty("gpr.user") ?: System.getenv("GITHUB_ACTOR")
+                password = project.findProperty("gpr.token") ?: System.getenv("GITHUB_TOKEN")
             }
         }
     }
