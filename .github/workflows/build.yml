@@ -48,13 +48,15 @@ jobs:
 
       - name: Run Test Server
         if: ${{ !inputs.is-release && runner.os != 'Windows' }}
-        run: ./gradlew runServer --stacktrace
+        run: |
+          ./gradlew runServer --stacktrace &
+          PID=$!
+          sleep 30
+          kill $PID || true
         timeout-minutes: 2
 
       - name: Publish
         if: ${{ inputs.is-release }}
         env:
-          MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
-          CURSEFORGE_TOKEN: ${{ secrets.CURSEFORGE_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: ./gradlew publishMods
+        run: ./gradlew publish
