@@ -48,7 +48,6 @@ jobs:
 
       - name: Run Gametests (Linux)
         if: ${{ !inputs.is-release && runner.os != 'Windows' }}
-        shell: bash
         run: .\gradlew runGameTestServer
 
       - name: Publish
@@ -58,4 +57,3 @@ jobs:
           CURSEFORGE_TOKEN: ${{ secrets.CURSEFORGE_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: ./gradlew publishMods
-
