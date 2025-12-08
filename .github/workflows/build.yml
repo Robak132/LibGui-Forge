@@ -48,7 +48,7 @@ jobs:
 
       - name: Run Gametests (Linux)
         if: ${{ !inputs.is-release && runner.os != 'Windows' }}
-        run: .\gradlew runGameTestServer
+        run: ./gradlew runGameTestServer
 
       - name: Publish
         if: ${{ inputs.is-release }}
