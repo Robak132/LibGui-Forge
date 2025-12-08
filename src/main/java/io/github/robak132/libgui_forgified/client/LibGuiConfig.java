@@ -37,7 +37,9 @@ public final class LibGuiConfig {
 
     public static void loadConfig() {
         LibGuiConfig config = new Gson().fromJson(readJson("./config/%s/config.json".formatted(MOD_ID)), LibGuiConfig.class);
-        instance.setSettings(config);
+        if (config != null) {
+            instance.setSettings(config);
+        }
     }
 
     public static void writeJson(String str, String path, String fileName) {
