@@ -1,0 +1,25 @@
+modLoader="javafml"
+loaderVersion="[47,)"
+license="MIT"
+issueTrackerURL="https://github.com/Robak132/MCRGB/issues"
+
+[[mods]]
+modId="libgui_forge"
+version="0.3_1.20.1"
+displayName="LibGui: Forgified"
+description="Port moda z Fabric na Forge."
+authors="Robak132"
+
+[[dependencies.libgui_forge]]
+modId="forge"
+mandatory=true
+versionRange="[47,)"
+ordering="NONE"
+side="BOTH"
+
+[[dependencies.libgui_forge]]
+modId="minecraft"
+mandatory=true
+versionRange="[1.20.1]"
+ordering="NONE"
+side="BOTH"

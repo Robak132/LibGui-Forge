@@ -28,7 +28,7 @@ public enum NinePatchTextureRendererImpl implements ContextualTextureRenderer<Re
 
 	@Override
 	public void drawTiled(ResourceLocation texture, GuiGraphics context, int x, int y, int regionWidth, int regionHeight, int tileWidth, int tileHeight, float u1, float v1, float u2, float v2) {
-		RenderSystem.setShader(LibGui::getTiledRectangle);
+		RenderSystem.setShader(LibGuiShaders::getTiledRectangle);
 		RenderSystem.setShaderTexture(0, texture);
 		RenderSystem.setShaderColor(1, 1, 1, 1);
 		Matrix4f positionMatrix = context.pose().last().pose();

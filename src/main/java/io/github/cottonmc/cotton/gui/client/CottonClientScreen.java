@@ -65,7 +65,7 @@ public class CottonClientScreen extends Screen implements CottonScreenImpl {
 
         if (root != null) {
             GuiEventListener rootPanelElement = FocusElements.ofPanel(root);
-            ((ScreenAccessor) this).libgui$getChildren().add(rootPanelElement);
+            ((ScreenAccessor) this).libgui_forge$getChildren().add(rootPanelElement);
             setInitialFocus(rootPanelElement);
         } else {
             LOGGER.warn("No root panel found, keyboard navigation disabled");
@@ -249,7 +249,7 @@ public class CottonClientScreen extends Screen implements CottonScreenImpl {
     }
 
     @Override
-    protected void addNarrations(NarrationElementOutput builder) {
+    protected void updateNarratedWidget(@NotNull NarrationElementOutput builder) {
         if (description != null) NarrationHelper.addNarrations(description.getRootPanel(), builder);
     }
 }

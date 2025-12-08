@@ -73,10 +73,11 @@ minecraft {
 sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 dependencies {
-	implementation 'org.projectlombok:lombok:1.18.38'
     minecraft "net.minecraftforge:forge:1.20.1-47.4.13"
+    implementation 'org.projectlombok:lombok:1.18.38'
 	implementation "me.shedaniel.cloth:cloth-config-forge:11.1.136"
-	api "io.github.juuxel:libninepatch:1.2.0"
+    implementation 'com.google.code.gson:gson:2.13.2'
+    api "io.github.juuxel:libninepatch:1.2.0"
 
     compileOnly("org.projectlombok:lombok:1.18.42")
     annotationProcessor("org.projectlombok:lombok:1.18.42")
@@ -96,8 +97,8 @@ java {
 
 mixin {
 	// MixinGradle Settings
-	add sourceSets.main, 'mixins.mcrgb_forge.refmap.json'
-	config 'mixins.mcrgb_forge.json'
+	add sourceSets.main, 'mixins.libgui_forge.refmap.json'
+	config 'mixins.libgui_forge.json'
 
 	debug.verbose = true
 	debug.export = true

@@ -14,6 +14,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.narration.NarratedElementType;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
+import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
@@ -37,7 +38,7 @@ public class WTabPanel extends WPanel {
     private static final int TAB_WIDTH = 28;
     private static final int TAB_HEIGHT = 30;
     private static final int ICON_SIZE = 16;
-    private final WBox tabRibbon = new WBox(WidgetAxis.HORIZONTAL).setSpacing(1);
+    private final WBox tabRibbon = new WBox(Direction.Plane.HORIZONTAL).setSpacing(1);
     private final List<WTab> tabWidgets = new ArrayList<>();
     private final Map<Tab, WTab> tabWidgetsByData = new HashMap<>();
     private final WCardPanel mainPanel = new WCardPanel();

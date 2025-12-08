@@ -4,19 +4,19 @@ package io.github.cottonmc.cotton.gui.client;
 import net.minecraft.network.chat.Component;
 
 public final class NarrationMessages {
-	public static final String ITEM_SLOT_TITLE_KEY = "widget.libgui.item_slot.narration.title";
-	public static final String LABELED_SLIDER_TITLE_KEY = "widget.libgui.labeled_slider.narration.title";
-	public static final Component SCROLL_BAR_TITLE = Component.translatable("widget.libgui.scroll_bar.narration.title");
-	public static final String SLIDER_MESSAGE_KEY = "widget.libgui.slider.narration.title";
-	public static final Component SLIDER_USAGE = Component.translatable("widget.libgui.slider.narration.usage");
-	public static final String TAB_TITLE_KEY = "widget.libgui.tab.narration.title";
-	public static final String TAB_POSITION_KEY = "widget.libgui.tab.narration.position";
-	public static final String TEXT_FIELD_TITLE_KEY = "widget.libgui.Text_field.narration.title";
-	public static final String TEXT_FIELD_SUGGESTION_KEY = "widget.libgui.Text_field.narration.suggestion";
-	public static final String TOGGLE_BUTTON_NAMED_KEY = "widget.libgui.toggle_button.narration.named";
-	public static final Component TOGGLE_BUTTON_OFF = Component.translatable("widget.libgui.toggle_button.narration.off");
-	public static final Component TOGGLE_BUTTON_ON = Component.translatable("widget.libgui.toggle_button.narration.on");
-	public static final String TOGGLE_BUTTON_UNNAMED_KEY = "widget.libgui.toggle_button.narration.unnamed";
+	public static final String ITEM_SLOT_TITLE_KEY = "widget.libgui_forge.item_slot.narration.title";
+	public static final String LABELED_SLIDER_TITLE_KEY = "widget.libgui_forge.labeled_slider.narration.title";
+	public static final Component SCROLL_BAR_TITLE = Component.translatable("widget.libgui_forge.scroll_bar.narration.title");
+	public static final String SLIDER_MESSAGE_KEY = "widget.libgui_forge.slider.narration.title";
+	public static final Component SLIDER_USAGE = Component.translatable("widget.libgui_forge.slider.narration.usage");
+	public static final String TAB_TITLE_KEY = "widget.libgui_forge.tab.narration.title";
+	public static final String TAB_POSITION_KEY = "widget.libgui_forge.tab.narration.position";
+	public static final String TEXT_FIELD_TITLE_KEY = "widget.libgui_forge.Text_field.narration.title";
+	public static final String TEXT_FIELD_SUGGESTION_KEY = "widget.libgui_forge.Text_field.narration.suggestion";
+	public static final String TOGGLE_BUTTON_NAMED_KEY = "widget.libgui_forge.toggle_button.narration.named";
+	public static final Component TOGGLE_BUTTON_OFF = Component.translatable("widget.libgui_forge.toggle_button.narration.off");
+	public static final Component TOGGLE_BUTTON_ON = Component.translatable("widget.libgui_forge.toggle_button.narration.on");
+	public static final String TOGGLE_BUTTON_UNNAMED_KEY = "widget.libgui_forge.toggle_button.narration.unnamed";
 
 	public static final class Vanilla {
 		public static final Component BUTTON_USAGE_FOCUSED = Component.translatable("narration.button.usage.focused");

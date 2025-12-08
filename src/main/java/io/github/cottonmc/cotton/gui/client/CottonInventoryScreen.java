@@ -105,7 +105,7 @@ public class CottonInventoryScreen<T extends SyncedGuiDescription> extends Abstr
 
         if (root != null) {
             GuiEventListener rootPanelElement = FocusElements.ofPanel(root);
-            ((ScreenAccessor) this).libgui$getChildren().add(rootPanelElement);
+            ((ScreenAccessor) this).libgui_forge$getChildren().add(rootPanelElement);
             setInitialFocus(rootPanelElement);
         } else {
             LOGGER.warn("No root panel found, keyboard navigation disabled");
@@ -299,12 +299,11 @@ public class CottonInventoryScreen<T extends SyncedGuiDescription> extends Abstr
         if (description != null) {
             WPanel root = description.getRootPanel();
             if (root != null) {
-                WWidget hitChild = root.hit(mouseX - x, mouseY - y);
-                if (hitChild != null) hitChild.renderTooltip(context, x, y, mouseX - x, mouseY - y);
+                WWidget hitChild = root.hit(mouseX - inventoryLabelX, mouseY - inventoryLabelY);
+                if (hitChild != null) hitChild.renderTooltip(context, inventoryLabelX, inventoryLabelY, mouseX - inventoryLabelX, mouseY - inventoryLabelY);
             }
         }
-
-        drawMouseoverTooltip(context, mouseX, mouseY); //Draws the itemstack tooltips
+        renderTooltip(context, mouseX, mouseY);
         VisualLogger.render(context);
     }
 
@@ -330,7 +329,7 @@ public class CottonInventoryScreen<T extends SyncedGuiDescription> extends Abstr
     }
 
     @Override
-    protected void addNarrations(NarrationElementOutput builder) {
+    protected void updateNarratedWidget(@NotNull NarrationElementOutput builder) {
         if (description != null) NarrationHelper.addNarrations(description.getRootPanel(), builder);
     }
 }

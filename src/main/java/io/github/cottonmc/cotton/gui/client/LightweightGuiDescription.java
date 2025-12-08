@@ -34,7 +34,8 @@ public class LightweightGuiDescription implements GuiDescription {
 
     @Override
     public int getTitleColor() {
-        return isDarkMode().orElse(LibGuiConfig.isDarkMode()) ? darkmodeTitleColor : titleColor;
+        if (isDarkMode() == null) return LibGuiConfig.isDarkMode() ? darkmodeTitleColor : titleColor;
+        return isDarkMode() ? darkmodeTitleColor : titleColor;
     }
 
     @Override

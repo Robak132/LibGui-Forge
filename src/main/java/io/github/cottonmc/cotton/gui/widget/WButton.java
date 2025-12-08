@@ -1,5 +1,6 @@
 package io.github.cottonmc.cotton.gui.widget;
 
+import io.github.cottonmc.cotton.gui.client.LibGui;
 import io.github.cottonmc.cotton.gui.client.NarrationMessages;
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment;
@@ -8,30 +9,22 @@ import io.github.cottonmc.cotton.gui.widget.icon.Icon;
 import lombok.Getter;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarratedElementType;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.Nullable;
 
 public class WButton extends WWidget {
-    private static final ResourceLocation DARK_WIDGETS_LOCATION = ResourceLocation.tryBuild("libgui", "textures/widget/dark_widgets.png");
+    private static final ResourceLocation DARK_WIDGETS_LOCATION = ResourceLocation.tryBuild(LibGui.MOD_ID, "textures/widget/dark_widgets.png");
     private static final int BUTTON_HEIGHT = 20;
     private static final int ICON_SPACING = 2;
     protected int color = WLabel.DEFAULT_TEXT_COLOR;
-    protected int darkmodeColor = WLabel.DEFAULT_TEXT_COLOR;
-    /**
-     * The size (width/height) of this button's icon in pixels.
-     * <p>
-     * -- GETTER --
-     * Gets the current height / width of the icon.
-     *
-     * @return the current height / width of the icon
-     * @since 6.4.0
-     *
-     */
     @Getter
     protected int iconSize = 16;
     @Getter
@@ -85,7 +78,7 @@ public class WButton extends WWidget {
 
     @OnlyIn(Dist.CLIENT)
     static ResourceLocation getTexture(WWidget widget) {
-        return widget.shouldRenderInDarkMode() ? DARK_WIDGETS_LOCATION : ClickableWidget.WIDGETS_TEXTURE;
+        return widget.shouldRenderInDarkMode() ? DARK_WIDGETS_LOCATION : AbstractWidget.WIDGETS_LOCATION;
     }
 
     @Override
@@ -131,12 +124,10 @@ public class WButton extends WWidget {
             int color = 0xE0E0E0;
             if (!enabled) {
                 color = 0xA0A0A0;
-            } /*else if (hovered) {
-				color = 0xFFFFA0;
-			}*/
+            }
 
             int xOffset = (icon != null && alignment == HorizontalAlignment.LEFT) ? ICON_SPACING + iconSize + ICON_SPACING : 0;
-            ScreenDrawing.drawStringWithShadow(context, label.getVisualOrderText(), alignment, x + xOffset, y + ((20 - 8) / 2), width, color); //LibGuiClient.config.darkMode ? darkmodeColor : color);
+            ScreenDrawing.drawStringWithShadow(context, label.getVisualOrderText(), alignment, x + xOffset, y + ((20 - 8) / 2), width, color);
         }
     }
 
@@ -151,7 +142,7 @@ public class WButton extends WWidget {
         super.onClick(x, y, button);
 
         if (enabled && isWithinBounds(x, y)) {
-            Minecraft.getInstance().getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+            Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
 
             if (onClick != null) onClick.run();
             return InputResult.PROCESSED;
@@ -250,7 +241,7 @@ public class WButton extends WWidget {
     @OnlyIn(Dist.CLIENT)
     @Override
     public void addNarrations(NarrationElementOutput builder) {
-        builder.add(NarratedElementType.TITLE, ClickableWidget.getNarrationMessage(getLabel()));
+        builder.add(NarratedElementType.TITLE, AbstractWidget.wrapDefaultNarrationMessage(getLabel()));
 
         if (isEnabled()) {
             if (isFocused()) {

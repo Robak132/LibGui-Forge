@@ -92,8 +92,11 @@ public class SyncedGuiDescription extends AbstractContainerMenu implements GuiDe
 	}
 
     public int getTitleColor() {
-		return (world.isClientSide && isDarkMode().orElse(LibGuiConfig.isDarkMode())) ? darkTitleColor : titleColor;
-	}
+        if (world.isClientSide && isDarkMode() == null) {
+            return LibGuiConfig.isDarkMode() ? darkTitleColor : titleColor;
+        }
+        return isDarkMode() ? darkTitleColor : titleColor;
+    }
 	
 	public SyncedGuiDescription setRootPanel(WPanel panel) {
 		this.rootPanel = panel;
@@ -126,7 +129,7 @@ public class SyncedGuiDescription extends AbstractContainerMenu implements GuiDe
 	}
 
 	@Override
-	public ItemStack quickMove(Player player, int index) {
+	public @NotNull ItemStack quickMoveStack(@NotNull Player player, int index) {
 		ItemStack result = ItemStack.EMPTY;
 		Slot slot = slots.get(index);
 
@@ -198,7 +201,7 @@ public class SyncedGuiDescription extends AbstractContainerMenu implements GuiDe
 		return false;
 	}
 	
-	private boolean insertItem(ItemStack toInsert, Inventory inventory, boolean walkBackwards, Player player) {
+	private boolean insertItem(ItemStack toInsert, Container inventory, boolean walkBackwards, Player player) {
 		//Make a unified list of slots *only from this inventory*
 		ArrayList<Slot> inventorySlots = new ArrayList<>();
 		for(Slot slot : slots) {
@@ -215,11 +218,10 @@ public class SyncedGuiDescription extends AbstractContainerMenu implements GuiDe
 				if (toInsert.isEmpty()) break;
 			}
 		} else {
-			for(int i=0; i<inventorySlots.size(); i++) {
-				Slot curSlot = inventorySlots.get(i);
-				if (insertIntoExisting(toInsert, curSlot, player)) inserted = true;
-				if (toInsert.isEmpty()) break;
-			}
+            for (Slot curSlot : inventorySlots) {
+                if (insertIntoExisting(toInsert, curSlot, player)) inserted = true;
+                if (toInsert.isEmpty()) break;
+            }
 			
 		}
 		
@@ -232,11 +234,10 @@ public class SyncedGuiDescription extends AbstractContainerMenu implements GuiDe
 					if (toInsert.isEmpty()) break;
 				}
 			} else {
-				for(int i=0; i<inventorySlots.size(); i++) {
-					Slot curSlot = inventorySlots.get(i);
-					if (insertIntoEmpty(toInsert, curSlot)) inserted = true;
-					if (toInsert.isEmpty()) break;
-				}
+                for (Slot curSlot : inventorySlots) {
+                    if (insertIntoEmpty(toInsert, curSlot)) inserted = true;
+                    if (toInsert.isEmpty()) break;
+                }
 				
 			}
 		}
@@ -252,8 +253,8 @@ public class SyncedGuiDescription extends AbstractContainerMenu implements GuiDe
 		boolean inserted = false;
 		
 		for(Slot slot : slots) {
-			if (slot.container==inventory && slot instanceof ValidatedSlot) {
-				int index = ((ValidatedSlot)slot).getInventoryIndex();
+			if (slot.container==inventory && slot instanceof ValidatedSlot validatedSlot) {
+				int index = validatedSlot.getInventoryIndex();
 				if (Inventory.isHotbarSlot(index)) {
 					hotbarSlots.add(slot);
 				} else {
@@ -266,31 +267,27 @@ public class SyncedGuiDescription extends AbstractContainerMenu implements GuiDe
 		
 		if (swapToStorage) {
 			//swap from hotbar to storage
-			for(int i=0; i<storageSlots.size(); i++) {
-				Slot curSlot = storageSlots.get(i);
-				if (insertIntoExisting(toInsert, curSlot, player)) inserted = true;
-				if (toInsert.isEmpty()) break;
-			}
+            for (Slot curSlot : storageSlots) {
+                if (insertIntoExisting(toInsert, curSlot, player)) inserted = true;
+                if (toInsert.isEmpty()) break;
+            }
 			if (!toInsert.isEmpty()) {
-				for(int i=0; i<storageSlots.size(); i++) {
-					Slot curSlot = storageSlots.get(i);
-					if (insertIntoEmpty(toInsert, curSlot)) inserted = true;
-					if (toInsert.isEmpty()) break;
-				}
+                for (Slot curSlot : storageSlots) {
+                    if (insertIntoEmpty(toInsert, curSlot)) inserted = true;
+                    if (toInsert.isEmpty()) break;
+                }
 			}
 		} else {
 			//swap from storage to hotbar
-			for(int i=0; i<hotbarSlots.size(); i++) {
-				Slot curSlot = hotbarSlots.get(i);
-				if (insertIntoExisting(toInsert, curSlot, player)) inserted = true;
-				if (toInsert.isEmpty()) break;
-			}
+            for (Slot curSlot : hotbarSlots) {
+                if (insertIntoExisting(toInsert, curSlot, player)) inserted = true;
+                if (toInsert.isEmpty()) break;
+            }
 			if (!toInsert.isEmpty()) {
-				for(int i=0; i<hotbarSlots.size(); i++) {
-					Slot curSlot = hotbarSlots.get(i);
-					if (insertIntoEmpty(toInsert, curSlot)) inserted = true;
-					if (toInsert.isEmpty()) break;
-				}
+                for (Slot curSlot : hotbarSlots) {
+                    if (insertIntoEmpty(toInsert, curSlot)) inserted = true;
+                    if (toInsert.isEmpty()) break;
+                }
 			}
 		}
 		
@@ -386,8 +383,8 @@ public class SyncedGuiDescription extends AbstractContainerMenu implements GuiDe
 			BlockState state = world.getBlockState(pos);
 			Block b = state.getBlock();
 
-			if (b instanceof WorldlyContainerHolder) {
-				Container inventory = ((WorldlyContainerHolder)b).getContainer(state, world, pos);
+			if (b instanceof WorldlyContainerHolder worldlyContainerHolder) {
+				Container inventory = worldlyContainerHolder.getContainer(state, world, pos);
 				if (inventory != null) {
 					return inventory;
 				}
@@ -422,8 +419,8 @@ public class SyncedGuiDescription extends AbstractContainerMenu implements GuiDe
 	public static ContainerData getBlockPropertyDelegate(ContainerLevelAccess ctx) {
 		return ctx.evaluate((world, pos) -> {
 			BlockEntity be = world.getBlockEntity(pos);
-			if (be!=null && be instanceof PropertyDelegateHolder) {
-				return ((PropertyDelegateHolder)be).getPropertyDelegate();
+			if (be instanceof PropertyDelegateHolder propertyDelegateHolder) {
+				return propertyDelegateHolder.getPropertyDelegate();
 			}
 			
 			return new SimpleContainerData(0);
@@ -455,7 +452,7 @@ public class SyncedGuiDescription extends AbstractContainerMenu implements GuiDe
 	}
 	
 	@Override
-	public boolean canUse(Player entity) {
+	public boolean stillValid(@NotNull Player entity) {
 		return blockInventory == null || blockInventory.stillValid(entity);
 	}
 

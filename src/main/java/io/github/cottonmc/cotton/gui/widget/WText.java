@@ -1,20 +1,20 @@
 package io.github.cottonmc.cotton.gui.widget;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
-import net.minecraft.client.gui.screen.narration.NarrationPart;
-import net.minecraft.text.OrderedText;
-import net.minecraft.text.Style;
-import net.minecraft.text.Text;
-
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment;
 import io.github.cottonmc.cotton.gui.widget.data.InputResult;
 import io.github.cottonmc.cotton.gui.widget.data.VerticalAlignment;
+import lombok.Getter;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.narration.NarratedElementType;
+import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
+import net.minecraft.util.FormattedCharSequence;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -26,20 +26,25 @@ import java.util.Objects;
  * @since 1.8.0
  */
 public class WText extends WWidget {
-	protected Text text;
-	protected int color;
-	protected int darkmodeColor;
-	protected HorizontalAlignment horizontalAlignment = HorizontalAlignment.LEFT;
-	protected VerticalAlignment verticalAlignment = VerticalAlignment.TOP;
+	@Getter
+    protected Component text;
+	@Getter
+    protected int color;
+	@Getter
+    protected int darkmodeColor;
+	@Getter
+    protected HorizontalAlignment horizontalAlignment = HorizontalAlignment.LEFT;
+	@Getter
+    protected VerticalAlignment verticalAlignment = VerticalAlignment.TOP;
 	@OnlyIn(Dist.CLIENT)
-	private List<OrderedText> wrappedLines;
+	private List<FormattedCharSequence> wrappedLines;
 	private boolean wrappingScheduled = false;
 
-	public WText(Text text) {
+	public WText(Component text) {
 		this(text, WLabel.DEFAULT_TEXT_COLOR);
 	}
 
-	public WText(Text text, int color) {
+	public WText(Component text, int color) {
 		this.text = Objects.requireNonNull(text, "text must not be null");
 		this.color = color;
 		this.darkmodeColor = (color == WLabel.DEFAULT_TEXT_COLOR) ? WLabel.DEFAULT_DARKMODE_TEXT_COLOR : color;
@@ -58,8 +63,8 @@ public class WText extends WWidget {
 
 	@OnlyIn(Dist.CLIENT)
 	private void wrapLines() {
-		TextRenderer font = MinecraftClient.getInstance().textRenderer;
-		wrappedLines = font.wrapLines(text, width);
+		Font font = Minecraft.getInstance().font;
+		wrappedLines = font.split(text, width);
 	}
 
 	/**
@@ -72,12 +77,12 @@ public class WText extends WWidget {
 	@OnlyIn(Dist.CLIENT)
 	@Nullable
 	public Style getTextStyleAt(int x, int y) {
-		TextRenderer font = MinecraftClient.getInstance().textRenderer;
-		int lineIndex = y / font.fontHeight;
+		Font font = Minecraft.getInstance().font;
+		int lineIndex = y / font.lineHeight;
 
 		if (lineIndex >= 0 && lineIndex < wrappedLines.size()) {
-			OrderedText line = wrappedLines.get(lineIndex);
-			return font.getTextHandler().getStyleAt(line, x);
+            FormattedCharSequence line = wrappedLines.get(lineIndex);
+			return font.getSplitter().componentStyleAtWidth(line, x);
 		}
 
 		return null;
@@ -85,25 +90,25 @@ public class WText extends WWidget {
 
 	@OnlyIn(Dist.CLIENT)
 	@Override
-	public void paint(DrawContext context, int x, int y, int mouseX, int mouseY) {
+	public void paint(GuiGraphics context, int x, int y, int mouseX, int mouseY) {
 		if (wrappedLines == null || wrappingScheduled) {
 			wrapLines();
 			wrappingScheduled = false;
 		}
 
-		TextRenderer font = MinecraftClient.getInstance().textRenderer;
+		Font font = Minecraft.getInstance().font;
 
 		int yOffset = switch (verticalAlignment) {
-			case CENTER -> height / 2 - font.fontHeight * wrappedLines.size() / 2;
-			case BOTTOM -> height - font.fontHeight * wrappedLines.size();
+			case CENTER -> height / 2 - font.lineHeight * wrappedLines.size() / 2;
+			case BOTTOM -> height - font.lineHeight * wrappedLines.size();
 			case TOP -> 0;
 		};
 
 		for (int i = 0; i < wrappedLines.size(); i++) {
-			OrderedText line = wrappedLines.get(i);
+            FormattedCharSequence line = wrappedLines.get(i);
 			int c = shouldRenderInDarkMode() ? darkmodeColor : color;
 
-			ScreenDrawing.drawString(context, line, horizontalAlignment, x, y + yOffset + i * font.fontHeight, width, c);
+			ScreenDrawing.drawString(context, line, horizontalAlignment, x, y + yOffset + i * font.lineHeight, width, c);
 		}
 
 		Style hoveredTextStyle = getTextStyleAt(mouseX, mouseY);
@@ -117,29 +122,20 @@ public class WText extends WWidget {
 
 		Style hoveredTextStyle = getTextStyleAt(x, y);
 		if (hoveredTextStyle != null) {
-			boolean processed = MinecraftClient.getInstance().currentScreen.handleTextClick(hoveredTextStyle);
+			boolean processed = Minecraft.getInstance().screen.handleComponentClicked(hoveredTextStyle);
 			return InputResult.of(processed);
 		}
 
 		return InputResult.IGNORED;
 	}
 
-	/**
-	 * Gets the text of this label.
-	 *
-	 * @return the text
-	 */
-	public Text getText() {
-		return text;
-	}
-
-	/**
+    /**
 	 * Sets the text of this label.
 	 *
 	 * @param text the new text
 	 * @return this label
 	 */
-	public WText setText(Text text) {
+	public WText setText(Component text) {
 		Objects.requireNonNull(text, "text is null");
 		this.text = text;
 		wrappingScheduled = true;
@@ -147,16 +143,7 @@ public class WText extends WWidget {
 		return this;
 	}
 
-	/**
-	 * Gets the light mode color of this label.
-	 *
-	 * @return the color
-	 */
-	public int getColor() {
-		return color;
-	}
-
-	/**
+    /**
 	 * Sets the light mode color of this label.
 	 *
 	 * @param color the new color
@@ -167,17 +154,7 @@ public class WText extends WWidget {
 		return this;
 	}
 
-	/**
-	 * Gets the dark mode color of this label.
-	 *
-	 * @return the color
-	 * @since 2.0.0
-	 */
-	public int getDarkmodeColor() {
-		return darkmodeColor;
-	}
-
-	/**
+    /**
 	 * Sets the dark mode color of this label.
 	 *
 	 * @param darkmodeColor the new color
@@ -211,17 +188,7 @@ public class WText extends WWidget {
 		return this;
 	}
 
-	/**
-	 * Gets the horizontal alignment of this text widget.
-	 *
-	 * @return the alignment
-	 * @since 1.9.0
-	 */
-	public HorizontalAlignment getHorizontalAlignment() {
-		return horizontalAlignment;
-	}
-
-	/**
+    /**
 	 * Sets the horizontal alignment of this text widget.
 	 *
 	 * @param horizontalAlignment the new alignment
@@ -233,17 +200,7 @@ public class WText extends WWidget {
 		return this;
 	}
 
-	/**
-	 * Gets the vertical alignment of this text widget.
-	 *
-	 * @return the alignment
-	 * @since 2.0.0
-	 */
-	public VerticalAlignment getVerticalAlignment() {
-		return verticalAlignment;
-	}
-
-	/**
+    /**
 	 * Sets the vertical alignment of this text widget.
 	 *
 	 * @param verticalAlignment the new alignment
@@ -257,7 +214,7 @@ public class WText extends WWidget {
 
 	@OnlyIn(Dist.CLIENT)
 	@Override
-	public void addNarrations(NarrationMessageBuilder builder) {
-		builder.put(NarrationPart.TITLE, text);
+	public void addNarrations(NarrationElementOutput builder) {
+		builder.add(NarratedElementType.TITLE, text);
 	}
 }

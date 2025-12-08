@@ -1,28 +1,20 @@
 package io.github.cottonmc.cotton.gui.widget;
 
+import io.github.cottonmc.cotton.gui.client.LibGui;
 import lombok.Getter;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.narration.NarratedElementType;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
-import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
-import net.minecraft.client.gui.screen.narration.NarrationPart;
-import net.minecraft.client.sound.PositionedSoundInstance;
+import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
 
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
-import io.github.cottonmc.cotton.gui.LibGuiCommon;
 import io.github.cottonmc.cotton.gui.client.NarrationMessages;
 import io.github.cottonmc.cotton.gui.widget.data.InputResult;
 import io.github.cottonmc.cotton.gui.widget.data.Texture;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.Nullable;
@@ -31,9 +23,9 @@ import java.util.function.Consumer;
 
 public class WToggleButton extends WWidget {
 	// Default on/off images
-	protected static final Texture DEFAULT_OFF_IMAGE = new Texture(new Identifier(LibGuiCommon.MOD_ID, "textures/widget/toggle_off.png"));
-	protected static final Texture DEFAULT_ON_IMAGE  = new Texture(new Identifier(LibGuiCommon.MOD_ID, "textures/widget/toggle_on.png"));
-	protected static final Texture DEFAULT_FOCUS_IMAGE = new Texture(new Identifier(LibGuiCommon.MOD_ID, "textures/widget/toggle_focus.png"));
+	protected static final Texture DEFAULT_OFF_IMAGE = new Texture(ResourceLocation.tryBuild(LibGui.MOD_ID, "textures/widget/toggle_off.png"));
+	protected static final Texture DEFAULT_ON_IMAGE  = new Texture(ResourceLocation.tryBuild(LibGui.MOD_ID, "textures/widget/toggle_on.png"));
+	protected static final Texture DEFAULT_FOCUS_IMAGE = new Texture(ResourceLocation.tryBuild(LibGui.MOD_ID, "textures/widget/toggle_focus.png"));
 
 	@Getter
     protected Texture onImage;
@@ -140,7 +132,7 @@ public class WToggleButton extends WWidget {
 	@OnlyIn(Dist.CLIENT)
 	@Override
 	public InputResult onClick(int x, int y, int button) {
-		Minecraft.getInstance().getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+		Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
 
 		this.isOn = !this.isOn;
 		onToggle(this.isOn);

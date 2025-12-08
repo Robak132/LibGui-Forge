@@ -3,8 +3,8 @@ package io.github.cottonmc.cotton.gui.widget;
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment;
 import io.github.cottonmc.cotton.gui.widget.data.Insets;
 import io.github.cottonmc.cotton.gui.widget.data.VerticalAlignment;
-import io.github.cottonmc.cotton.gui.widget.data.WidgetAxis;
 import lombok.Getter;
+import net.minecraft.core.Direction;
 
 import java.util.Objects;
 
@@ -13,30 +13,14 @@ import java.util.Objects;
  *
  * @since 2.0.0
  */
+@Getter
 public class WBox extends WPanelWithInsets {
 	/**
 	 * The spacing between widgets.
 	 */
-	@Getter
-    protected int spacing = 4;
-
-	/**
-	 * The axis that the widgets are laid out on.
-	 */
-	protected WidgetAxis axis;
-
-	/**
-	 * The horizontal alignment for this box's children.
-	 *
-	 * @since 2.1.0
-	 */
+	protected int spacing = 4;
+	protected Direction.Plane axis;
 	protected HorizontalAlignment horizontalAlignment = HorizontalAlignment.LEFT;
-
-	/**
-	 * The vertical alignment for this box's children.
-	 *
-	 * @since 2.1.0
-	 */
 	protected VerticalAlignment verticalAlignment = VerticalAlignment.TOP;
 
 	/**
@@ -45,7 +29,7 @@ public class WBox extends WPanelWithInsets {
 	 * @param axis the box axis
 	 * @throws NullPointerException if the axis is null
 	 */
-	public WBox(WidgetAxis axis) {
+	public WBox(Direction.Plane axis) {
 		this.axis = Objects.requireNonNull(axis, "axis");
 	}
 
@@ -77,10 +61,10 @@ public class WBox extends WPanelWithInsets {
 
 	@Override
 	public void layout() {
-		int dimension = axis.choose(insets.left(), insets.top());
+		int dimension = (axis == Direction.Plane.HORIZONTAL) ? insets.left() : insets.top();
 
 		// Set position offset from alignment along the box axis
-		if (axis == WidgetAxis.HORIZONTAL) {
+		if (axis == Direction.Plane.HORIZONTAL) {
 			if (horizontalAlignment != HorizontalAlignment.LEFT) {
 				int widgetWidth = spacing * (children.size() - 1);
 				for (WWidget child : children) {
@@ -109,7 +93,7 @@ public class WBox extends WPanelWithInsets {
 		for (int i = 0; i < children.size(); i++) {
 			WWidget child = children.get(i);
 
-			if (axis == WidgetAxis.HORIZONTAL) {
+			if (axis == Direction.Plane.HORIZONTAL) {
 				int y = switch (verticalAlignment) {
 					case TOP -> insets.top();
 					case CENTER -> insets.top() + (getHeight() - insets.top() - insets.bottom() - child.getHeight()) / 2;
@@ -127,14 +111,14 @@ public class WBox extends WPanelWithInsets {
 				child.setLocation(x, dimension);
 			}
 
-			if (child instanceof WPanel) ((WPanel) child).layout();
+			if (child instanceof WPanel panel) panel.layout();
 			expandToFit(child, insets);
 
 			if (i != children.size() - 1) {
 				dimension += spacing;
 			}
 
-			dimension += axis.choose(child.getWidth(), child.getHeight());
+			dimension += (axis == Direction.Plane.HORIZONTAL) ? child.getWidth() : child.getHeight();
 		}
 	}
 
@@ -150,38 +134,19 @@ public class WBox extends WPanelWithInsets {
 		return this;
 	}
 
-	/**
-	 * Gets the axis of this box.
-	 *
-	 * @return the axis
-	 */
-	public WidgetAxis getAxis() {
-		return axis;
-	}
-
-	/**
+    /**
 	 * Sets the axis of this box.
 	 *
 	 * @param axis the new axis
 	 * @return this box
 	 * @throws NullPointerException if the axis is null
 	 */
-	public WBox setAxis(WidgetAxis axis) {
+	public WBox setAxis(Direction.Plane axis) {
 		this.axis = Objects.requireNonNull(axis, "axis");
 		return this;
 	}
 
-	/**
-	 * Gets the horizontal alignment of this box.
-	 *
-	 * @return the alignment
-	 * @since 2.1.0
-	 */
-	public HorizontalAlignment getHorizontalAlignment() {
-		return horizontalAlignment;
-	}
-
-	/**
+    /**
 	 * Sets the horizontal alignment of this box.
 	 *
 	 * @param alignment the new alignment
@@ -194,17 +159,7 @@ public class WBox extends WPanelWithInsets {
 		return this;
 	}
 
-	/**
-	 * Gets the vertical alignment of this box.
-	 *
-	 * @return the alignment
-	 * @since 2.1.0
-	 */
-	public VerticalAlignment getVerticalAlignment() {
-		return verticalAlignment;
-	}
-
-	/**
+    /**
 	 * Sets the vertical alignment of this box.
 	 *
 	 * @param alignment the new alignment

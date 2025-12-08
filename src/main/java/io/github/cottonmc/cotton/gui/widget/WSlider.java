@@ -1,7 +1,9 @@
 package io.github.cottonmc.cotton.gui.widget;
 
 import io.github.cottonmc.cotton.gui.client.LibGui;
+import io.github.cottonmc.cotton.gui.widget.data.WidgetDirection;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 
 import io.github.cottonmc.cotton.gui.client.BackgroundPainter;
@@ -25,7 +27,7 @@ public class WSlider extends WAbstractSlider {
 	@Nullable
 	private BackgroundPainter backgroundPainter;
 
-	public WSlider(int min, int max, net.minecraft.core.Direction.Plane axis) {
+	public WSlider(int min, int max, Direction.Plane axis) {
 		super(min, max, axis);
 	}
 
@@ -37,8 +39,8 @@ public class WSlider extends WAbstractSlider {
 	@Override
 	protected boolean isMouseInsideBounds(int x, int y) {
 		// ao = axis-opposite mouse coordinate, aoCenter = center of ao's axis
-		int ao = axis == Axis.HORIZONTAL ? y : x;
-		int aoCenter = (axis == Axis.HORIZONTAL ? height : width) / 2;
+		int ao = axis == Direction.Plane.HORIZONTAL ? y : x;
+		int aoCenter = (axis == Direction.Plane.HORIZONTAL ? height : width) / 2;
 
 		// Check if cursor is inside or <=2px away from track
 		return ao >= aoCenter - TRACK_WIDTH / 2 - 2 && ao <= aoCenter + TRACK_WIDTH / 2 + 2;
@@ -59,10 +61,10 @@ public class WSlider extends WAbstractSlider {
 			int thumbXOffset;
 			ResourceLocation texture = shouldRenderInDarkMode() ? DARK_TEXTURE : LIGHT_TEXTURE;
 
-			if (axis == Axis.VERTICAL) {
+			if (axis == Direction.Plane.VERTICAL) {
 				int trackX = x + width / 2 - TRACK_WIDTH / 2;
 				thumbX = width / 2 - THUMB_SIZE / 2;
-				thumbY = widgetDirection == SliderDirection.UP
+				thumbY = widgetDirection == WidgetDirection.UP
 						? (height - THUMB_SIZE) + 1 - (int) (coordToValueRatio * (value - min))
 						: Math.round(coordToValueRatio * (value - min));
 				thumbXOffset = 0;
@@ -72,7 +74,7 @@ public class WSlider extends WAbstractSlider {
 				ScreenDrawing.texturedRect(context, trackX, y + height, TRACK_WIDTH, 1, texture, 16*px, 2*px, 22*px, 3*px, 0xFFFFFFFF);
 			} else {
 				int trackY = y + height / 2 - TRACK_WIDTH / 2;
-				thumbX = widgetDirection == SliderDirection.LEFT
+				thumbX = widgetDirection == WidgetDirection.LEFT
 						? (width - THUMB_SIZE) - (int) (coordToValueRatio * (value - min))
 						: Math.round(coordToValueRatio * (value - min));
 				thumbY = height / 2 - THUMB_SIZE / 2;

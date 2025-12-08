@@ -11,8 +11,6 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Optional;
-
 /**
  * A GUI description represents a GUI without depending on screens.
  *
@@ -145,18 +143,7 @@ public interface GuiDescription {
 	 */
 	void setTitlePos(Vec2i titlePos);
 
-	/**
-	 * Checks whether dark mode is used for this GUI description.
-	 *
-	 * @return <ul>
-	 *     <li>{@link TriState#TRUE} to force dark mode
-	 *     <li>{@link TriState#FALSE} to force light mode
-	 *     <li>{@link TriState#DEFAULT} to use the {@linkplain io.github.cottonmc.cotton.gui.client.LibGui#isDarkMode()
-	 *     global dark mode setting}
-	 * </ul>
-	 * @since 7.1.0
-	 */
-	default Optional<Boolean> isDarkMode() {
-		return Optional.empty();
+	default Boolean isDarkMode() {
+		return null;
 	}
 }

@@ -11,5 +11,5 @@ import java.util.List;
 @Mixin(Screen.class)
 public interface ScreenAccessor {
 	@Accessor("children")
-	List<GuiEventListener> libgui$getChildren(); //NOSONAR
+	List<GuiEventListener> libgui_forge$getChildren(); //NOSONAR
 }

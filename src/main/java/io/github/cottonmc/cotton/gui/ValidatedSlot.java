@@ -3,11 +3,13 @@ package io.github.cottonmc.cotton.gui;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import io.github.cottonmc.cotton.gui.widget.WItemSlot;
+import lombok.Getter;
+import lombok.Setter;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-import org.slf4j.Logger;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 import java.util.function.Predicate;
@@ -22,10 +24,25 @@ public class ValidatedSlot extends Slot {
     private static final VisualLogger LOGGER = new VisualLogger(ValidatedSlot.class);
     protected final Multimap<WItemSlot, WItemSlot.ChangeListener> listeners = HashMultimap.create();
     private final int slotNumber;
+
+    @Getter
+    @Setter
     private boolean insertingAllowed = true;
+
+    @Setter
+    @Getter
     private boolean takingAllowed = true;
+
+    @Setter
+    @Getter
     private Predicate<ItemStack> inputFilter = DEFAULT_ITEM_FILTER;
+
+    @Setter
+    @Getter
     private Predicate<ItemStack> outputFilter = DEFAULT_ITEM_FILTER;
+
+    @Setter
+    @Getter
     private boolean visible = true;
 
     public ValidatedSlot(Container inventory, int index, int x, int y) {
@@ -35,17 +52,17 @@ public class ValidatedSlot extends Slot {
     }
 
     @Override
-    public boolean canInsert(ItemStack stack) {
+    public boolean mayPlace(@NotNull ItemStack stack) {
         return insertingAllowed && container.canPlaceItem(slotNumber, stack) && inputFilter.test(stack);
     }
 
     @Override
-    public boolean canTakeItems(Player player) {
+    public boolean mayPickup(@NotNull Player player) {
         return takingAllowed && container.stillValid(player) && outputFilter.test(getItem());
     }
 
     @Override
-    public ItemStack getItem() {
+    public @NotNull ItemStack getItem() {
         if (container == null) {
             LOGGER.warn("Prevented null-inventory from WItemSlot with slot #: {}", slotNumber);
             return ItemStack.EMPTY;
@@ -76,110 +93,6 @@ public class ValidatedSlot extends Slot {
     }
 
     /**
-     * Returns whether items can be inserted into this slot.
-     *
-     * @return true if items can be inserted, false otherwise
-     * @since 1.10.0
-     */
-    public boolean isInsertingAllowed() {
-        return insertingAllowed;
-    }
-
-    /**
-     * Sets whether inserting items into this slot is allowed.
-     *
-     * @param insertingAllowed true if items can be inserted, false otherwise
-     * @since 1.10.0
-     */
-    public void setInsertingAllowed(boolean insertingAllowed) {
-        this.insertingAllowed = insertingAllowed;
-    }
-
-    /**
-     * Returns whether items can be taken from this slot.
-     *
-     * @return true if items can be taken, false otherwise
-     * @since 1.10.0
-     */
-    public boolean isTakingAllowed() {
-        return takingAllowed;
-    }
-
-    /**
-     * Sets whether taking items from this slot is allowed.
-     *
-     * @param takingAllowed true if items can be taken, false otherwise
-     * @since 1.10.0
-     */
-    public void setTakingAllowed(boolean takingAllowed) {
-        this.takingAllowed = takingAllowed;
-    }
-
-    /**
-     * Gets the item stack input filter of this slot.
-     *
-     * @return the item input filter
-     * @since 8.1.0
-     */
-    public Predicate<ItemStack> getInputFilter() {
-        return inputFilter;
-    }
-
-    /**
-     * Sets the item stack input filter of this slot.
-     *
-     * @param inputFilter the new item input filter
-     * @since 8.1.0
-     */
-    public void setInputFilter(Predicate<ItemStack> inputFilter) {
-        this.inputFilter = inputFilter;
-    }
-
-    /**
-     * Gets the item stack output filter of this slot.
-     *
-     * @return the item output filter
-     * @since 8.1.0
-     */
-    public Predicate<ItemStack> getOutputFilter() {
-        return outputFilter;
-    }
-
-    /**
-     * Sets the item stack output filter of this slot.
-     *
-     * @param outputFilter the new item output filter
-     * @since 8.1.0
-     */
-    public void setOutputFilter(Predicate<ItemStack> outputFilter) {
-        this.outputFilter = outputFilter;
-    }
-
-    /**
-     * Gets the item stack filter of this slot.
-     *
-     * @return the item filter
-     * @since 2.0.0
-     * @deprecated Replaced by {@link #getInputFilter()}
-     */
-    @Deprecated(forRemoval = true)
-    public Predicate<ItemStack> getFilter() {
-        return inputFilter;
-    }
-
-    /**
-     * Sets the item stack filter of this slot.
-     *
-     * @param filter the new item filter
-     * @since 2.0.0
-     * @deprecated Replaced by {@link #setInputFilter(Predicate)}
-     */
-    @Deprecated(forRemoval = true)
-    public void setFilter(Predicate<ItemStack> filter) {
-        setInputFilter(filter);
-    }
-
-    /**
      * Adds a change listener to this slot.
      * Does nothing if the listener is already registered.
      *
@@ -195,27 +108,8 @@ public class ValidatedSlot extends Slot {
     }
 
     @Override
-    public boolean isEnabled() {
+    public boolean isActive() {
         return isVisible();
     }
 
-    /**
-     * Tests whether this slot is visible.
-     *
-     * @return true if this slot is visible, false otherwise
-     * @since 3.0.0
-     */
-    public boolean isVisible() {
-        return visible;
-    }
-
-    /**
-     * Sets whether this slot is visible.
-     *
-     * @param visible true if this slot if visible, false otherwise
-     * @since 3.0.0
-     */
-    public void setVisible(boolean visible) {
-        this.visible = visible;
-    }
 }

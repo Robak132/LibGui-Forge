@@ -1,10 +1,10 @@
 package io.github.cottonmc.cotton.gui.widget;
 
-import io.github.cottonmc.cotton.gui.widget.data.WidgetAxis;
 import io.github.cottonmc.cotton.gui.widget.data.WidgetDirection;
 import lombok.Getter;
 import net.minecraft.client.gui.narration.NarratedElementType;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 
@@ -42,20 +42,11 @@ public abstract class WAbstractSlider extends WWidget {
 	protected int min;
     protected int max;
 	@Getter
-    protected final WidgetAxis axis;
+    protected final Direction.Plane axis;
     @Getter
     protected WidgetDirection widgetDirection;
 	@Getter
     protected int value;
-
-	/**
-	 * True if the user is currently dragging the thumb.
-	 * Used for visuals.
-     * -- GETTER --
-     *  Tests whether the user is dragging this slider.
-     * @return true if this slider is being dragged, false otherwise
-     *
-     */
 	@Getter
     protected boolean dragging = false;
 
@@ -85,13 +76,13 @@ public abstract class WAbstractSlider extends WWidget {
 	@Nullable private IntConsumer valueChangeListener = null;
 	@Nullable private IntConsumer draggingFinishedListener = null;
 
-	protected WAbstractSlider(int min, int max, WidgetAxis axis) {
+	protected WAbstractSlider(int min, int max, Direction.Plane axis) {
 		if (max <= min) throw new IllegalArgumentException("Minimum value must be smaller than the maximum!");
 		this.min = min;
 		this.max = max;
 		this.axis = axis;
 		this.value = min;
-		this.widgetDirection = (axis == WidgetAxis.HORIZONTAL) ? WidgetDirection.RIGHT : WidgetDirection.UP;
+		this.widgetDirection = (axis == Direction.Plane.HORIZONTAL) ? WidgetDirection.RIGHT : WidgetDirection.UP;
 	}
 
 	/**
@@ -115,7 +106,7 @@ public abstract class WAbstractSlider extends WWidget {
 	 * @since 5.1.0
 	 */
 	protected void updateValueCoordRatios() {
-		int trackHeight = (axis == WidgetAxis.HORIZONTAL ? getWidth() : getHeight()) - getThumbWidth();
+		int trackHeight = (axis == Direction.Plane.HORIZONTAL ? getWidth() : getHeight()) - getThumbWidth();
 		valueToCoordRatio = (float) (max - min) / trackHeight;
 		coordToValueRatio = 1 / valueToCoordRatio;
 	}

@@ -1,11 +1,13 @@
 package io.github.cottonmc.cotton.gui.widget;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import io.github.cottonmc.cotton.gui.widget.data.WidgetDirection;
 import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.narration.NarratedElementType;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import com.mojang.math.Axis;
@@ -40,7 +42,7 @@ public class WLabeledSlider extends WAbstractSlider {
 	 * @param max the maximum value
 	 */
 	public WLabeledSlider(int min, int max) {
-		this(min, max, Axis.HORIZONTAL);
+		this(min, max, Direction.Plane.HORIZONTAL);
 	}
 
 	/**
@@ -50,7 +52,7 @@ public class WLabeledSlider extends WAbstractSlider {
 	 * @param max the maximum value
 	 * @param axis the slider axis
 	 */
-	public WLabeledSlider(int min, int max, Axis axis) {
+	public WLabeledSlider(int min, int max, Direction.Plane axis) {
 		super(min, max, axis);
 	}
 
@@ -62,7 +64,7 @@ public class WLabeledSlider extends WAbstractSlider {
 	 * @param axis the slider axis
 	 * @param label the slider label (can be null)
 	 */
-	public WLabeledSlider(int min, int max, Axis axis, @Nullable Component label) {
+	public WLabeledSlider(int min, int max, Direction.Plane axis, @Nullable Component label) {
 		this(min, max, axis);
 		this.label = label;
 	}
@@ -81,7 +83,7 @@ public class WLabeledSlider extends WAbstractSlider {
 
 	@Override
 	public void setSize(int x, int y) {
-		if (axis == Axis.HORIZONTAL) {
+		if (axis == Direction.Plane.HORIZONTAL) {
 			super.setSize(x, 20);
 		} else {
 			super.setSize(20, y);
@@ -151,22 +153,22 @@ public class WLabeledSlider extends WAbstractSlider {
         int aHeight;
         int rotMouseX;
         int rotMouseY;
-        if (axis == Axis.HORIZONTAL) {
+        if (axis == Direction.Plane.HORIZONTAL) {
             aWidth = width;
             aHeight = height;
-            rotMouseX = widgetDirection == SliderDirection.LEFT ? width - mouseX : mouseX;
+            rotMouseX = widgetDirection == WidgetDirection.LEFT ? width - mouseX : mouseX;
             rotMouseY = mouseY;
         } else {
             aWidth = height;
             aHeight = width;
-            rotMouseX = widgetDirection == SliderDirection.UP ? height - mouseY : mouseY;
+            rotMouseX = widgetDirection == WidgetDirection.UP ? height - mouseY : mouseY;
             rotMouseY = mouseX;
         }
 
         PoseStack matrices = context.pose();
 		matrices.pushPose();
 		matrices.translate(x, y, 0);
-		if (axis == Axis.VERTICAL) {
+		if (axis == Direction.Plane.VERTICAL) {
 			matrices.translate(0, height, 0);
 			matrices.mulPose(Axis.ZP.rotationDegrees(270));
 		}
@@ -235,6 +237,6 @@ public class WLabeledSlider extends WAbstractSlider {
 		 * @param value the slider value
 		 * @return the label
 		 */
-		Text updateLabel(int value);
+		Component updateLabel(int value);
 	}
 }

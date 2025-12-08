@@ -1,21 +1,22 @@
 package io.github.cottonmc.cotton.gui.widget;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.util.Identifier;
-
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
 import io.github.cottonmc.cotton.gui.widget.data.Texture;
+import lombok.Getter;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 /**
  * A sprite whose texture will be tiled.
  *
  * @since 2.0.0
  */
+@Getter
 public class WTiledSprite extends WSprite {
-	private int tileWidth;
-	private int tileHeight;
+    private int tileWidth;
+    private int tileHeight;
 
 	/**
 	 * Create a tiled sprite.
@@ -24,7 +25,7 @@ public class WTiledSprite extends WSprite {
 	 * @param tileHeight The height of a tile
 	 * @param image      The image to tile
 	 */
-	public WTiledSprite(int tileWidth, int tileHeight, Identifier image) {
+	public WTiledSprite(int tileWidth, int tileHeight, ResourceLocation image) {
 		super(image);
 		this.tileWidth = tileWidth;
 		this.tileHeight = tileHeight;
@@ -38,7 +39,7 @@ public class WTiledSprite extends WSprite {
 	 * @param frameTime  How long in milliseconds to display for. (1 tick = 50 ms)
 	 * @param frames     The locations of the frames of the animation.
 	 */
-	public WTiledSprite(int tileWidth, int tileHeight, int frameTime, Identifier... frames) {
+	public WTiledSprite(int tileWidth, int tileHeight, int frameTime, ResourceLocation... frames) {
 		super(frameTime, frames);
 		this.tileWidth = tileWidth;
 		this.tileHeight = tileHeight;
@@ -84,27 +85,7 @@ public class WTiledSprite extends WSprite {
 		tileHeight = height;
 	}
 
-	/**
-	 * Gets the tile width of this sprite.
-	 *
-	 * @return the tile width
-	 * @since 2.2.0
-	 */
-	public int getTileWidth() {
-		return tileWidth;
-	}
-
-	/**
-	 * Gets the tile height of this sprite.
-	 *
-	 * @return the tile height
-	 * @since 2.2.0
-	 */
-	public int getTileHeight() {
-		return tileHeight;
-	}
-
-	/**
+    /**
 	 * Sets the tile width of this sprite.
 	 *
 	 * @param tileWidth the new tile width
@@ -130,7 +111,7 @@ public class WTiledSprite extends WSprite {
 
 	@OnlyIn(Dist.CLIENT)
 	@Override
-	public void paintFrame(DrawContext context, int x, int y, Texture texture) {
+	public void paintFrame(GuiGraphics context, int x, int y, Texture texture) {
 		// Y Direction (down)
 		for (int tileYOffset = 0; tileYOffset < height; tileYOffset += tileHeight) {
 			// X Direction (right)

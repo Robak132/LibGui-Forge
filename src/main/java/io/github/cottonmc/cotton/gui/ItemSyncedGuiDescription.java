@@ -6,6 +6,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
@@ -17,7 +18,7 @@ import java.util.Objects;
  * an item in an entity's inventory or a block's container, or any other reference
  * to an item stack.
  *
- * <p>If the owning item stack changes in any way, the screen closes by default (see {@link #canUse(Player)}).
+ * <p>If the owning item stack changes in any way, the screen closes by default (see {@link #stillValid(Player)}).
  *
  * @since 7.0.0
  */
@@ -58,7 +59,7 @@ public class ItemSyncedGuiDescription extends SyncedGuiDescription {
 	 * to any NBT changes in the owning item stack.
 	 */
 	@Override
-	public boolean canUse(Player entity) {
+	public boolean stillValid(@NotNull Player entity) {
 		return ItemStack.matches(ownerStack, owner.get());
 	}
 }

@@ -1,6 +1,7 @@
 package io.github.cottonmc.cotton.gui.widget.data;
 
 import lombok.Getter;
+import net.minecraft.core.Direction;
 
 /**
  * The direction enum represents all four directions a slider can face.
@@ -14,16 +15,16 @@ import lombok.Getter;
  */
 @Getter
 public enum WidgetDirection {
-    UP(WidgetAxis.VERTICAL, false),
-    DOWN(WidgetAxis.VERTICAL, true),
-    LEFT(WidgetAxis.HORIZONTAL, true),
-    RIGHT(WidgetAxis.HORIZONTAL, false);
+    UP(Direction.Plane.VERTICAL, false),
+    DOWN(Direction.Plane.VERTICAL, true),
+    LEFT(Direction.Plane.HORIZONTAL, true),
+    RIGHT(Direction.Plane.HORIZONTAL, false);
 
     /**
      * -- GETTER --
      *  Gets the direction's axis.
      */
-    private final WidgetAxis axis;
+    private final Direction.Plane axis;
     /**
      * -- GETTER --
      *  Returns whether this slider is inverted.
@@ -31,7 +32,7 @@ public enum WidgetDirection {
      */
     private final boolean inverted;
 
-    WidgetDirection(WidgetAxis axis, boolean inverted) {
+    WidgetDirection(Direction.Plane axis, boolean inverted) {
         this.axis = axis;
         this.inverted = inverted;
     }
