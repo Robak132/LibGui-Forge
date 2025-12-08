@@ -1,24 +1,26 @@
 package io.github.cottonmc.cotton.gui.client;
 
-import net.minecraft.client.renderer.ShaderInstance;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.ConfigScreenHandler;
-import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
-import org.jetbrains.annotations.Nullable;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
-@Mod(LibGui.MOD_ID)
-public class LibGui {
-    private static @Nullable ShaderInstance tiledRectangle;
+import static io.github.cottonmc.cotton.gui.client.LibGuiClient.MOD_ID;
+
+@Mod(value = MOD_ID)
+@Mod.EventBusSubscriber(modid = MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
+public class LibGuiClient {
     public static final String MOD_ID = "libgui_forge";
 
-    public LibGui() {
+    @SubscribeEvent
+    public static void onClientSetup(FMLClientSetupEvent event) {
         if (isClothConfigLoaded()) {
             ModLoadingContext.get().registerExtensionPoint(ConfigScreenHandler.ConfigScreenFactory.class,
                     () -> new ConfigScreenHandler.ConfigScreenFactory((client, parent) -> ClothConfigIntegration.getConfigScreen(parent)));
         }
-        MinecraftForge.EVENT_BUS.register(this);
     }
 
     private static boolean isClothConfigLoaded() {

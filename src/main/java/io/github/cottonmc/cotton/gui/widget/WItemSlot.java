@@ -4,7 +4,7 @@ import io.github.cottonmc.cotton.gui.GuiDescription;
 import io.github.cottonmc.cotton.gui.ValidatedSlot;
 import io.github.cottonmc.cotton.gui.client.BackgroundPainter;
 import io.github.cottonmc.cotton.gui.VisualLogger;
-import io.github.cottonmc.cotton.gui.client.LibGui;
+import io.github.cottonmc.cotton.gui.client.LibGuiClient;
 import io.github.cottonmc.cotton.gui.client.NarrationMessages;
 import io.github.cottonmc.cotton.gui.widget.data.InputResult;
 import io.github.cottonmc.cotton.gui.widget.data.Rect2i;
@@ -81,7 +81,7 @@ public class WItemSlot extends WWidget {
 	 *
 	 * @since 6.2.0
 	 */
-	public static final ResourceLocation SLOT_TEXTURE = ResourceLocation.tryBuild(LibGui.MOD_ID, "textures/widget/item_slot.png");
+	public static final ResourceLocation SLOT_TEXTURE = ResourceLocation.tryBuild(LibGuiClient.MOD_ID, "textures/widget/item_slot.png");
 	private static final VisualLogger LOGGER = new VisualLogger(WItemSlot.class);
 	private final List<ValidatedSlot> peers = new ArrayList<>();
 	@Nullable

@@ -1,6 +1,6 @@
 package io.github.cottonmc.cotton.gui.widget;
 
-import io.github.cottonmc.cotton.gui.client.LibGui;
+import io.github.cottonmc.cotton.gui.client.LibGuiClient;
 import io.github.cottonmc.cotton.gui.client.NarrationMessages;
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment;
@@ -21,7 +21,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.Nullable;
 
 public class WButton extends WWidget {
-    private static final ResourceLocation DARK_WIDGETS_LOCATION = ResourceLocation.tryBuild(LibGui.MOD_ID, "textures/widget/dark_widgets.png");
+    private static final ResourceLocation DARK_WIDGETS_LOCATION = ResourceLocation.tryBuild(LibGuiClient.MOD_ID, "textures/widget/dark_widgets.png");
     private static final int BUTTON_HEIGHT = 20;
     private static final int ICON_SPACING = 2;
     protected int color = WLabel.DEFAULT_TEXT_COLOR;

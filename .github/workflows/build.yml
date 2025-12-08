@@ -46,9 +46,10 @@ jobs:
           mkdir -p run
           echo "eula=true" > run/eula.txt
 
-      - name: Run Gametests (Linux)
+      - name: Run Test Server
         if: ${{ !inputs.is-release && runner.os != 'Windows' }}
-        run: ./gradlew runGameTestServer
+        run: ./gradlew runServer --stacktrace
+        timeout-minutes: 2
 
       - name: Publish
         if: ${{ inputs.is-release }}

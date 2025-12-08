@@ -1,6 +1,6 @@
 package io.github.cottonmc.cotton.gui.widget;
 
-import io.github.cottonmc.cotton.gui.client.LibGui;
+import io.github.cottonmc.cotton.gui.client.LibGuiClient;
 import io.github.cottonmc.cotton.gui.widget.data.WidgetDirection;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.Direction;
@@ -20,8 +20,8 @@ import org.jetbrains.annotations.Nullable;
 public class WSlider extends WAbstractSlider {
 	public static final int TRACK_WIDTH = 6;
 	public static final int THUMB_SIZE = 8;
-	public static final ResourceLocation LIGHT_TEXTURE = ResourceLocation.tryBuild(LibGui.MOD_ID, "textures/widget/slider_light.png");
-	public static final ResourceLocation DARK_TEXTURE = ResourceLocation.tryBuild(LibGui.MOD_ID, "textures/widget/slider_dark.png");
+	public static final ResourceLocation LIGHT_TEXTURE = ResourceLocation.tryBuild(LibGuiClient.MOD_ID, "textures/widget/slider_light.png");
+	public static final ResourceLocation DARK_TEXTURE = ResourceLocation.tryBuild(LibGuiClient.MOD_ID, "textures/widget/slider_dark.png");
 
 	@OnlyIn(Dist.CLIENT)
 	@Nullable

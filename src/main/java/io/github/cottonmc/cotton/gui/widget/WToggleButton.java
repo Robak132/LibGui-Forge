@@ -1,6 +1,6 @@
 package io.github.cottonmc.cotton.gui.widget;
 
-import io.github.cottonmc.cotton.gui.client.LibGui;
+import io.github.cottonmc.cotton.gui.client.LibGuiClient;
 import lombok.Getter;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -23,9 +23,9 @@ import java.util.function.Consumer;
 
 public class WToggleButton extends WWidget {
 	// Default on/off images
-	protected static final Texture DEFAULT_OFF_IMAGE = new Texture(ResourceLocation.tryBuild(LibGui.MOD_ID, "textures/widget/toggle_off.png"));
-	protected static final Texture DEFAULT_ON_IMAGE  = new Texture(ResourceLocation.tryBuild(LibGui.MOD_ID, "textures/widget/toggle_on.png"));
-	protected static final Texture DEFAULT_FOCUS_IMAGE = new Texture(ResourceLocation.tryBuild(LibGui.MOD_ID, "textures/widget/toggle_focus.png"));
+	protected static final Texture DEFAULT_OFF_IMAGE = new Texture(ResourceLocation.tryBuild(LibGuiClient.MOD_ID, "textures/widget/toggle_off.png"));
+	protected static final Texture DEFAULT_ON_IMAGE  = new Texture(ResourceLocation.tryBuild(LibGuiClient.MOD_ID, "textures/widget/toggle_on.png"));
+	protected static final Texture DEFAULT_FOCUS_IMAGE = new Texture(ResourceLocation.tryBuild(LibGuiClient.MOD_ID, "textures/widget/toggle_focus.png"));
 
 	@Getter
     protected Texture onImage;

@@ -1,12 +1,11 @@
 package io.github.cottonmc.cotton.gui.widget;
 
 import io.github.cottonmc.cotton.gui.client.BackgroundPainter;
-import io.github.cottonmc.cotton.gui.client.LibGui;
+import io.github.cottonmc.cotton.gui.client.LibGuiClient;
 import io.github.cottonmc.cotton.gui.client.NarrationMessages;
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment;
 import io.github.cottonmc.cotton.gui.widget.data.InputResult;
-import io.github.cottonmc.cotton.gui.widget.data.WidgetAxis;
 import io.github.cottonmc.cotton.gui.widget.icon.Icon;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -317,10 +316,10 @@ public class WTabPanel extends WPanel {
      */
     @OnlyIn(Dist.CLIENT)
     static final class Painters {
-        static final BackgroundPainter SELECTED_TAB = BackgroundPainter.createLightDarkVariants(BackgroundPainter.createNinePatch(ResourceLocation.tryBuild(LibGui.MOD_ID, "textures/widget/tab/selected_light.png")).setTopPadding(2), BackgroundPainter.createNinePatch(ResourceLocation.tryBuild(LibGui.MOD_ID, "textures/widget/tab/selected_dark.png")).setTopPadding(2));
-        static final BackgroundPainter UNSELECTED_TAB = BackgroundPainter.createLightDarkVariants(BackgroundPainter.createNinePatch(ResourceLocation.tryBuild(LibGui.MOD_ID, "textures/widget/tab/unselected_light.png")), BackgroundPainter.createNinePatch(ResourceLocation.tryBuild(LibGui.MOD_ID, "textures/widget/tab/unselected_dark.png")));
-        static final BackgroundPainter SELECTED_TAB_FOCUS_BORDER = BackgroundPainter.createNinePatch(ResourceLocation.tryBuild(LibGui.MOD_ID, "textures/widget/tab/focus.png")).setTopPadding(2);
-        static final BackgroundPainter UNSELECTED_TAB_FOCUS_BORDER = BackgroundPainter.createNinePatch(ResourceLocation.tryBuild(LibGui.MOD_ID, "textures/widget/tab/focus.png"));
+        static final BackgroundPainter SELECTED_TAB = BackgroundPainter.createLightDarkVariants(BackgroundPainter.createNinePatch(ResourceLocation.tryBuild(LibGuiClient.MOD_ID, "textures/widget/tab/selected_light.png")).setTopPadding(2), BackgroundPainter.createNinePatch(ResourceLocation.tryBuild(LibGuiClient.MOD_ID, "textures/widget/tab/selected_dark.png")).setTopPadding(2));
+        static final BackgroundPainter UNSELECTED_TAB = BackgroundPainter.createLightDarkVariants(BackgroundPainter.createNinePatch(ResourceLocation.tryBuild(LibGuiClient.MOD_ID, "textures/widget/tab/unselected_light.png")), BackgroundPainter.createNinePatch(ResourceLocation.tryBuild(LibGuiClient.MOD_ID, "textures/widget/tab/unselected_dark.png")));
+        static final BackgroundPainter SELECTED_TAB_FOCUS_BORDER = BackgroundPainter.createNinePatch(ResourceLocation.tryBuild(LibGuiClient.MOD_ID, "textures/widget/tab/focus.png")).setTopPadding(2);
+        static final BackgroundPainter UNSELECTED_TAB_FOCUS_BORDER = BackgroundPainter.createNinePatch(ResourceLocation.tryBuild(LibGuiClient.MOD_ID, "textures/widget/tab/focus.png"));
     }
 
     private final class WTab extends WWidget {

@@ -2,7 +2,7 @@ package io.github.cottonmc.cotton.gui.widget;
 
 
 import io.github.cottonmc.cotton.gui.client.BackgroundPainter;
-import io.github.cottonmc.cotton.gui.client.LibGui;
+import io.github.cottonmc.cotton.gui.client.LibGuiClient;
 import io.github.cottonmc.cotton.gui.client.NarrationMessages;
 import io.github.cottonmc.cotton.gui.client.NinePatchTextureRendererImpl;
 import io.github.cottonmc.cotton.gui.widget.data.InputResult;
@@ -244,13 +244,13 @@ public class WScrollBar extends WWidget {
 
     @OnlyIn(Dist.CLIENT)
     static final class Painters {
-        static final NinePatch<ResourceLocation> SCROLL_BAR = NinePatch.builder(ResourceLocation.tryBuild(LibGui.MOD_ID, "textures/widget/scroll_bar/scroll_bar_light.png")).cornerSize(4).cornerUv(0.25f).build();
-        static final NinePatch<ResourceLocation> SCROLL_BAR_DARK = NinePatch.builder(ResourceLocation.tryBuild(LibGui.MOD_ID, "textures/widget/scroll_bar/scroll_bar_dark.png")).cornerSize(4).cornerUv(0.25f).build();
-        static final NinePatch<ResourceLocation> SCROLL_BAR_PRESSED = NinePatch.builder(ResourceLocation.tryBuild(LibGui.MOD_ID, "textures/widget/scroll_bar/scroll_bar_pressed_light.png")).cornerSize(4).cornerUv(0.25f).build();
-        static final NinePatch<ResourceLocation> SCROLL_BAR_PRESSED_DARK = NinePatch.builder(ResourceLocation.tryBuild(LibGui.MOD_ID, "textures/widget/scroll_bar/scroll_bar_pressed_dark.png")).cornerSize(4).cornerUv(0.25f).build();
-        static final NinePatch<ResourceLocation> SCROLL_BAR_HOVERED = NinePatch.builder(ResourceLocation.tryBuild(LibGui.MOD_ID, "textures/widget/scroll_bar/scroll_bar_hovered_light.png")).cornerSize(4).cornerUv(0.25f).build();
-        static final NinePatch<ResourceLocation> SCROLL_BAR_HOVERED_DARK = NinePatch.builder(ResourceLocation.tryBuild(LibGui.MOD_ID, "textures/widget/scroll_bar/scroll_bar_hovered_dark.png")).cornerSize(4).cornerUv(0.25f).build();
-        static final BackgroundPainter BACKGROUND = BackgroundPainter.createLightDarkVariants(createNinePatch(ResourceLocation.tryBuild(LibGui.MOD_ID, "textures/widget/scroll_bar/background_light.png")), createNinePatch(ResourceLocation.tryBuild(LibGui.MOD_ID, "textures/widget/scroll_bar/background_dark.png")));
-        static final NinePatch<ResourceLocation> FOCUS = NinePatch.builder(ResourceLocation.tryBuild(LibGui.MOD_ID, "textures/widget/scroll_bar/focus.png")).cornerSize(4).cornerUv(0.25f).build();
+        static final NinePatch<ResourceLocation> SCROLL_BAR = NinePatch.builder(ResourceLocation.tryBuild(LibGuiClient.MOD_ID, "textures/widget/scroll_bar/scroll_bar_light.png")).cornerSize(4).cornerUv(0.25f).build();
+        static final NinePatch<ResourceLocation> SCROLL_BAR_DARK = NinePatch.builder(ResourceLocation.tryBuild(LibGuiClient.MOD_ID, "textures/widget/scroll_bar/scroll_bar_dark.png")).cornerSize(4).cornerUv(0.25f).build();
+        static final NinePatch<ResourceLocation> SCROLL_BAR_PRESSED = NinePatch.builder(ResourceLocation.tryBuild(LibGuiClient.MOD_ID, "textures/widget/scroll_bar/scroll_bar_pressed_light.png")).cornerSize(4).cornerUv(0.25f).build();
+        static final NinePatch<ResourceLocation> SCROLL_BAR_PRESSED_DARK = NinePatch.builder(ResourceLocation.tryBuild(LibGuiClient.MOD_ID, "textures/widget/scroll_bar/scroll_bar_pressed_dark.png")).cornerSize(4).cornerUv(0.25f).build();
+        static final NinePatch<ResourceLocation> SCROLL_BAR_HOVERED = NinePatch.builder(ResourceLocation.tryBuild(LibGuiClient.MOD_ID, "textures/widget/scroll_bar/scroll_bar_hovered_light.png")).cornerSize(4).cornerUv(0.25f).build();
+        static final NinePatch<ResourceLocation> SCROLL_BAR_HOVERED_DARK = NinePatch.builder(ResourceLocation.tryBuild(LibGuiClient.MOD_ID, "textures/widget/scroll_bar/scroll_bar_hovered_dark.png")).cornerSize(4).cornerUv(0.25f).build();
+        static final BackgroundPainter BACKGROUND = BackgroundPainter.createLightDarkVariants(createNinePatch(ResourceLocation.tryBuild(LibGuiClient.MOD_ID, "textures/widget/scroll_bar/background_light.png")), createNinePatch(ResourceLocation.tryBuild(LibGuiClient.MOD_ID, "textures/widget/scroll_bar/background_dark.png")));
+        static final NinePatch<ResourceLocation> FOCUS = NinePatch.builder(ResourceLocation.tryBuild(LibGuiClient.MOD_ID, "textures/widget/scroll_bar/focus.png")).cornerSize(4).cornerUv(0.25f).build();
     }
 }

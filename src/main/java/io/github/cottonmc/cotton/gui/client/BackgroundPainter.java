@@ -41,8 +41,8 @@ public interface BackgroundPainter {
 	 * @since 1.5.0
 	 */
 	BackgroundPainter VANILLA = createLightDarkVariants(
-			createNinePatch(ResourceLocation.tryBuild(LibGui.MOD_ID, "textures/widget/panel_light.png")),
-			createNinePatch(ResourceLocation.tryBuild(LibGui.MOD_ID, "textures/widget/panel_dark.png"))
+			createNinePatch(ResourceLocation.tryBuild(LibGuiClient.MOD_ID, "textures/widget/panel_light.png")),
+			createNinePatch(ResourceLocation.tryBuild(LibGuiClient.MOD_ID, "textures/widget/panel_dark.png"))
 	);
 
 	/**
