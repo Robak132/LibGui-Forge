@@ -127,3 +127,21 @@ tasks.named('jar', Jar).configure {
 tasks.register('cleanJar') {
 	delete 'build/libs'
 }
+
+tasks.named('jarJar') {
+    // ...
+}
+
+
+publishing {
+    repositories {
+        maven {
+            name = "OSSRH"
+            url = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+            credentials {
+                username = System.getenv("MAVEN_USERNAME")
+                password = System.getenv("MAVEN_PASSWORD")
+            }
+        }
+    }
+}

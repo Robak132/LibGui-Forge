@@ -2,7 +2,6 @@ package io.github.robak132.libgui_forgified.widget.icon;
 
 
 import net.minecraft.client.gui.GuiGraphics;
-
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -14,14 +13,15 @@ import net.minecraftforge.api.distmarker.OnlyIn;
  * @since 2.2.0
  */
 public interface Icon {
-	/**
-	 * Paints this icon.
-	 *
-	 * @param context the draw context
-	 * @param x       the X coordinate
-	 * @param y       the Y coordinate
-	 * @param size    the size of this icon in pixels (size N means a N*N square)
-	 */
-	@OnlyIn(Dist.CLIENT)
-	void paint(GuiGraphics context, int x, int y, int size);
+
+    /**
+     * Paints this icon.
+     *
+     * @param context the draw context
+     * @param x       the X coordinate
+     * @param y       the Y coordinate
+     * @param size    the size of this icon in pixels (size N means a N*N square)
+     */
+    @OnlyIn(Dist.CLIENT)
+    void paint(GuiGraphics context, int x, int y, int size);
 }

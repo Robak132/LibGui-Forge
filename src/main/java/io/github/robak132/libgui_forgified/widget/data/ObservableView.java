@@ -1,9 +1,8 @@
 package io.github.robak132.libgui_forgified.widget.data;
 
-import org.jetbrains.annotations.Nullable;
-
 import java.util.Optional;
 import java.util.function.Supplier;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * A read-only {@linkplain ObservableProperty observable property}.
@@ -12,61 +11,64 @@ import java.util.function.Supplier;
  * @since 4.2.0
  */
 public interface ObservableView<T> extends Supplier<T> {
-	/**
-	 * {@return whether this property has been set to a value}
-	 */
-	boolean hasValue();
 
-	/**
-	 * {@return the value of this property}
-	 * @throws IllegalStateException if not initialized
-	 * @see #hasValue()
-	 */
-	@Override
-	T get();
+    /**
+     * {@return whether this property has been set to a value}
+     */
+    boolean hasValue();
 
-	/**
-	 * {@return the value of this property, or null if not initialized}
-	 */
-	default @Nullable T getOrNull() {
-		return hasValue() ? get() : null;
-	}
+    /**
+     * {@return the value of this property}
+     *
+     * @throws IllegalStateException if not initialized
+     * @see #hasValue()
+     */
+    @Override
+    T get();
 
-	/**
-	 * {@return the nonnull value of this property, or {@link Optional#empty()} if null or not initialized}
-	 */
-	default Optional<T> find() {
-		return Optional.ofNullable(getOrNull());
-	}
+    /**
+     * {@return the value of this property, or null if not initialized}
+     */
+    default @Nullable T getOrNull() {
+        return hasValue() ? get() : null;
+    }
 
-	/**
-	 * Adds a change listener to this property view.
-	 *
-	 * @param listener the added listener
-	 */
-	void addListener(ChangeListener<? super T> listener);
+    /**
+     * {@return the nonnull value of this property, or {@link Optional#empty()} if null or not initialized}
+     */
+    default Optional<T> find() {
+        return Optional.ofNullable(getOrNull());
+    }
 
-	/**
-	 * Removes a change listener from this property view if present.
-	 *
-	 * @param listener the removed listener
-	 */
-	void removeListener(ChangeListener<? super T> listener);
+    /**
+     * Adds a change listener to this property view.
+     *
+     * @param listener the added listener
+     */
+    void addListener(ChangeListener<? super T> listener);
 
-	/**
-	 * A listener for changes in observable views and properties.
-	 *
-	 * @param <T> the value type listened to
-	 */
-	@FunctionalInterface
-	interface ChangeListener<T> {
-		/**
-		 * Handles a change in an observable property.
-		 *
-		 * @param property the changed property or view
-		 * @param from     the previous value, or null if not set before
-		 * @param to       the new value, or null if cleared
-		 */
-		void onPropertyChange(ObservableView<? extends T> property, @Nullable T from, @Nullable T to);
-	}
+    /**
+     * Removes a change listener from this property view if present.
+     *
+     * @param listener the removed listener
+     */
+    void removeListener(ChangeListener<? super T> listener);
+
+    /**
+     * A listener for changes in observable views and properties.
+     *
+     * @param <T> the value type listened to
+     */
+    @FunctionalInterface
+    interface ChangeListener<T> {
+
+        /**
+         * Handles a change in an observable property.
+         *
+         * @param property the changed property or view
+         * @param from     the previous value, or null if not set before
+         * @param to       the new value, or null if cleared
+         */
+        void onPropertyChange(ObservableView<? extends T> property, @Nullable T from, @Nullable T to);
+    }
 }

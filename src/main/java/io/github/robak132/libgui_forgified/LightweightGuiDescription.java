@@ -16,6 +16,7 @@ import org.jetbrains.annotations.Nullable;
  * A GuiDescription without any associated Minecraft classes
  */
 public class LightweightGuiDescription implements GuiDescription {
+
     protected WPanel rootPanel = new WGridPanel().setInsets(Insets.ROOT_PANEL);
     protected ContainerData propertyDelegate;
     protected WWidget focus;
@@ -34,7 +35,9 @@ public class LightweightGuiDescription implements GuiDescription {
 
     @Override
     public int getTitleColor() {
-        if (isDarkMode() == null) return LibGuiConfig.isDarkMode() ? darkmodeTitleColor : titleColor;
+        if (isDarkMode() == null) {
+            return LibGuiConfig.isDarkMode() ? darkmodeTitleColor : titleColor;
+        }
         return isDarkMode() ? darkmodeTitleColor : titleColor;
     }
 
@@ -95,9 +98,15 @@ public class LightweightGuiDescription implements GuiDescription {
     @Override
     public void requestFocus(WWidget widget) {
         //TODO: Are there circumstances where focus can't be stolen?
-        if (focus == widget) return; //Nothing happens if we're already focused
-        if (!widget.canFocus()) return; //This is kind of a gotcha but needs to happen
-        if (focus != null) focus.onFocusLost();
+        if (focus == widget) {
+            return; //Nothing happens if we're already focused
+        }
+        if (!widget.canFocus()) {
+            return; //This is kind of a gotcha but needs to happen
+        }
+        if (focus != null) {
+            focus.onFocusLost();
+        }
         focus = widget;
         focus.onFocusGained();
     }

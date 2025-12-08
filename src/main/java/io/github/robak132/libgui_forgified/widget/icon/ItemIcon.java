@@ -1,13 +1,12 @@
 package io.github.robak132.libgui_forgified.widget.icon;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import java.util.Objects;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-
-import java.util.Objects;
 
 /**
  * An icon that draws an item stack.
@@ -15,38 +14,39 @@ import java.util.Objects;
  * @since 2.2.0
  */
 public class ItemIcon implements Icon {
-	private final ItemStack stack;
 
-	/**
-	 * Constructs an item icon.
-	 *
-	 * @param stack the drawn item stack
-	 * @throws NullPointerException if the stack is null
-	 */
-	public ItemIcon(ItemStack stack) {
-		this.stack = Objects.requireNonNull(stack, "stack");
-	}
+    private final ItemStack stack;
 
-	/**
-	 * Constructs an item icon with the item's default stack.
-	 *
-	 * @param item the drawn item
-	 * @throws NullPointerException if the item is null
-	 * @since 3.2.0
-	 */
-	public ItemIcon(Item item) {
-		this(Objects.requireNonNull(item, "item").getDefaultInstance());
-	}
+    /**
+     * Constructs an item icon.
+     *
+     * @param stack the drawn item stack
+     * @throws NullPointerException if the stack is null
+     */
+    public ItemIcon(ItemStack stack) {
+        this.stack = Objects.requireNonNull(stack, "stack");
+    }
 
-	@OnlyIn(Dist.CLIENT)
-	@Override
-	public void paint(GuiGraphics context, int x, int y, int size) {
-		float scale = size != 16 ? (size / 16f) : 1f;
-		PoseStack matrices = context.pose();
-		matrices.pushPose();
-		matrices.translate(x, y, 0);
-		matrices.scale(scale, scale, 1);
-		context.renderFakeItem(stack, 0, 0);
-		matrices.popPose();
-	}
+    /**
+     * Constructs an item icon with the item's default stack.
+     *
+     * @param item the drawn item
+     * @throws NullPointerException if the item is null
+     * @since 3.2.0
+     */
+    public ItemIcon(Item item) {
+        this(Objects.requireNonNull(item, "item").getDefaultInstance());
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    @Override
+    public void paint(GuiGraphics context, int x, int y, int size) {
+        float scale = size != 16 ? (size / 16f) : 1f;
+        PoseStack matrices = context.pose();
+        matrices.pushPose();
+        matrices.translate(x, y, 0);
+        matrices.scale(scale, scale, 1);
+        context.renderFakeItem(stack, 0, 0);
+        matrices.popPose();
+    }
 }

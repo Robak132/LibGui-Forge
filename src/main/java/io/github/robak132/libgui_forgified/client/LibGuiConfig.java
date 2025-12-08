@@ -1,21 +1,22 @@
 package io.github.robak132.libgui_forgified.client;
 
 import com.google.gson.Gson;
-import lombok.Data;
-import lombok.Getter;
-
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
+import lombok.Data;
+import lombok.Getter;
 
 @Data
 public final class LibGuiConfig {
+
     @Getter
     private static LibGuiConfig instance;
 
     private boolean darkMode = false;
 
-    private LibGuiConfig () {}
+    private LibGuiConfig() {
+    }
 
     public static boolean isDarkMode() {
         return getInstance().darkMode;
@@ -25,16 +26,16 @@ public final class LibGuiConfig {
         getInstance().darkMode = darkMode;
     }
 
-    public static void save(){
+    public static void save() {
         Gson gson = new Gson();
         String blockColoursJson = gson.toJson(instance);
         writeJson(blockColoursJson, "./config/mcrgb_forge/", "config.json");
     }
 
-    public static void load(){
+    public static void load() {
         Gson gson = new Gson();
         instance = gson.fromJson(readJson("./config/mcrgb_forge/config.json"), LibGuiConfig.class);
-        if(instance == null){
+        if (instance == null) {
             instance = new LibGuiConfig();
             save();
         }

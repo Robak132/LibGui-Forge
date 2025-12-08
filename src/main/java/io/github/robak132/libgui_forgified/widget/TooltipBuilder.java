@@ -1,15 +1,13 @@
 package io.github.robak132.libgui_forgified.widget;
 
 
-import net.minecraft.network.chat.Component;
-import net.minecraft.util.FormattedCharSequence;
-
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import net.minecraft.network.chat.Component;
+import net.minecraft.util.FormattedCharSequence;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 /**
  * A builder for widget tooltips.
@@ -18,35 +16,36 @@ import java.util.List;
  */
 @OnlyIn(Dist.CLIENT)
 public final class TooltipBuilder {
-	final List<FormattedCharSequence> lines = new ArrayList<>();
 
-	int size() {
-		return lines.size();
-	}
+    final List<FormattedCharSequence> lines = new ArrayList<>();
 
-	/**
-	 * Adds the lines to this builder.
-	 *
-	 * @param lines the lines
-	 * @return this builder
-	 */
-	public TooltipBuilder add(Component... lines) {
-		for (Component line : lines) {
-			this.lines.add(line.getVisualOrderText());
-		}
+    int size() {
+        return lines.size();
+    }
 
-		return this;
-	}
+    /**
+     * Adds the lines to this builder.
+     *
+     * @param lines the lines
+     * @return this builder
+     */
+    public TooltipBuilder add(Component... lines) {
+        for (Component line : lines) {
+            this.lines.add(line.getVisualOrderText());
+        }
 
-	/**
-	 * Adds the lines to this builder.
-	 *
-	 * @param lines the lines
-	 * @return this builder
-	 */
-	public TooltipBuilder add(FormattedCharSequence... lines) {
-		Collections.addAll(this.lines, lines);
+        return this;
+    }
 
-		return this;
-	}
+    /**
+     * Adds the lines to this builder.
+     *
+     * @param lines the lines
+     * @return this builder
+     */
+    public TooltipBuilder add(FormattedCharSequence... lines) {
+        Collections.addAll(this.lines, lines);
+
+        return this;
+    }
 }

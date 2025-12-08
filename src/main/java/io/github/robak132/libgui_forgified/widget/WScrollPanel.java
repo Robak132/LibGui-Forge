@@ -14,6 +14,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
  * @since 2.0.0
  */
 public class WScrollPanel extends WClippedPanel {
+
     private static final int SCROLL_BAR_SIZE = 8;
     private final WWidget widget;
     /**
@@ -48,9 +49,8 @@ public class WScrollPanel extends WClippedPanel {
     /**
      * Returns whether this scroll panel has a horizontal scroll bar.
      *
-     * @return true if there is a horizontal scroll bar,
-     * default if a scroll bar should be added if needed,
-     * and false otherwise
+     * @return true if there is a horizontal scroll bar, default if a scroll bar should be added if needed, and false
+     * otherwise
      */
     public Boolean isScrollingHorizontally() {
         return scrollingHorizontally;
@@ -68,9 +68,8 @@ public class WScrollPanel extends WClippedPanel {
     /**
      * Returns whether this scroll panel has a vertical scroll bar.
      *
-     * @return true if there is a vertical scroll bar,
-     * *         default if a scroll bar should be added if needed,
-     * *         and false otherwise
+     * @return true if there is a vertical scroll bar, *         default if a scroll bar should be added if needed, *
+     * and false otherwise
      */
     public Boolean isScrollingVertically() {
         return scrollingVertically;
@@ -88,7 +87,8 @@ public class WScrollPanel extends WClippedPanel {
     @OnlyIn(Dist.CLIENT)
     @Override
     public void paint(GuiGraphics context, int x, int y, int mouseX, int mouseY) {
-        if (verticalScrollBar.getValue() != lastVerticalScroll || horizontalScrollBar.getValue() != lastHorizontalScroll) {
+        if (verticalScrollBar.getValue() != lastVerticalScroll
+                || horizontalScrollBar.getValue() != lastHorizontalScroll) {
             layout();
             lastHorizontalScroll = horizontalScrollBar.getValue();
             lastVerticalScroll = verticalScrollBar.getValue();
@@ -110,7 +110,9 @@ public class WScrollPanel extends WClippedPanel {
         horizontalScrollBar.setSize(this.width - offset, SCROLL_BAR_SIZE);
         horizontalScrollBar.setLocation(0, this.height - horizontalScrollBar.getHeight());
 
-        if (widget instanceof WPanel) ((WPanel) widget).layout();
+        if (widget instanceof WPanel) {
+            ((WPanel) widget).layout();
+        }
         children.add(widget);
         int x = horizontal ? -horizontalScrollBar.getValue() : 0;
         int y = vertical ? -verticalScrollBar.getValue() : 0;
@@ -121,8 +123,12 @@ public class WScrollPanel extends WClippedPanel {
         horizontalScrollBar.setWindow(this.width - (vertical ? SCROLL_BAR_SIZE : 0));
         horizontalScrollBar.setMaxValue(widget.getWidth());
 
-        if (vertical) children.add(verticalScrollBar);
-        if (horizontal) children.add(horizontalScrollBar);
+        if (vertical) {
+            children.add(verticalScrollBar);
+        }
+        if (horizontal) {
+            children.add(horizontalScrollBar);
+        }
     }
 
     private boolean hasHorizontalScrollbar() {

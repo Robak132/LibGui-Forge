@@ -8,10 +8,11 @@ import org.jetbrains.annotations.Nullable;
 
 @OnlyIn(Dist.CLIENT)
 public interface CottonScreenImpl {
-	GuiDescription getDescription();
 
-	@Nullable
-	WWidget getLastResponder();
+    GuiDescription getDescription();
 
-	void setLastResponder(@Nullable WWidget lastResponder);
+    @Nullable
+    WWidget getLastResponder();
+
+    void setLastResponder(@Nullable WWidget lastResponder);
 }

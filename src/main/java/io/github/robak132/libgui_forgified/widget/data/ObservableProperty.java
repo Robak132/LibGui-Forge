@@ -1,15 +1,14 @@
 package io.github.robak132.libgui_forgified.widget.data;
 
 import io.github.robak132.libgui_forgified.widget.WWidget;
-import org.jetbrains.annotations.Nullable;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import org.jetbrains.annotations.Nullable;
 
 /**
- * An observable mutable property. Observable properties are containers for values
- * that can be modified and listened to.
+ * An observable mutable property. Observable properties are containers for values that can be modified and listened
+ * to.
  *
  * <p>The naming convention for {@code ObservableProperty} getters follows the convention
  * {@code <property name>Property}. For example, the {@code WWidget.hovered} property can be retrieved with
@@ -20,171 +19,174 @@ import java.util.Objects;
  */
 // TODO: Add filters
 public final class ObservableProperty<T> implements ObservableView<T> {
-	private static final String DEFAULT_NAME = "<unnamed>";
-	private boolean hasValue;
-	private T value;
-	private final List<ChangeListener<? super T>> listeners = new ArrayList<>();
-	private final boolean allowNull;
-	private final String name;
 
-	private ObservableProperty(@Nullable T value, boolean hasValue, boolean allowNull, String name) {
-		this.value = value;
-		this.hasValue = hasValue;
-		this.allowNull = allowNull;
-		this.name = name;
+    private static final String DEFAULT_NAME = "<unnamed>";
+    private boolean hasValue;
+    private T value;
+    private final List<ChangeListener<? super T>> listeners = new ArrayList<>();
+    private final boolean allowNull;
+    private final String name;
 
-		if (hasValue && value == null && !allowNull) {
-			throw new NullPointerException("Cannot initialise nonnull property " + name + " with null value");
-		}
-	}
+    private ObservableProperty(@Nullable T value, boolean hasValue, boolean allowNull, String name) {
+        this.value = value;
+        this.hasValue = hasValue;
+        this.allowNull = allowNull;
+        this.name = name;
 
-	/**
-	 * Creates a "late init" property without an initial value.
-	 * The created property will throw an exception if it has not been initialised yet.
-	 *
-	 * @param <T> the contained value type
-	 * @return the created empty property builder
-	 */
-	public static <T> Builder<T> empty() {
-		return new Builder<>(null, false);
-	}
+        if (hasValue && value == null && !allowNull) {
+            throw new NullPointerException("Cannot initialise nonnull property " + name + " with null value");
+        }
+    }
 
-	/**
-	 * Creates a property with an initial value.
-	 *
-	 * @param initialValue the initial value
-	 * @param <T> the contained value type
-	 * @return the created property
-	 */
-	public static <T> Builder<T> of(T initialValue) {
-		return new Builder<>(initialValue, true);
-	}
+    /**
+     * Creates a "late init" property without an initial value. The created property will throw an exception if it has
+     * not been initialised yet.
+     *
+     * @param <T> the contained value type
+     * @return the created empty property builder
+     */
+    public static <T> Builder<T> empty() {
+        return new Builder<>(null, false);
+    }
 
-	@Override
-	public boolean hasValue() {
-		return hasValue;
-	}
+    /**
+     * Creates a property with an initial value.
+     *
+     * @param initialValue the initial value
+     * @param <T>          the contained value type
+     * @return the created property
+     */
+    public static <T> Builder<T> of(T initialValue) {
+        return new Builder<>(initialValue, true);
+    }
 
-	@Override
-	public T get() {
-		if (!hasValue) {
-			throw new IllegalStateException("Property " + name + " not initialised!");
-		}
+    @Override
+    public boolean hasValue() {
+        return hasValue;
+    }
 
-		return value;
-	}
+    @Override
+    public T get() {
+        if (!hasValue) {
+            throw new IllegalStateException("Property " + name + " not initialised!");
+        }
 
-	/**
-	 * Sets this property to a constant value.
-	 *
-	 * @param value the new value
-	 * @throws NullPointerException if the value is null and nulls aren't allowed
-	 */
-	public void set(T value) {
-		if (value == null && !allowNull) throw new NullPointerException("Trying to set null value for nonnull property " + name);
-		T oldValue = this.value;
-		this.value = value;
-		hasValue = true;
+        return value;
+    }
 
-		if (oldValue != value) {
-			for (ChangeListener<? super T> listener : listeners) {
-				listener.onPropertyChange(this, oldValue, value);
-			}
-		}
-	}
+    /**
+     * Sets this property to a constant value.
+     *
+     * @param value the new value
+     * @throws NullPointerException if the value is null and nulls aren't allowed
+     */
+    public void set(T value) {
+        if (value == null && !allowNull) {
+            throw new NullPointerException("Trying to set null value for nonnull property " + name);
+        }
+        T oldValue = this.value;
+        this.value = value;
+        hasValue = true;
 
-	/**
-	 * Returns a read-only view of this property.
-	 * The result is not an instance of {@link ObservableProperty},
-	 * and thus can't be mutated.
-	 *
-	 * @return an observable view of this property
-	 */
-	public ObservableView<T> readOnly() {
-		// Missing delegates from Kotlin... :(
-		return new ObservableView<>() {
-			@Override
-			public boolean hasValue() {
-				return ObservableProperty.this.hasValue();
-			}
+        if (oldValue != value) {
+            for (ChangeListener<? super T> listener : listeners) {
+                listener.onPropertyChange(this, oldValue, value);
+            }
+        }
+    }
 
-			@Override
-			public T get() {
-				return ObservableProperty.this.get();
-			}
+    /**
+     * Returns a read-only view of this property. The result is not an instance of {@link ObservableProperty}, and thus
+     * can't be mutated.
+     *
+     * @return an observable view of this property
+     */
+    public ObservableView<T> readOnly() {
+        // Missing delegates from Kotlin... :(
+        return new ObservableView<>() {
+            @Override
+            public boolean hasValue() {
+                return ObservableProperty.this.hasValue();
+            }
 
-			@Override
-			public void addListener(ChangeListener<? super T> listener) {
-				ObservableProperty.this.addListener(listener);
-			}
+            @Override
+            public T get() {
+                return ObservableProperty.this.get();
+            }
 
-			@Override
-			public void removeListener(ChangeListener<? super T> listener) {
-				ObservableProperty.this.removeListener(listener);
-			}
-		};
-	}
+            @Override
+            public void addListener(ChangeListener<? super T> listener) {
+                ObservableProperty.this.addListener(listener);
+            }
 
-	/**
-	 * {@return the name of this property}
-	 */
-	public String getName() {
-		return name;
-	}
+            @Override
+            public void removeListener(ChangeListener<? super T> listener) {
+                ObservableProperty.this.removeListener(listener);
+            }
+        };
+    }
 
-	@Override
-	public void addListener(ChangeListener<? super T> listener) {
-		Objects.requireNonNull(listener);
-		listeners.add(listener);
-	}
+    /**
+     * {@return the name of this property}
+     */
+    public String getName() {
+        return name;
+    }
 
-	@Override
-	public void removeListener(ChangeListener<? super T> listener) {
-		Objects.requireNonNull(listener);
-		listeners.remove(listener);
-	}
+    @Override
+    public void addListener(ChangeListener<? super T> listener) {
+        Objects.requireNonNull(listener);
+        listeners.add(listener);
+    }
 
-	/**
-	 * A builder for properties.
-	 *
-	 * @param <T> the contained value type
-	 */
-	public static final class Builder<T> {
-		private final T initialValue;
-		private final boolean hasValue;
-		private String name = DEFAULT_NAME;
-		private boolean allowNull = true;
+    @Override
+    public void removeListener(ChangeListener<? super T> listener) {
+        Objects.requireNonNull(listener);
+        listeners.remove(listener);
+    }
 
-		Builder(@Nullable T initialValue, boolean hasValue) {
-			this.initialValue = initialValue;
-			this.hasValue = hasValue;
-		}
+    /**
+     * A builder for properties.
+     *
+     * @param <T> the contained value type
+     */
+    public static final class Builder<T> {
 
-		/**
-		 * Disallows null values.
-		 *
-		 * @return this builder
-		 */
-		public Builder<T> nonnull() {
-			allowNull = false;
-			return this;
-		}
+        private final T initialValue;
+        private final boolean hasValue;
+        private String name = DEFAULT_NAME;
+        private boolean allowNull = true;
 
-		/**
-		 * Sets the name of this property, which is used in debug messages.
-		 */
-		public Builder<T> name(String name) {
-			this.name = Objects.requireNonNull(name, "name");
-			return this;
-		}
+        Builder(@Nullable T initialValue, boolean hasValue) {
+            this.initialValue = initialValue;
+            this.hasValue = hasValue;
+        }
 
-		/**
-		 * Builds the observable property.
-		 *
-		 * @return the created property
-		 */
-		public ObservableProperty<T> build() {
-			return new ObservableProperty<>(initialValue, hasValue, allowNull, name);
-		}
-	}
+        /**
+         * Disallows null values.
+         *
+         * @return this builder
+         */
+        public Builder<T> nonnull() {
+            allowNull = false;
+            return this;
+        }
+
+        /**
+         * Sets the name of this property, which is used in debug messages.
+         */
+        public Builder<T> name(String name) {
+            this.name = Objects.requireNonNull(name, "name");
+            return this;
+        }
+
+        /**
+         * Builds the observable property.
+         *
+         * @return the created property
+         */
+        public ObservableProperty<T> build() {
+            return new ObservableProperty<>(initialValue, hasValue, allowNull, name);
+        }
+    }
 }

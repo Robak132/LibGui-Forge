@@ -4,6 +4,8 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import io.github.robak132.libgui_forgified.client.VisualLogger;
 import io.github.robak132.libgui_forgified.widget.WItemSlot;
+import java.util.Objects;
+import java.util.function.Predicate;
 import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.world.Container;
@@ -12,10 +14,8 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Objects;
-import java.util.function.Predicate;
-
 public class ValidatedSlot extends Slot {
+
     /**
      * The default {@linkplain #setInputFilter(Predicate) item filter} that allows all items.
      *
@@ -48,7 +48,9 @@ public class ValidatedSlot extends Slot {
 
     public ValidatedSlot(Container inventory, int index, int x, int y) {
         super(inventory, index, x, y);
-        if (inventory == null) throw new IllegalArgumentException("Can't make an itemslot from a null inventory!");
+        if (inventory == null) {
+            throw new IllegalArgumentException("Can't make an itemslot from a null inventory!");
+        }
         this.slotNumber = index;
     }
 
@@ -94,8 +96,7 @@ public class ValidatedSlot extends Slot {
     }
 
     /**
-     * Adds a change listener to this slot.
-     * Does nothing if the listener is already registered.
+     * Adds a change listener to this slot. Does nothing if the listener is already registered.
      *
      * @param owner    the owner of this slot
      * @param listener the listener

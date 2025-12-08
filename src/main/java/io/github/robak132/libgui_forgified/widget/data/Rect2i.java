@@ -1,8 +1,8 @@
 package io.github.robak132.libgui_forgified.widget.data;
 
 /**
- * An immutable, two-dimensional int rectangle consisting of a position and dimensions.
- * This record can be used to represent rectangles on the screen.
+ * An immutable, two-dimensional int rectangle consisting of a position and dimensions. This record can be used to
+ * represent rectangles on the screen.
  *
  * @param x      the X coordinate
  * @param y      the Y coordinate
@@ -11,4 +11,5 @@ package io.github.robak132.libgui_forgified.widget.data;
  * @since 7.0.0
  */
 public record Rect2i(int x, int y, int width, int height) {
+
 }

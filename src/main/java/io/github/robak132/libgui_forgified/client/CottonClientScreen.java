@@ -17,21 +17,20 @@ import org.jetbrains.annotations.Nullable;
 import org.lwjgl.opengl.GL11;
 
 public class CottonClientScreen extends Screen implements CottonScreenImpl {
+
     private static final VisualLogger LOGGER = new VisualLogger(CottonInventoryScreen.class);
     private final MouseInputHandler<CottonClientScreen> mouseInputHandler = new MouseInputHandler<>(this);
     protected GuiDescription description;
     protected int left = 0;
     protected int top = 0;
     /**
-     * The X coordinate of the screen title.
-     * This is relative to the root panel's top-left corner.
+     * The X coordinate of the screen title. This is relative to the root panel's top-left corner.
      *
      * @since 2.0.0
      */
     protected int titleX;
     /**
-     * The Y coordinate of the screen title.
-     * This is relative to the root panel's top-left corner.
+     * The Y coordinate of the screen title. This is relative to the root panel's top-left corner.
      *
      * @since 2.0.0
      */
@@ -59,7 +58,9 @@ public class CottonClientScreen extends Screen implements CottonScreenImpl {
         super.init();
 
         WPanel root = description.getRootPanel();
-        if (root != null) root.addPainters();
+        if (root != null) {
+            root.addPainters();
+        }
         description.addPainters();
         reposition(width, height);
 
@@ -130,7 +131,8 @@ public class CottonClientScreen extends Screen implements CottonScreenImpl {
 
             if (getTitle() != null && description.isTitleVisible()) {
                 int width = description.getRootPanel().getWidth();
-                ScreenDrawing.drawString(context, getTitle().getVisualOrderText(), description.getTitleAlignment(), left + titleX, top + titleY, width - 2 * titleX, description.getTitleColor());
+                ScreenDrawing.drawString(context, getTitle().getVisualOrderText(), description.getTitleAlignment(),
+                        left + titleX, top + titleY, width - 2 * titleX, description.getTitleColor());
             }
         }
     }
@@ -145,7 +147,9 @@ public class CottonClientScreen extends Screen implements CottonScreenImpl {
             WPanel root = description.getRootPanel();
             if (root != null) {
                 WWidget hitChild = root.hit(mouseX - left, mouseY - top);
-                if (hitChild != null) hitChild.renderTooltip(context, left, top, mouseX - left, mouseY - top);
+                if (hitChild != null) {
+                    hitChild.renderTooltip(context, left, top, mouseX - left, mouseY - top);
+                }
             }
         }
 
@@ -170,7 +174,9 @@ public class CottonClientScreen extends Screen implements CottonScreenImpl {
         int containerX = (int) mouseX - left;
         int containerY = (int) mouseY - top;
         mouseInputHandler.checkFocus(containerX, containerY);
-        if (containerX < 0 || containerY < 0 || containerX >= width || containerY >= height) return true;
+        if (containerX < 0 || containerY < 0 || containerX >= width || containerY >= height) {
+            return true;
+        }
         mouseInputHandler.onMouseDown(containerX, containerY, mouseButton);
 
         return true;
@@ -250,6 +256,8 @@ public class CottonClientScreen extends Screen implements CottonScreenImpl {
 
     @Override
     protected void updateNarratedWidget(@NotNull NarrationElementOutput builder) {
-        if (description != null) NarrationHelper.addNarrations(description.getRootPanel(), builder);
+        if (description != null) {
+            NarrationHelper.addNarrations(description.getRootPanel(), builder);
+        }
     }
 }

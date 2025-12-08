@@ -21,14 +21,12 @@ public enum WidgetDirection {
     RIGHT(Direction.Plane.HORIZONTAL, false);
 
     /**
-     * -- GETTER --
-     *  Gets the direction's axis.
+     * -- GETTER -- Gets the direction's axis.
      */
     private final Direction.Plane axis;
     /**
-     * -- GETTER --
-     *  Returns whether this slider is inverted.
-     *  <p>An inverted slider will have reversed keyboard control.
+     * -- GETTER -- Returns whether this slider is inverted.
+     * <p>An inverted slider will have reversed keyboard control.
      */
     private final boolean inverted;
 

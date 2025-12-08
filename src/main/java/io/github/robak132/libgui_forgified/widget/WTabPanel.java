@@ -1,12 +1,21 @@
 package io.github.robak132.libgui_forgified.widget;
 
+import io.github.robak132.libgui_forgified.NarrationMessages;
 import io.github.robak132.libgui_forgified.client.BackgroundPainter;
 import io.github.robak132.libgui_forgified.client.LibGui;
-import io.github.robak132.libgui_forgified.NarrationMessages;
 import io.github.robak132.libgui_forgified.client.ScreenDrawing;
 import io.github.robak132.libgui_forgified.widget.data.HorizontalAlignment;
 import io.github.robak132.libgui_forgified.widget.data.InputResult;
 import io.github.robak132.libgui_forgified.widget.icon.Icon;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.Objects;
+import java.util.function.Consumer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
@@ -22,9 +31,6 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
-import java.util.function.Consumer;
-
 // TODO: Different tab positions
 
 /**
@@ -33,6 +39,7 @@ import java.util.function.Consumer;
  * @since 3.0.0
  */
 public class WTabPanel extends WPanel {
+
     private static final int TAB_PADDING = 4;
     private static final int TAB_WIDTH = 28;
     private static final int TAB_HEIGHT = 30;
@@ -172,7 +179,9 @@ public class WTabPanel extends WPanel {
      */
     public record Tab(@Nullable Component title, @Nullable Icon icon, WWidget widget,
                       @Nullable Consumer<TooltipBuilder> tooltip) {
-        public Tab(@Nullable Component title, @Nullable Icon icon, WWidget widget, @Nullable Consumer<TooltipBuilder> tooltip) {
+
+        public Tab(@Nullable Component title, @Nullable Icon icon, WWidget widget,
+                @Nullable Consumer<TooltipBuilder> tooltip) {
             if (title == null && icon == null) {
                 throw new IllegalArgumentException("A tab must have a title or an icon");
             }
@@ -220,6 +229,7 @@ public class WTabPanel extends WPanel {
          * A builder for tab data.
          */
         public static final class Builder {
+
             private final WWidget widget;
             private final List<Component> tooltip = new ArrayList<>();
             @Nullable
@@ -316,13 +326,26 @@ public class WTabPanel extends WPanel {
      */
     @OnlyIn(Dist.CLIENT)
     static final class Painters {
-        static final BackgroundPainter SELECTED_TAB = BackgroundPainter.createLightDarkVariants(BackgroundPainter.createNinePatch(ResourceLocation.tryBuild(LibGui.MOD_ID, "textures/widget/tab/selected_light.png")).setTopPadding(2), BackgroundPainter.createNinePatch(ResourceLocation.tryBuild(LibGui.MOD_ID, "textures/widget/tab/selected_dark.png")).setTopPadding(2));
-        static final BackgroundPainter UNSELECTED_TAB = BackgroundPainter.createLightDarkVariants(BackgroundPainter.createNinePatch(ResourceLocation.tryBuild(LibGui.MOD_ID, "textures/widget/tab/unselected_light.png")), BackgroundPainter.createNinePatch(ResourceLocation.tryBuild(LibGui.MOD_ID, "textures/widget/tab/unselected_dark.png")));
-        static final BackgroundPainter SELECTED_TAB_FOCUS_BORDER = BackgroundPainter.createNinePatch(ResourceLocation.tryBuild(LibGui.MOD_ID, "textures/widget/tab/focus.png")).setTopPadding(2);
-        static final BackgroundPainter UNSELECTED_TAB_FOCUS_BORDER = BackgroundPainter.createNinePatch(ResourceLocation.tryBuild(LibGui.MOD_ID, "textures/widget/tab/focus.png"));
+
+        static final BackgroundPainter SELECTED_TAB = BackgroundPainter.createLightDarkVariants(
+                BackgroundPainter.createNinePatch(
+                                ResourceLocation.tryBuild(LibGui.MOD_ID, "textures/widget/tab/selected_light.png"))
+                        .setTopPadding(2), BackgroundPainter.createNinePatch(
+                                ResourceLocation.tryBuild(LibGui.MOD_ID, "textures/widget/tab/selected_dark.png"))
+                        .setTopPadding(2));
+        static final BackgroundPainter UNSELECTED_TAB = BackgroundPainter.createLightDarkVariants(
+                BackgroundPainter.createNinePatch(
+                        ResourceLocation.tryBuild(LibGui.MOD_ID, "textures/widget/tab/unselected_light.png")),
+                BackgroundPainter.createNinePatch(
+                        ResourceLocation.tryBuild(LibGui.MOD_ID, "textures/widget/tab/unselected_dark.png")));
+        static final BackgroundPainter SELECTED_TAB_FOCUS_BORDER = BackgroundPainter.createNinePatch(
+                ResourceLocation.tryBuild(LibGui.MOD_ID, "textures/widget/tab/focus.png")).setTopPadding(2);
+        static final BackgroundPainter UNSELECTED_TAB_FOCUS_BORDER = BackgroundPainter.createNinePatch(
+                ResourceLocation.tryBuild(LibGui.MOD_ID, "textures/widget/tab/focus.png"));
     }
 
     private final class WTab extends WWidget {
+
         private final Tab data;
         boolean selected = false;
 
@@ -344,7 +367,8 @@ public class WTabPanel extends WPanel {
         @Override
         public InputResult onClick(int x, int y, int button) {
             super.onClick(x, y, button);
-            Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+            Minecraft.getInstance().getSoundManager()
+                    .play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
             setSelectedIndex(tabWidgets.indexOf(this));
             return InputResult.PROCESSED;
         }
@@ -369,7 +393,9 @@ public class WTabPanel extends WPanel {
 
             if (title != null) {
                 int width = TAB_WIDTH + renderer.width(title);
-                if (icon == null) width = Math.max(TAB_WIDTH, width - ICON_SIZE);
+                if (icon == null) {
+                    width = Math.max(TAB_WIDTH, width - ICON_SIZE);
+                }
 
                 if (this.width != width) {
                     setSize(width, this.height);
@@ -379,7 +405,8 @@ public class WTabPanel extends WPanel {
 
             (selected ? Painters.SELECTED_TAB : Painters.UNSELECTED_TAB).paintBackground(context, x, y, this);
             if (isFocused()) {
-                (selected ? Painters.SELECTED_TAB_FOCUS_BORDER : Painters.UNSELECTED_TAB_FOCUS_BORDER).paintBackground(context, x, y, this);
+                (selected ? Painters.SELECTED_TAB_FOCUS_BORDER : Painters.UNSELECTED_TAB_FOCUS_BORDER).paintBackground(
+                        context, x, y, this);
             }
 
             int iconX = 6;
@@ -397,7 +424,8 @@ public class WTabPanel extends WPanel {
                     color = selected ? WLabel.DEFAULT_TEXT_COLOR : 0xEEEEEE;
                 }
 
-                ScreenDrawing.drawString(context, title.getVisualOrderText(), align, x + titleX, y + titleY, width, color);
+                ScreenDrawing.drawString(context, title.getVisualOrderText(), align, x + titleX, y + titleY, width,
+                        color);
             }
 
             if (icon != null) {
@@ -420,7 +448,9 @@ public class WTabPanel extends WPanel {
                 builder.add(NarratedElementType.TITLE, Component.translatable(NarrationMessages.TAB_TITLE_KEY, label));
             }
 
-            builder.add(NarratedElementType.POSITION, Component.translatable(NarrationMessages.TAB_POSITION_KEY, tabWidgets.indexOf(this) + 1, tabWidgets.size()));
+            builder.add(NarratedElementType.POSITION,
+                    Component.translatable(NarrationMessages.TAB_POSITION_KEY, tabWidgets.indexOf(this) + 1,
+                            tabWidgets.size()));
         }
     }
 }

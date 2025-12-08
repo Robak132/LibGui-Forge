@@ -26,7 +26,9 @@ import org.lwjgl.opengl.GL11;
  *
  * @param <T> the description type
  */
-public class CottonInventoryScreen<T extends SyncedGuiDescription> extends AbstractContainerScreen<T> implements CottonScreenImpl {
+public class CottonInventoryScreen<T extends SyncedGuiDescription> extends AbstractContainerScreen<T> implements
+        CottonScreenImpl {
+
     private static final VisualLogger LOGGER = new VisualLogger(CottonInventoryScreen.class);
     private final MouseInputHandler<CottonInventoryScreen<T>> mouseInputHandler = new MouseInputHandler<>(this);
     protected SyncedGuiDescription description;
@@ -98,7 +100,9 @@ public class CottonInventoryScreen<T extends SyncedGuiDescription> extends Abstr
         super.init();
 
         WPanel root = description.getRootPanel();
-        if (root != null) root.addPainters();
+        if (root != null) {
+            root.addPainters();
+        }
         description.addPainters();
 
         reposition(width, height);
@@ -158,8 +162,12 @@ public class CottonInventoryScreen<T extends SyncedGuiDescription> extends Abstr
             imageHeight = basePanel.getHeight();
 
             //DEBUG
-            if (imageWidth < 16) imageWidth = 300;
-            if (imageHeight < 16) imageHeight = 300;
+            if (imageWidth < 16) {
+                imageWidth = 300;
+            }
+            if (imageHeight < 16) {
+                imageHeight = 300;
+            }
         }
 
         titleLabelX = description.getTitlePos().x();
@@ -191,7 +199,9 @@ public class CottonInventoryScreen<T extends SyncedGuiDescription> extends Abstr
         int containerX = (int) mouseX - inventoryLabelX;
         int containerY = (int) mouseY - inventoryLabelY;
         mouseInputHandler.checkFocus(containerX, containerY);
-        if (containerX < 0 || containerY < 0 || containerX >= width || containerY >= height) return true;
+        if (containerX < 0 || containerY < 0 || containerX >= width || containerY >= height) {
+            return true;
+        }
         mouseInputHandler.onMouseDown(containerX, containerY, mouseButton);
 
         return true;
@@ -282,7 +292,8 @@ public class CottonInventoryScreen<T extends SyncedGuiDescription> extends Abstr
             if (root != null) {
                 GL11.glEnable(GL11.GL_SCISSOR_TEST);
                 Scissors.refreshScissors();
-                root.paint(context, inventoryLabelX, inventoryLabelY, mouseX - inventoryLabelX, mouseY - inventoryLabelY);
+                root.paint(context, inventoryLabelX, inventoryLabelY, mouseX - inventoryLabelX,
+                        mouseY - inventoryLabelY);
                 GL11.glDisable(GL11.GL_SCISSOR_TEST);
                 Scissors.checkStackIsEmpty();
             }
@@ -300,7 +311,10 @@ public class CottonInventoryScreen<T extends SyncedGuiDescription> extends Abstr
             WPanel root = description.getRootPanel();
             if (root != null) {
                 WWidget hitChild = root.hit(mouseX - inventoryLabelX, mouseY - inventoryLabelY);
-                if (hitChild != null) hitChild.renderTooltip(context, inventoryLabelX, inventoryLabelY, mouseX - inventoryLabelX, mouseY - inventoryLabelY);
+                if (hitChild != null) {
+                    hitChild.renderTooltip(context, inventoryLabelX, inventoryLabelY, mouseX - inventoryLabelX,
+                            mouseY - inventoryLabelY);
+                }
             }
         }
         renderTooltip(context, mouseX, mouseY);
@@ -311,7 +325,8 @@ public class CottonInventoryScreen<T extends SyncedGuiDescription> extends Abstr
     protected void renderLabels(@NotNull GuiGraphics context, int mouseX, int mouseY) {
         if (description != null && description.isTitleVisible()) {
             int width = description.getRootPanel().getWidth();
-            ScreenDrawing.drawString(context, getTitle().getVisualOrderText(), description.getTitleAlignment(), titleLabelX, titleLabelY, width - 2 * titleLabelX, description.getTitleColor());
+            ScreenDrawing.drawString(context, getTitle().getVisualOrderText(), description.getTitleAlignment(),
+                    titleLabelX, titleLabelY, width - 2 * titleLabelX, description.getTitleColor());
         }
 
         // Don't draw the player inventory label as it's drawn by the widget itself
@@ -330,6 +345,8 @@ public class CottonInventoryScreen<T extends SyncedGuiDescription> extends Abstr
 
     @Override
     protected void updateNarratedWidget(@NotNull NarrationElementOutput builder) {
-        if (description != null) NarrationHelper.addNarrations(description.getRootPanel(), builder);
+        if (description != null) {
+            NarrationHelper.addNarrations(description.getRootPanel(), builder);
+        }
     }
 }

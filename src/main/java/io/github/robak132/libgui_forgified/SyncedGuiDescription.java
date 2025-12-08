@@ -3,11 +3,16 @@ package io.github.robak132.libgui_forgified;
 
 import io.github.robak132.libgui_forgified.client.BackgroundPainter;
 import io.github.robak132.libgui_forgified.client.LibGuiConfig;
-import io.github.cottonmc.cotton.gui.widget.*;
-import io.github.robak132.libgui_forgified.widget.*;
+import io.github.robak132.libgui_forgified.widget.WGridPanel;
+import io.github.robak132.libgui_forgified.widget.WLabel;
+import io.github.robak132.libgui_forgified.widget.WPanel;
+import io.github.robak132.libgui_forgified.widget.WPlayerInvPanel;
+import io.github.robak132.libgui_forgified.widget.WWidget;
 import io.github.robak132.libgui_forgified.widget.data.HorizontalAlignment;
 import io.github.robak132.libgui_forgified.widget.data.Insets;
 import io.github.robak132.libgui_forgified.widget.data.Vec2i;
+import java.util.ArrayList;
+import java.util.function.Supplier;
 import lombok.Getter;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
@@ -15,7 +20,12 @@ import net.minecraft.world.WorldlyContainer;
 import net.minecraft.world.WorldlyContainerHolder;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.*;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ContainerData;
+import net.minecraft.world.inventory.ContainerLevelAccess;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.inventory.SimpleContainerData;
+import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -25,9 +35,6 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.ArrayList;
-import java.util.function.Supplier;
 
 /**
  * A screen handler-based GUI description for GUIs with slots.
@@ -71,17 +78,24 @@ public class SyncedGuiDescription extends AbstractContainerMenu implements GuiDe
      * @param type             the {@link MenuType} of this GUI description
      * @param syncId           the current sync ID
      * @param playerInventory  the player inventory of the player viewing this screen
-     * @param blockInventory   the block inventory of a corresponding container block, or null if not found or applicable
-     * @param propertyDelegate a property delegate whose properties, if any, will automatically be {@linkplain #addDataSlots(ContainerData) added}
+     * @param blockInventory   the block inventory of a corresponding container block, or null if not found or
+     *                         applicable
+     * @param propertyDelegate a property delegate whose properties, if any, will automatically be
+     *                         {@linkplain #addDataSlots(ContainerData) added}
      */
-    public SyncedGuiDescription(MenuType<?> type, int syncId, Inventory playerInventory, @Nullable Inventory blockInventory, @Nullable ContainerData propertyDelegate) {
+    public SyncedGuiDescription(MenuType<?> type, int syncId, Inventory playerInventory,
+            @Nullable Inventory blockInventory, @Nullable ContainerData propertyDelegate) {
         super(type, syncId);
         this.blockInventory = blockInventory;
         this.playerInventory = playerInventory;
         this.world = playerInventory.player.level();
         this.propertyDelegate = propertyDelegate;
-        if (propertyDelegate != null && propertyDelegate.getCount() > 0) this.addDataSlots(propertyDelegate);
-        if (blockInventory != null) blockInventory.startOpen(playerInventory.player);
+        if (propertyDelegate != null && propertyDelegate.getCount() > 0) {
+            this.addDataSlots(propertyDelegate);
+        }
+        if (blockInventory != null) {
+            blockInventory.startOpen(playerInventory.player);
+        }
     }
 
     /**
@@ -250,7 +264,8 @@ public class SyncedGuiDescription extends AbstractContainerMenu implements GuiDe
                     if (!this.insertItem(slotStack, this.playerInventory, true, player)) {
                         return ItemStack.EMPTY;
                     }
-                } else if (!this.insertItem(slotStack, this.blockInventory, false, player)) { //Try to transfer the item from the player to the block
+                } else if (!this.insertItem(slotStack, this.blockInventory, false,
+                        player)) { //Try to transfer the item from the player to the block
                     return ItemStack.EMPTY;
                 }
             } else {
@@ -316,22 +331,34 @@ public class SyncedGuiDescription extends AbstractContainerMenu implements GuiDe
         //Make a unified list of slots *only from this inventory*
         ArrayList<Slot> inventorySlots = new ArrayList<>();
         for (Slot slot : slots) {
-            if (slot.container == inventory) inventorySlots.add(slot);
+            if (slot.container == inventory) {
+                inventorySlots.add(slot);
+            }
         }
-        if (inventorySlots.isEmpty()) return false;
+        if (inventorySlots.isEmpty()) {
+            return false;
+        }
 
         //Try to insert it on top of existing stacks
         boolean inserted = false;
         if (walkBackwards) {
             for (int i = inventorySlots.size() - 1; i >= 0; i--) {
                 Slot curSlot = inventorySlots.get(i);
-                if (insertIntoExisting(toInsert, curSlot, player)) inserted = true;
-                if (toInsert.isEmpty()) break;
+                if (insertIntoExisting(toInsert, curSlot, player)) {
+                    inserted = true;
+                }
+                if (toInsert.isEmpty()) {
+                    break;
+                }
             }
         } else {
             for (Slot curSlot : inventorySlots) {
-                if (insertIntoExisting(toInsert, curSlot, player)) inserted = true;
-                if (toInsert.isEmpty()) break;
+                if (insertIntoExisting(toInsert, curSlot, player)) {
+                    inserted = true;
+                }
+                if (toInsert.isEmpty()) {
+                    break;
+                }
             }
 
         }
@@ -341,13 +368,21 @@ public class SyncedGuiDescription extends AbstractContainerMenu implements GuiDe
             if (walkBackwards) {
                 for (int i = inventorySlots.size() - 1; i >= 0; i--) {
                     Slot curSlot = inventorySlots.get(i);
-                    if (insertIntoEmpty(toInsert, curSlot)) inserted = true;
-                    if (toInsert.isEmpty()) break;
+                    if (insertIntoEmpty(toInsert, curSlot)) {
+                        inserted = true;
+                    }
+                    if (toInsert.isEmpty()) {
+                        break;
+                    }
                 }
             } else {
                 for (Slot curSlot : inventorySlots) {
-                    if (insertIntoEmpty(toInsert, curSlot)) inserted = true;
-                    if (toInsert.isEmpty()) break;
+                    if (insertIntoEmpty(toInsert, curSlot)) {
+                        inserted = true;
+                    }
+                    if (toInsert.isEmpty()) {
+                        break;
+                    }
                 }
 
             }
@@ -370,34 +405,54 @@ public class SyncedGuiDescription extends AbstractContainerMenu implements GuiDe
                     hotbarSlots.add(slot);
                 } else {
                     storageSlots.add(slot);
-                    if (slot.index == slotNumber) swapToStorage = false;
+                    if (slot.index == slotNumber) {
+                        swapToStorage = false;
+                    }
                 }
             }
         }
-        if (storageSlots.isEmpty() || hotbarSlots.isEmpty()) return false;
+        if (storageSlots.isEmpty() || hotbarSlots.isEmpty()) {
+            return false;
+        }
 
         if (swapToStorage) {
             //swap from hotbar to storage
             for (Slot curSlot : storageSlots) {
-                if (insertIntoExisting(toInsert, curSlot, player)) inserted = true;
-                if (toInsert.isEmpty()) break;
+                if (insertIntoExisting(toInsert, curSlot, player)) {
+                    inserted = true;
+                }
+                if (toInsert.isEmpty()) {
+                    break;
+                }
             }
             if (!toInsert.isEmpty()) {
                 for (Slot curSlot : storageSlots) {
-                    if (insertIntoEmpty(toInsert, curSlot)) inserted = true;
-                    if (toInsert.isEmpty()) break;
+                    if (insertIntoEmpty(toInsert, curSlot)) {
+                        inserted = true;
+                    }
+                    if (toInsert.isEmpty()) {
+                        break;
+                    }
                 }
             }
         } else {
             //swap from storage to hotbar
             for (Slot curSlot : hotbarSlots) {
-                if (insertIntoExisting(toInsert, curSlot, player)) inserted = true;
-                if (toInsert.isEmpty()) break;
+                if (insertIntoExisting(toInsert, curSlot, player)) {
+                    inserted = true;
+                }
+                if (toInsert.isEmpty()) {
+                    break;
+                }
             }
             if (!toInsert.isEmpty()) {
                 for (Slot curSlot : hotbarSlots) {
-                    if (insertIntoEmpty(toInsert, curSlot)) inserted = true;
-                    if (toInsert.isEmpty()) break;
+                    if (insertIntoEmpty(toInsert, curSlot)) {
+                        inserted = true;
+                    }
+                    if (toInsert.isEmpty()) {
+                        break;
+                    }
                 }
             }
         }
@@ -456,7 +511,9 @@ public class SyncedGuiDescription extends AbstractContainerMenu implements GuiDe
     @Override
     public void removed(@NotNull Player player) {
         super.removed(player);
-        if (blockInventory != null) blockInventory.stopOpen(player);
+        if (blockInventory != null) {
+            blockInventory.stopOpen(player);
+        }
     }
 
     @Override
@@ -471,9 +528,15 @@ public class SyncedGuiDescription extends AbstractContainerMenu implements GuiDe
 
     @Override
     public void requestFocus(WWidget widget) {
-        if (focus == widget) return; //Nothing happens if we're already focused
-        if (!widget.canFocus()) return; //This is kind of a gotcha but needs to happen
-        if (focus != null) focus.onFocusLost();
+        if (focus == widget) {
+            return; //Nothing happens if we're already focused
+        }
+        if (!widget.canFocus()) {
+            return; //This is kind of a gotcha but needs to happen
+        }
+        if (focus != null) {
+            focus.onFocusLost();
+        }
         focus = widget;
         focus.onFocusGained();
     }

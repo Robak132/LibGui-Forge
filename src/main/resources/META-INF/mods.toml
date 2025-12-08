@@ -5,9 +5,9 @@ issueTrackerURL="https://github.com/Robak132/MCRGB/issues"
 
 [[mods]]
 modId="libgui_forge"
-version="0.3_1.20.1"
+version="8.1.1"
 displayName="LibGui: Forgified"
-description="Port moda z Fabric na Forge."
+description="A library mod for creating GUIs in Minecraft Forge mods."
 authors="Robak132"
 
 [[dependencies.libgui_forge]]

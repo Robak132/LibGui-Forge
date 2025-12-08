@@ -1,49 +1,51 @@
 package io.github.robak132.libgui_forgified.client;
 
 import io.github.robak132.libgui_forgified.NarrationMessages;
+import io.github.robak132.libgui_forgified.widget.WPanel;
+import io.github.robak132.libgui_forgified.widget.WWidget;
+import java.util.List;
+import java.util.stream.Stream;
 import net.minecraft.client.gui.narration.NarratedElementType;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
-
-import io.github.robak132.libgui_forgified.widget.WPanel;
-import io.github.robak132.libgui_forgified.widget.WWidget;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-import java.util.List;
-import java.util.stream.Stream;
-
 @OnlyIn(Dist.CLIENT)
 public final class NarrationHelper {
-	public static void addNarrations(WPanel rootPanel, NarrationElementOutput builder) {
-		List<WWidget> narratableWidgets = getAllWidgets(rootPanel)
-			.filter(WWidget::isNarratable)
-			.toList();
 
-		for (int i = 0, childCount = narratableWidgets.size(); i < childCount; i++) {
-			WWidget child = narratableWidgets.get(i);
-			if (!child.isFocused() && !child.isHovered()) continue;
+    public static void addNarrations(WPanel rootPanel, NarrationElementOutput builder) {
+        List<WWidget> narratableWidgets = getAllWidgets(rootPanel)
+                .filter(WWidget::isNarratable)
+                .toList();
 
-			// replicates Screen.addElementNarrations
-			if (narratableWidgets.size() > 1) {
-				builder.add(NarratedElementType.POSITION, Component.translatable(NarrationMessages.Vanilla.SCREEN_POSITION_KEY, i + 1, childCount));
+        for (int i = 0, childCount = narratableWidgets.size(); i < childCount; i++) {
+            WWidget child = narratableWidgets.get(i);
+            if (!child.isFocused() && !child.isHovered()) {
+                continue;
+            }
 
-				if (child.isFocused()) {
-					builder.add(NarratedElementType.USAGE, NarrationMessages.Vanilla.COMPONENT_LIST_USAGE);
-				}
-			}
+            // replicates Screen.addElementNarrations
+            if (narratableWidgets.size() > 1) {
+                builder.add(NarratedElementType.POSITION,
+                        Component.translatable(NarrationMessages.Vanilla.SCREEN_POSITION_KEY, i + 1, childCount));
 
-			child.addNarrations(builder.nest());
-		}
-	}
+                if (child.isFocused()) {
+                    builder.add(NarratedElementType.USAGE, NarrationMessages.Vanilla.COMPONENT_LIST_USAGE);
+                }
+            }
 
-	private static Stream<WWidget> getAllWidgets(WPanel panel) {
-		return Stream.concat(Stream.of(panel), panel.streamChildren().flatMap(widget -> {
-			if (widget instanceof WPanel nested) {
-				return getAllWidgets(nested);
-			}
+            child.addNarrations(builder.nest());
+        }
+    }
 
-			return Stream.of(widget);
-		}));
-	}
+    private static Stream<WWidget> getAllWidgets(WPanel panel) {
+        return Stream.concat(Stream.of(panel), panel.streamChildren().flatMap(widget -> {
+            if (widget instanceof WPanel nested) {
+                return getAllWidgets(nested);
+            }
+
+            return Stream.of(widget);
+        }));
+    }
 }

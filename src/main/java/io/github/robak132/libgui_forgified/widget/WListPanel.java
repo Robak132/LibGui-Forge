@@ -2,17 +2,16 @@ package io.github.robak132.libgui_forgified.widget;
 
 import io.github.robak132.libgui_forgified.GuiDescription;
 import io.github.robak132.libgui_forgified.widget.data.InputResult;
-import lombok.Getter;
-import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.core.Direction;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;
+import lombok.Getter;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.core.Direction;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 /**
  * Similar to the RecyclerView in Android, this widget represents a scrollable list of items.
@@ -22,6 +21,7 @@ import java.util.function.Supplier;
  * <p> W is the WWidget class that will represent a single D of data.
  */
 public class WListPanel<D, W extends WWidget> extends WClippedPanel {
+
     /**
      * The widgets whose host hasn't been set yet.
      */
@@ -35,8 +35,7 @@ public class WListPanel<D, W extends WWidget> extends WClippedPanel {
      */
     protected Supplier<W> supplier;
     /**
-     * The widget configurator that configures the passed widget
-     * to display the passed data.
+     * The widget configurator that configures the passed widget to display the passed data.
      */
     protected BiConsumer<D, W> configurator;
     protected HashMap<D, W> configured = new HashMap<>();
@@ -126,20 +125,29 @@ public class WListPanel<D, W extends WWidget> extends WClippedPanel {
                 if (configured.isEmpty()) {
                     W exemplar = createChild();
                     unconfigured.add(exemplar);
-                    if (!exemplar.canResize()) cellHeight = exemplar.getHeight();
+                    if (!exemplar.canResize()) {
+                        cellHeight = exemplar.getHeight();
+                    }
                 } else {
                     W exemplar = configured.values().iterator().next();
-                    if (!exemplar.canResize()) cellHeight = exemplar.getHeight();
+                    if (!exemplar.canResize()) {
+                        cellHeight = exemplar.getHeight();
+                    }
                 }
             } else {
                 W exemplar = unconfigured.get(0);
-                if (!exemplar.canResize()) cellHeight = exemplar.getHeight();
+                if (!exemplar.canResize()) {
+                    cellHeight = exemplar.getHeight();
+                }
             }
         }
-        if (cellHeight < 4) cellHeight = 4;
+        if (cellHeight < 4) {
+            cellHeight = 4;
+        }
 
         int layoutHeight = this.getHeight() - (margin * 2);
-        int cellsHigh = Math.max((layoutHeight + margin) / (cellHeight + margin), 1); // At least one cell is always visible
+        int cellsHigh = Math.max((layoutHeight + margin) / (cellHeight + margin),
+                1); // At least one cell is always visible
 
         //Fix up the scrollbar handle and track metrics
         scrollBar.setWindow(cellsHigh);
@@ -151,8 +159,12 @@ public class WListPanel<D, W extends WWidget> extends WClippedPanel {
         if (presentCells > 0) {
             for (int i = 0; i < presentCells; i++) {
                 int index = i + scrollOffset;
-                if (index >= data.size()) break;
-                if (index < 0) continue; //THIS IS A THING THAT IS HAPPENING >:(
+                if (index >= data.size()) {
+                    break;
+                }
+                if (index < 0) {
+                    continue; //THIS IS A THING THAT IS HAPPENING >:(
+                }
                 D d = data.get(index);
                 W w = configured.get(d);
                 if (w == null) {

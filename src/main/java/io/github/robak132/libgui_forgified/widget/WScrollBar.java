@@ -1,9 +1,11 @@
 package io.github.robak132.libgui_forgified.widget;
 
 
+import static io.github.robak132.libgui_forgified.client.BackgroundPainter.createNinePatch;
+
+import io.github.robak132.libgui_forgified.NarrationMessages;
 import io.github.robak132.libgui_forgified.client.BackgroundPainter;
 import io.github.robak132.libgui_forgified.client.LibGui;
-import io.github.robak132.libgui_forgified.NarrationMessages;
 import io.github.robak132.libgui_forgified.client.NinePatchTextureRendererImpl;
 import io.github.robak132.libgui_forgified.widget.data.InputResult;
 import io.github.robak132.libgui_forgified.widget.data.WidgetDirection;
@@ -17,9 +19,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-import static io.github.robak132.libgui_forgified.client.BackgroundPainter.createNinePatch;
-
 public class WScrollBar extends WWidget {
+
     private static final int SCROLLING_SPEED = 4;
 
     protected Direction.Plane axis = Direction.Plane.HORIZONTAL;
@@ -56,7 +57,9 @@ public class WScrollBar extends WWidget {
         boolean darkMode = shouldRenderInDarkMode();
         Painters.BACKGROUND.paintBackground(context, x, y, this);
         NinePatch<ResourceLocation> painter = (darkMode ? Painters.SCROLL_BAR_DARK : Painters.SCROLL_BAR);
-        if (maxValue <= 0) return;
+        if (maxValue <= 0) {
+            return;
+        }
         if (sliding) {
             painter = (darkMode ? Painters.SCROLL_BAR_PRESSED_DARK : Painters.SCROLL_BAR_PRESSED);
         } else if (isWithinBounds(mouseX, mouseY)) {
@@ -100,7 +103,9 @@ public class WScrollBar extends WWidget {
         float percentage = (window >= maxValue) ? 1f : window / (float) maxValue;
         int bar = (axis == Direction.Plane.HORIZONTAL) ? width - 2 : height - 2;
         int result = (int) (percentage * bar);
-        if (result < 6) result = 6;
+        if (result < 6) {
+            result = 6;
+        }
         return result;
     }
 
@@ -124,8 +129,7 @@ public class WScrollBar extends WWidget {
     }
 
     /**
-     * Gets the maximum scroll value achievable; this will typically be the maximum value minus the
-     * window size
+     * Gets the maximum scroll value achievable; this will typically be the maximum value minus the window size
      */
     public int getMaxScrollValue() {
         return maxValue - window;
@@ -143,8 +147,12 @@ public class WScrollBar extends WWidget {
         int valueDelta = pixelsToValues(delta);
         int valueNew = anchorValue + valueDelta;
 
-        if (valueNew > getMaxScrollValue()) valueNew = getMaxScrollValue();
-        if (valueNew < 0) valueNew = 0;
+        if (valueNew > getMaxScrollValue()) {
+            valueNew = getMaxScrollValue();
+        }
+        if (valueNew < 0) {
+            valueNew = 0;
+        }
         this.value = valueNew;
     }
 
@@ -183,7 +191,8 @@ public class WScrollBar extends WWidget {
 
     @Override
     public InputResult onKeyPressed(int ch, int key, int modifiers) {
-        WidgetDirection sliderDirection = axis == Direction.Plane.HORIZONTAL ? WidgetDirection.RIGHT : WidgetDirection.DOWN;
+        WidgetDirection sliderDirection =
+                axis == Direction.Plane.HORIZONTAL ? WidgetDirection.RIGHT : WidgetDirection.DOWN;
 
         if (WAbstractSlider.isIncreasingKey(ch, sliderDirection)) {
             if (value < getMaxScrollValue()) {
@@ -225,14 +234,15 @@ public class WScrollBar extends WWidget {
     }
 
     /**
-     * Checks that the current value is in the correct range
-     * and adjusts it if needed.
+     * Checks that the current value is in the correct range and adjusts it if needed.
      */
     protected void checkValue() {
         if (this.value > maxValue - window) {
             this.value = maxValue - window;
         }
-        if (this.value < 0) this.value = 0;
+        if (this.value < 0) {
+            this.value = 0;
+        }
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -244,13 +254,31 @@ public class WScrollBar extends WWidget {
 
     @OnlyIn(Dist.CLIENT)
     static final class Painters {
-        static final NinePatch<ResourceLocation> SCROLL_BAR = NinePatch.builder(ResourceLocation.tryBuild(LibGui.MOD_ID, "textures/widget/scroll_bar/scroll_bar_light.png")).cornerSize(4).cornerUv(0.25f).build();
-        static final NinePatch<ResourceLocation> SCROLL_BAR_DARK = NinePatch.builder(ResourceLocation.tryBuild(LibGui.MOD_ID, "textures/widget/scroll_bar/scroll_bar_dark.png")).cornerSize(4).cornerUv(0.25f).build();
-        static final NinePatch<ResourceLocation> SCROLL_BAR_PRESSED = NinePatch.builder(ResourceLocation.tryBuild(LibGui.MOD_ID, "textures/widget/scroll_bar/scroll_bar_pressed_light.png")).cornerSize(4).cornerUv(0.25f).build();
-        static final NinePatch<ResourceLocation> SCROLL_BAR_PRESSED_DARK = NinePatch.builder(ResourceLocation.tryBuild(LibGui.MOD_ID, "textures/widget/scroll_bar/scroll_bar_pressed_dark.png")).cornerSize(4).cornerUv(0.25f).build();
-        static final NinePatch<ResourceLocation> SCROLL_BAR_HOVERED = NinePatch.builder(ResourceLocation.tryBuild(LibGui.MOD_ID, "textures/widget/scroll_bar/scroll_bar_hovered_light.png")).cornerSize(4).cornerUv(0.25f).build();
-        static final NinePatch<ResourceLocation> SCROLL_BAR_HOVERED_DARK = NinePatch.builder(ResourceLocation.tryBuild(LibGui.MOD_ID, "textures/widget/scroll_bar/scroll_bar_hovered_dark.png")).cornerSize(4).cornerUv(0.25f).build();
-        static final BackgroundPainter BACKGROUND = BackgroundPainter.createLightDarkVariants(createNinePatch(ResourceLocation.tryBuild(LibGui.MOD_ID, "textures/widget/scroll_bar/background_light.png")), createNinePatch(ResourceLocation.tryBuild(LibGui.MOD_ID, "textures/widget/scroll_bar/background_dark.png")));
-        static final NinePatch<ResourceLocation> FOCUS = NinePatch.builder(ResourceLocation.tryBuild(LibGui.MOD_ID, "textures/widget/scroll_bar/focus.png")).cornerSize(4).cornerUv(0.25f).build();
+
+        static final NinePatch<ResourceLocation> SCROLL_BAR = NinePatch.builder(
+                        ResourceLocation.tryBuild(LibGui.MOD_ID, "textures/widget/scroll_bar/scroll_bar_light.png"))
+                .cornerSize(4).cornerUv(0.25f).build();
+        static final NinePatch<ResourceLocation> SCROLL_BAR_DARK = NinePatch.builder(
+                        ResourceLocation.tryBuild(LibGui.MOD_ID, "textures/widget/scroll_bar/scroll_bar_dark.png"))
+                .cornerSize(4).cornerUv(0.25f).build();
+        static final NinePatch<ResourceLocation> SCROLL_BAR_PRESSED = NinePatch.builder(
+                        ResourceLocation.tryBuild(LibGui.MOD_ID, "textures/widget/scroll_bar/scroll_bar_pressed_light.png"))
+                .cornerSize(4).cornerUv(0.25f).build();
+        static final NinePatch<ResourceLocation> SCROLL_BAR_PRESSED_DARK = NinePatch.builder(
+                        ResourceLocation.tryBuild(LibGui.MOD_ID, "textures/widget/scroll_bar/scroll_bar_pressed_dark.png"))
+                .cornerSize(4).cornerUv(0.25f).build();
+        static final NinePatch<ResourceLocation> SCROLL_BAR_HOVERED = NinePatch.builder(
+                        ResourceLocation.tryBuild(LibGui.MOD_ID, "textures/widget/scroll_bar/scroll_bar_hovered_light.png"))
+                .cornerSize(4).cornerUv(0.25f).build();
+        static final NinePatch<ResourceLocation> SCROLL_BAR_HOVERED_DARK = NinePatch.builder(
+                        ResourceLocation.tryBuild(LibGui.MOD_ID, "textures/widget/scroll_bar/scroll_bar_hovered_dark.png"))
+                .cornerSize(4).cornerUv(0.25f).build();
+        static final BackgroundPainter BACKGROUND = BackgroundPainter.createLightDarkVariants(createNinePatch(
+                        ResourceLocation.tryBuild(LibGui.MOD_ID, "textures/widget/scroll_bar/background_light.png")),
+                createNinePatch(
+                        ResourceLocation.tryBuild(LibGui.MOD_ID, "textures/widget/scroll_bar/background_dark.png")));
+        static final NinePatch<ResourceLocation> FOCUS = NinePatch.builder(
+                        ResourceLocation.tryBuild(LibGui.MOD_ID, "textures/widget/scroll_bar/focus.png")).cornerSize(4)
+                .cornerUv(0.25f).build();
     }
 }

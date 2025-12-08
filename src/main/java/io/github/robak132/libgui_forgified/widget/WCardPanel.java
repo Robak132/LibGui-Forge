@@ -1,12 +1,11 @@
 package io.github.robak132.libgui_forgified.widget;
 
 import io.github.robak132.libgui_forgified.GuiDescription;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 /**
  * Similar to the CardLayout in AWT, this panel displays one widget at a time from a list of widgets.
@@ -14,176 +13,182 @@ import java.util.NoSuchElementException;
  * @since 3.0.0
  */
 public class WCardPanel extends WPanel {
-	private final List<WWidget> cards = new ArrayList<>();
-	private int selectedIndex = 0;
 
-	/**
-	 * Adds a card to this panel without resizing it.
-	 *
-	 * @param card the added card
-	 */
-	public void add(WWidget card) {
-		add(cards.size(), card);
-	}
+    private final List<WWidget> cards = new ArrayList<>();
+    private int selectedIndex = 0;
 
-	/**
-	 * Adds a card to this panel without resizing it.
-	 *
-	 * @param index the index of the card
-	 * @param card  the added card
-	 */
-	public void add(int index, WWidget card) {
-		cards.add(index, card);
+    /**
+     * Adds a card to this panel without resizing it.
+     *
+     * @param card the added card
+     */
+    public void add(WWidget card) {
+        add(cards.size(), card);
+    }
 
-		card.setParent(this);
-		card.setLocation(0, 0);
-		expandToFit(card);
-	}
+    /**
+     * Adds a card to this panel without resizing it.
+     *
+     * @param index the index of the card
+     * @param card  the added card
+     */
+    public void add(int index, WWidget card) {
+        cards.add(index, card);
 
-	/**
-	 * Adds a card to this panel and resizes it.
-	 *
-	 * @param card   the added card
-	 * @param width  the new width
-	 * @param height the new height
-	 */
-	public void add(WWidget card, int width, int height) {
-		add(cards.size(), card, width, height);
-	}
+        card.setParent(this);
+        card.setLocation(0, 0);
+        expandToFit(card);
+    }
 
-	/**
-	 * Adds a card to this panel and resizes it.
-	 *
-	 * @param index  the index of the card
-	 * @param card   the added card
-	 * @param width  the new width
-	 * @param height the new height
-	 */
-	public void add(int index, WWidget card, int width, int height) {
-		if (card.canResize()) {
-			card.setSize(width, height);
-		}
+    /**
+     * Adds a card to this panel and resizes it.
+     *
+     * @param card   the added card
+     * @param width  the new width
+     * @param height the new height
+     */
+    public void add(WWidget card, int width, int height) {
+        add(cards.size(), card, width, height);
+    }
 
-		add(index, card);
-	}
+    /**
+     * Adds a card to this panel and resizes it.
+     *
+     * @param index  the index of the card
+     * @param card   the added card
+     * @param width  the new width
+     * @param height the new height
+     */
+    public void add(int index, WWidget card, int width, int height) {
+        if (card.canResize()) {
+            card.setSize(width, height);
+        }
 
-	/**
-	 * Gets the index of the selected card in this panel.
-	 *
-	 * @return the selected card's index
-	 */
-	public int getSelectedIndex() {
-		return selectedIndex;
-	}
+        add(index, card);
+    }
 
-	/**
-	 * Sets the selected index of this panel.
-	 *
-	 * @param selectedIndex the new selected index
-	 * @return this panel
-	 * @throws IndexOutOfBoundsException if this panel does not contain the card index
-	 */
-	public WCardPanel setSelectedIndex(int selectedIndex) {
-		if (selectedIndex < 0 || selectedIndex >= cards.size()) {
-			throw new IndexOutOfBoundsException("Card index " + selectedIndex + " out of bounds: 0 <= index <" + cards.size());
-		}
+    /**
+     * Gets the index of the selected card in this panel.
+     *
+     * @return the selected card's index
+     */
+    public int getSelectedIndex() {
+        return selectedIndex;
+    }
 
-		if (this.selectedIndex != selectedIndex) {
-			this.selectedIndex = selectedIndex;
-			layout();
-		}
+    /**
+     * Sets the selected index of this panel.
+     *
+     * @param selectedIndex the new selected index
+     * @return this panel
+     * @throws IndexOutOfBoundsException if this panel does not contain the card index
+     */
+    public WCardPanel setSelectedIndex(int selectedIndex) {
+        if (selectedIndex < 0 || selectedIndex >= cards.size()) {
+            throw new IndexOutOfBoundsException(
+                    "Card index " + selectedIndex + " out of bounds: 0 <= index <" + cards.size());
+        }
 
-		return this;
-	}
+        if (this.selectedIndex != selectedIndex) {
+            this.selectedIndex = selectedIndex;
+            layout();
+        }
 
-	/**
-	 * Gets the selected card of this panel.
-	 *
-	 * @return the selected card
-	 */
-	public WWidget getSelectedCard() {
-		return cards.get(getSelectedIndex());
-	}
+        return this;
+    }
 
-	/**
-	 * Sets the selected card of this panel.
-	 *
-	 * @param selectedCard the new selected card
-	 * @return this panel
-	 * @throws NoSuchElementException if this panel does not contain the card
-	 */
-	public WCardPanel setSelectedCard(WWidget selectedCard) {
-		if (!cards.contains(selectedCard)) {
-			throw new NoSuchElementException("Widget " + selectedCard + " is not a card in this panel!");
-		}
+    /**
+     * Gets the selected card of this panel.
+     *
+     * @return the selected card
+     */
+    public WWidget getSelectedCard() {
+        return cards.get(getSelectedIndex());
+    }
 
-		return setSelectedIndex(cards.indexOf(selectedCard));
-	}
+    /**
+     * Sets the selected card of this panel.
+     *
+     * @param selectedCard the new selected card
+     * @return this panel
+     * @throws NoSuchElementException if this panel does not contain the card
+     */
+    public WCardPanel setSelectedCard(WWidget selectedCard) {
+        if (!cards.contains(selectedCard)) {
+            throw new NoSuchElementException("Widget " + selectedCard + " is not a card in this panel!");
+        }
 
-	/**
-	 * Gets the number of cards in this panel.
-	 *
-	 * @return the card count
-	 * @since 3.1.0
-	 */
-	public int getCardCount() {
-		return cards.size();
-	}
+        return setSelectedIndex(cards.indexOf(selectedCard));
+    }
 
-	@Override
-	public void setSize(int x, int y) {
-		super.setSize(x, y);
-		for (WWidget card : cards) {
-			card.setSize(x, y);
-		}
-	}
+    /**
+     * Gets the number of cards in this panel.
+     *
+     * @return the card count
+     * @since 3.1.0
+     */
+    public int getCardCount() {
+        return cards.size();
+    }
 
-	@Override
-	public void layout() {
-		children.clear();
+    @Override
+    public void setSize(int x, int y) {
+        super.setSize(x, y);
+        for (WWidget card : cards) {
+            card.setSize(x, y);
+        }
+    }
 
-		for (WWidget child : cards) {
-			if (child instanceof WPanel) ((WPanel) child).layout();
-			expandToFit(child);
+    @Override
+    public void layout() {
+        children.clear();
 
-			if (child == getSelectedCard()) {
-				child.onShown();
-			} else {
-				child.onHidden();
-			}
-		}
+        for (WWidget child : cards) {
+            if (child instanceof WPanel) {
+                ((WPanel) child).layout();
+            }
+            expandToFit(child);
 
-		for (WWidget child : cards) {
-			child.setSize(getWidth(), getHeight());
-		}
+            if (child == getSelectedCard()) {
+                child.onShown();
+            } else {
+                child.onHidden();
+            }
+        }
 
-		children.add(getSelectedCard());
-	}
+        for (WWidget child : cards) {
+            child.setSize(getWidth(), getHeight());
+        }
 
-	/**
-	 * {@inheritDoc}
-	 *
-	 * @param c the host GUI description
-	 * @throws IllegalStateException if this panel has no cards
-	 */
-	@Override
-	public void validate(GuiDescription c) {
-		if (cards.isEmpty()) {
-			throw new IllegalStateException("No children in card panel");
-		}
+        children.add(getSelectedCard());
+    }
 
-		layout();
-		for (WWidget card : cards) {
-			card.validate(c);
-			if (getSelectedCard() != card) card.onHidden();
-		}
-	}
+    /**
+     * {@inheritDoc}
+     *
+     * @param c the host GUI description
+     * @throws IllegalStateException if this panel has no cards
+     */
+    @Override
+    public void validate(GuiDescription c) {
+        if (cards.isEmpty()) {
+            throw new IllegalStateException("No children in card panel");
+        }
 
-	@OnlyIn(Dist.CLIENT)
-	@Override
-	public void addPainters() {
-		for (WWidget card : cards) {
-			card.addPainters();
-		}
-	}
+        layout();
+        for (WWidget card : cards) {
+            card.validate(c);
+            if (getSelectedCard() != card) {
+                card.onHidden();
+            }
+        }
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    @Override
+    public void addPainters() {
+        for (WWidget card : cards) {
+            card.addPainters();
+        }
+    }
 }

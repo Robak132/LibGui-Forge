@@ -4,19 +4,19 @@ import io.github.robak132.libgui_forgified.GuiDescription;
 import io.github.robak132.libgui_forgified.widget.WItemSlot;
 import io.github.robak132.libgui_forgified.widget.WWidget;
 import io.github.robak132.libgui_forgified.widget.data.Texture;
+import java.util.function.Consumer;
 import juuxel.libninepatch.NinePatch;
 import juuxel.libninepatch.TextureRegion;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
 
-import java.util.function.Consumer;
-
 /**
- * Background painters are used to paint the background of a widget.
- * The background painter instance of a widget can be changed to customize the look of a widget.
+ * Background painters are used to paint the background of a widget. The background painter instance of a widget can be
+ * changed to customize the look of a widget.
  */
 @FunctionalInterface
 public interface BackgroundPainter {
+
     /**
      * The {@code VANILLA} background painter draws a vanilla-like GUI panel using nine-patch textures.
      *
@@ -28,15 +28,19 @@ public interface BackgroundPainter {
      *
      * @since 1.5.0
      */
-    BackgroundPainter VANILLA = createLightDarkVariants(createNinePatch(ResourceLocation.tryBuild(LibGui.MOD_ID, "textures/widget/panel_light.png")), createNinePatch(ResourceLocation.tryBuild(LibGui.MOD_ID, "textures/widget/panel_dark.png")));
+    BackgroundPainter VANILLA = createLightDarkVariants(
+            createNinePatch(ResourceLocation.tryBuild(LibGui.MOD_ID, "textures/widget/panel_light.png")),
+            createNinePatch(ResourceLocation.tryBuild(LibGui.MOD_ID, "textures/widget/panel_dark.png")));
     /**
      * The {@code SLOT} background painter draws item slots or slot-like widgets.
      *
-     * <p>For {@linkplain WItemSlot item slots}, this painter uses {@link WItemSlot#SLOT_TEXTURE libgui:textures/widget/item_slot.png}.
+     * <p>For {@linkplain WItemSlot item slots}, this painter uses
+     * {@link WItemSlot#SLOT_TEXTURE libgui:textures/widget/item_slot.png}.
      */
     BackgroundPainter SLOT = (context, left, top, panel) -> {
         if (!(panel instanceof WItemSlot slot)) {
-            ScreenDrawing.drawBeveledPanel(context, left - 1, top - 1, panel.getWidth() + 2, panel.getHeight() + 2, 0xB8000000, 0x4C000000, 0xB8FFFFFF);
+            ScreenDrawing.drawBeveledPanel(context, left - 1, top - 1, panel.getWidth() + 2, panel.getHeight() + 2,
+                    0xB8000000, 0x4C000000, 0xB8FFFFFF);
         } else {
             for (int x = 0; x < slot.getWidth() / 18; ++x) {
                 for (int y = 0; y < slot.getHeight() / 18; ++y) {
@@ -45,16 +49,20 @@ public interface BackgroundPainter {
                     if (slot.isBigSlot()) {
                         int sx = (x * 18) + left - 4;
                         int sy = (y * 18) + top - 4;
-                        ScreenDrawing.texturedRect(context, sx, sy, 26, 26, WItemSlot.SLOT_TEXTURE, 18 * px, 0, 44 * px, 26 * px, 0xFF_FFFFFF);
+                        ScreenDrawing.texturedRect(context, sx, sy, 26, 26, WItemSlot.SLOT_TEXTURE, 18 * px, 0, 44 * px,
+                                26 * px, 0xFF_FFFFFF);
                         if (slot.getFocusedSlot() == index) {
-                            ScreenDrawing.texturedRect(context, sx, sy, 26, 26, WItemSlot.SLOT_TEXTURE, 18 * px, 26 * px, 44 * px, 52 * px, 0xFF_FFFFFF);
+                            ScreenDrawing.texturedRect(context, sx, sy, 26, 26, WItemSlot.SLOT_TEXTURE, 18 * px,
+                                    26 * px, 44 * px, 52 * px, 0xFF_FFFFFF);
                         }
                     } else {
                         int sx = (x * 18) + left;
                         int sy = (y * 18) + top;
-                        ScreenDrawing.texturedRect(context, sx, sy, 18, 18, WItemSlot.SLOT_TEXTURE, 0, 0, 18 * px, 18 * px, 0xFF_FFFFFF);
+                        ScreenDrawing.texturedRect(context, sx, sy, 18, 18, WItemSlot.SLOT_TEXTURE, 0, 0, 18 * px,
+                                18 * px, 0xFF_FFFFFF);
                         if (slot.getFocusedSlot() == index) {
-                            ScreenDrawing.texturedRect(context, sx, sy, 18, 18, WItemSlot.SLOT_TEXTURE, 0, 26 * px, 18 * px, 44 * px, 0xFF_FFFFFF);
+                            ScreenDrawing.texturedRect(context, sx, sy, 18, 18, WItemSlot.SLOT_TEXTURE, 0, 26 * px,
+                                    18 * px, 44 * px, 0xFF_FFFFFF);
                         }
                     }
                 }
@@ -70,7 +78,8 @@ public interface BackgroundPainter {
      * @see ScreenDrawing#drawGuiPanel(GuiGraphics, int, int, int, int, int)
      */
     static BackgroundPainter createColorful(int panelColor) {
-        return (context, left, top, panel) -> ScreenDrawing.drawGuiPanel(context, left, top, panel.getWidth(), panel.getHeight(), panelColor);
+        return (context, left, top, panel) -> ScreenDrawing.drawGuiPanel(context, left, top, panel.getWidth(),
+                panel.getHeight(), panelColor);
     }
 
     /**
@@ -85,7 +94,8 @@ public interface BackgroundPainter {
             int shadowColor = ScreenDrawing.multiplyColor(panelColor, 1.0f - contrast);
             int hilightColor = ScreenDrawing.multiplyColor(panelColor, 1.0f + contrast);
 
-            ScreenDrawing.drawGuiPanel(context, left, top, panel.getWidth(), panel.getHeight(), shadowColor, panelColor, hilightColor, 0xFF000000);
+            ScreenDrawing.drawGuiPanel(context, left, top, panel.getWidth(), panel.getHeight(), shadowColor, panelColor,
+                    hilightColor, 0xFF000000);
         };
     }
 
@@ -114,16 +124,18 @@ public interface BackgroundPainter {
      * @see NinePatchBackgroundPainter
      * @since 4.0.0
      */
-    static NinePatchBackgroundPainter createNinePatch(Texture texture, Consumer<NinePatch.Builder<ResourceLocation>> configurator) {
-        TextureRegion<ResourceLocation> region = new TextureRegion<>(texture.image(), texture.u1(), texture.v1(), texture.u2(), texture.v2());
+    static NinePatchBackgroundPainter createNinePatch(Texture texture,
+            Consumer<NinePatch.Builder<ResourceLocation>> configurator) {
+        TextureRegion<ResourceLocation> region = new TextureRegion<>(texture.image(), texture.u1(), texture.v1(),
+                texture.u2(), texture.v2());
         var builder = NinePatch.builder(region);
         configurator.accept(builder);
         return new NinePatchBackgroundPainter(builder.build());
     }
 
     /**
-     * Creates a background painter that uses either the {@code light} or the {@code dark} background painter
-     * depending on the {@linkplain WWidget#shouldRenderInDarkMode current setting}.
+     * Creates a background painter that uses either the {@code light} or the {@code dark} background painter depending
+     * on the {@linkplain WWidget#shouldRenderInDarkMode current setting}.
      *
      * @param light the light mode background painter
      * @param dark  the dark mode background painter
@@ -132,8 +144,11 @@ public interface BackgroundPainter {
      */
     static BackgroundPainter createLightDarkVariants(BackgroundPainter light, BackgroundPainter dark) {
         return (context, left, top, panel) -> {
-            if (panel.shouldRenderInDarkMode()) dark.paintBackground(context, left, top, panel);
-            else light.paintBackground(context, left, top, panel);
+            if (panel.shouldRenderInDarkMode()) {
+                dark.paintBackground(context, left, top, panel);
+            } else {
+                light.paintBackground(context, left, top, panel);
+            }
         };
     }
 

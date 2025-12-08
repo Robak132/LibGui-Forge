@@ -1,7 +1,7 @@
 package io.github.robak132.libgui_forgified.widget;
 
-import io.github.robak132.libgui_forgified.client.LibGui;
 import io.github.robak132.libgui_forgified.NarrationMessages;
+import io.github.robak132.libgui_forgified.client.LibGui;
 import io.github.robak132.libgui_forgified.client.ScreenDrawing;
 import io.github.robak132.libgui_forgified.widget.data.HorizontalAlignment;
 import io.github.robak132.libgui_forgified.widget.data.InputResult;
@@ -21,7 +21,9 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.Nullable;
 
 public class WButton extends WWidget {
-    private static final ResourceLocation DARK_WIDGETS_LOCATION = ResourceLocation.tryBuild(LibGui.MOD_ID, "textures/widget/dark_widgets.png");
+
+    private static final ResourceLocation DARK_WIDGETS_LOCATION = ResourceLocation.tryBuild(LibGui.MOD_ID,
+            "textures/widget/dark_widgets.png");
     private static final int BUTTON_HEIGHT = 20;
     private static final int ICON_SPACING = 2;
     protected int color = WLabel.DEFAULT_TEXT_COLOR;
@@ -106,15 +108,19 @@ public class WButton extends WWidget {
         float buttonLeft = 0 * px;
         float buttonTop = (46 + (state * 20)) * px;
         int halfWidth = getWidth() / 2;
-        if (halfWidth > 198) halfWidth = 198;
+        if (halfWidth > 198) {
+            halfWidth = 198;
+        }
         float buttonWidth = halfWidth * px;
         float buttonHeight = 20 * px;
 
         float buttonEndLeft = (200 - (getWidth() / 2)) * px;
 
         ResourceLocation texture = getTexture(this);
-        ScreenDrawing.texturedRect(context, x, y, getWidth() / 2, 20, texture, buttonLeft, buttonTop, buttonLeft + buttonWidth, buttonTop + buttonHeight, 0xFFFFFFFF);
-        ScreenDrawing.texturedRect(context, x + (getWidth() / 2), y, getWidth() / 2, 20, texture, buttonEndLeft, buttonTop, 200 * px, buttonTop + buttonHeight, 0xFFFFFFFF);
+        ScreenDrawing.texturedRect(context, x, y, getWidth() / 2, 20, texture, buttonLeft, buttonTop,
+                buttonLeft + buttonWidth, buttonTop + buttonHeight, 0xFFFFFFFF);
+        ScreenDrawing.texturedRect(context, x + (getWidth() / 2), y, getWidth() / 2, 20, texture, buttonEndLeft,
+                buttonTop, 200 * px, buttonTop + buttonHeight, 0xFFFFFFFF);
 
         if (icon != null) {
             icon.paint(context, x + ICON_SPACING, y + (BUTTON_HEIGHT - iconSize) / 2, iconSize);
@@ -126,8 +132,11 @@ public class WButton extends WWidget {
                 color = 0xA0A0A0;
             }
 
-            int xOffset = (icon != null && alignment == HorizontalAlignment.LEFT) ? ICON_SPACING + iconSize + ICON_SPACING : 0;
-            ScreenDrawing.drawStringWithShadow(context, label.getVisualOrderText(), alignment, x + xOffset, y + ((20 - 8) / 2), width, color);
+            int xOffset =
+                    (icon != null && alignment == HorizontalAlignment.LEFT) ? ICON_SPACING + iconSize + ICON_SPACING
+                            : 0;
+            ScreenDrawing.drawStringWithShadow(context, label.getVisualOrderText(), alignment, x + xOffset,
+                    y + ((20 - 8) / 2), width, color);
         }
     }
 
@@ -142,9 +151,12 @@ public class WButton extends WWidget {
         super.onClick(x, y, button);
 
         if (enabled && isWithinBounds(x, y)) {
-            Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+            Minecraft.getInstance().getSoundManager()
+                    .play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
 
-            if (onClick != null) onClick.run();
+            if (onClick != null) {
+                onClick.run();
+            }
             return InputResult.PROCESSED;
         }
 
