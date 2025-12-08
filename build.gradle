@@ -93,6 +93,7 @@ java {
 	sourceCompatibility = JavaVersion.VERSION_17
 	targetCompatibility = JavaVersion.VERSION_17
 	toolchain { languageVersion = JavaLanguageVersion.of(17) }
+    withSourcesJar()
 }
 
 mixin {
@@ -128,19 +129,15 @@ tasks.register('cleanJar') {
 	delete 'build/libs'
 }
 
-tasks.named('jarJar') {
-    // ...
-}
 
 project.publishing {
     publications {
         mavenJava(MavenPublication) {
-            artifactId base.archivesName.get()
-            from components.java
-
-            artifact(tasks.reobfJar) {
-                classifier = "all"
-            }
+            groupId project.group
+            artifactId project.archivesBaseName
+            version project.version
+            artifact jar
+            artifact sourcesJar
         }
     }
 
@@ -156,55 +153,5 @@ project.publishing {
                 url = URI.create(project.property("mavenURL") as String)
             }
         }
-
-        if (project.hasProperty("mavendir")) {
-            maven { url mavendir }
-        }
-    }
-}
-
-publishMods {
-    file = reobfJar.archiveFile
-    changelog = ChangelogText.getChangelogText(project).toString()
-    type = STABLE
-    version = "mc$minecraft_version-$mod_version"
-    displayName = "$mod_name $mod_version for mc$minecraft_version"
-    modLoaders.add("forge")
-    modLoaders.add("neoforge")
-
-    github {
-        accessToken = providers.environmentVariable("GITHUB_TOKEN")
-        repository = "Robak132/LibGui-Forgified"
-        commitish = gitHash
-        tagName = "mc$minecraft_version-$mod_version"
-        file.unset()
-        file.unsetConvention()
-
-        allowEmptyFiles = true
-    }
-}
-
-String calculateGitHash() {
-    try {
-        ExecOutput output = providers.exec {
-            commandLine("git", "rev-parse", "HEAD")
-        }
-        return output.standardOutput.asText.get().trim()
-    } catch (Throwable ignored) {
-        return "unknown"
-    }
-}
-
-boolean hasUnstaged() {
-    try {
-        ExecOutput output = providers.exec {
-            commandLine("git", "status", "--porcelain")
-        }
-        String result = output.standardOutput.asText.get().replace("/M gradlew(\\.bat)?/", "").trim()
-        if (!result.isEmpty())
-            println("Found stageable results:\n ${result}\n")
-        return !result.isEmpty()
-    } catch (Throwable ignored) {
-        return false
     }
 }
