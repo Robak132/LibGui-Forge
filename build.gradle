@@ -25,7 +25,8 @@ repositories {
 	maven { url "https://maven.juuxel.me/" }
 	maven { url "https://maven.shedaniel.me/" }
 	maven { url "https://maven.minecraftforge.net" }
-	mavenCentral()
+    maven { url 'https://jitpack.io' }
+    mavenCentral()
 }
 
 version = project.mod_version
