@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -53,8 +54,8 @@ public final class VisualLogger {
 
     @OnlyIn(Dist.CLIENT)
     public static void render(GuiGraphics context) {
-        var client = Minecraft.getInstance();
-        var textRenderer = client.font;
+        Minecraft client = Minecraft.getInstance();
+        Font textRenderer = client.font;
         int width = client.getWindow().getGuiScaledWidth();
         List<FormattedCharSequence> lines = new ArrayList<>();
 

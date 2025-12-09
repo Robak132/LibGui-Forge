@@ -163,11 +163,10 @@ public class WScrollBar extends WWidget {
 
         if (axis == Direction.Plane.HORIZONTAL) {
             anchor = x;
-            anchorValue = value;
         } else {
             anchor = y;
-            anchorValue = value;
         }
+        anchorValue = value;
         sliding = true;
         return InputResult.PROCESSED;
     }

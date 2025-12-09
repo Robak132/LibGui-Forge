@@ -580,7 +580,7 @@ public class WWidget {
      */
     @OnlyIn(Dist.CLIENT)
     public boolean shouldRenderInDarkMode() {
-        boolean globalDarkMode = LibGuiConfig.isDarkMode();
+        boolean globalDarkMode = LibGuiConfig.DARK_MODE.get();
 
         if (host != null) {
             return host.isDarkMode() == null ? globalDarkMode : host.isDarkMode();

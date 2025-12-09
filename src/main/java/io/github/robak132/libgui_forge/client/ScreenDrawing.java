@@ -233,7 +233,7 @@ public class ScreenDrawing {
      * @param height  the height of the panel
      */
     public static void drawGuiPanel(GuiGraphics context, int x, int y, int width, int height) {
-        if (LibGuiConfig.isDarkMode()) {
+        if (LibGuiConfig.DARK_MODE.get()) {
             drawGuiPanel(context, x, y, width, height, 0xFF0B0B0B, 0xFF2F2F2F, 0xFF414141, 0xFF000000);
         } else {
             drawGuiPanel(context, x, y, width, height, 0xFF555555, 0xFFC6C6C6, 0xFFFFFFFF, 0xFF000000);

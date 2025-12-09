@@ -214,7 +214,7 @@ public class SyncedGuiDescription extends AbstractContainerMenu implements GuiDe
 
     public int getTitleColor() {
         if (world.isClientSide && isDarkMode() == null) {
-            return LibGuiConfig.isDarkMode() ? darkTitleColor : titleColor;
+            return LibGuiConfig.DARK_MODE.get() ? darkTitleColor : titleColor;
         }
         return isDarkMode() ? darkTitleColor : titleColor;
     }
