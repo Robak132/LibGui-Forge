@@ -1,12 +1,14 @@
+import net.minecraftforge.gradle.userdev.tasks.RenameJarInPlace
+
 plugins {
-	id 'idea'
-	id 'java'
-	id 'java-library'
-	id 'maven-publish'
-	id 'net.minecraftforge.gradle' version '6.0.+'
-	id 'org.parchmentmc.librarian.forgegradle' version '1.+'
-	id 'org.spongepowered.mixin' version '0.7.+'
-    id"com.github.johnrengelman.shadow" version "8.1.1"
+    id 'idea'
+    id 'java'
+    id 'java-library'
+    id 'maven-publish'
+    id 'net.minecraftforge.gradle' version '6.0.+'
+    id 'org.parchmentmc.librarian.forgegradle' version '1.+'
+    id 'org.spongepowered.mixin' version '0.7.+'
+    id "com.github.johnrengelman.shadow" version "8.1.1"
 }
 
 def secretsFile = rootProject.file(".secret.properties")
@@ -31,141 +33,113 @@ repositories {
 
 version = project.mod_version
 group = project.maven_group
-
-base {
-	archivesName = project.archives_base_name
-}
-
-println "Java: ${System.getProperty 'java.version'}, JVM: ${System.getProperty 'java.vm.version'} (${System.getProperty 'java.vendor'}), Arch: ${System.getProperty 'os.arch'}"
-
-minecraft {
-	// Use Parchment mappings that match the Forge/Minecraft version (1.20.1)
-	mappings channel: 'parchment', version: '2023.09.03-1.20.1'
-	copyIdeResources = true
-	generateRunFolders = true
-	accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
-
-	runs {
-		configureEach {
-			workingDirectory project.file('run')
-			property 'forge.logging.markers', 'REGISTRIES'
-			property 'forge.logging.console.level', 'debug'
-
-			mods {
-				"${mod_id}" {
-					source sourceSets.main
-				}
-			}
-		}
-
-		client {
-			property 'mixin.env.remapRefMap', 'true'
-			property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
-			property 'forge.enabledGameTestNamespaces', mod_id
-		}
-
-		server {
-			property 'mixin.env.remapRefMap', 'true'
-			property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
-			property 'forge.enabledGameTestNamespaces', mod_id
-		}
-
-		gameTestServer {
-			property 'mixin.env.remapRefMap', 'true'
-			property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
-			property 'forge.enabledGameTestNamespaces', mod_id
-		}
-
-		data {
-			workingDirectory project.file('run-data')
-
-			args '--mod', mod_id, '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
-		}
-	}
-}
-
-sourceSets.main.resources { srcDir 'src/generated/resources' }
-
-dependencies {
-    minecraft "net.minecraftforge:forge:1.20.1-47.4.13"
-    api fg.deobf("me.shedaniel.cloth:cloth-config-forge:11.1.136")
-    shadow "io.github.juuxel:libninepatch:1.2.0"
-
-    compileOnly("org.projectlombok:lombok:1.18.42")
-    annotationProcessor("org.projectlombok:lombok:1.18.42")
-
-	annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
-}
+base.archivesName = project.archives_base_name
 
 java {
-	// Ensure source uses Java 21 features and bytecode targets Java 17
-	sourceCompatibility = JavaVersion.VERSION_17
-	targetCompatibility = JavaVersion.VERSION_17
-	toolchain { languageVersion = JavaLanguageVersion.of(17) }
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+    toolchain { languageVersion = JavaLanguageVersion.of(17) }
     withSourcesJar()
 }
 
-mixin {
-	// MixinGradle Settings
-	add sourceSets.main, 'mixins.libgui_forge.refmap.json'
-	config 'mixins.libgui_forge.json'
+minecraft {
+    // The ONLY mapping you need. No Yarn, no extra remaps.
+    mappings channel: 'parchment', version: '2023.09.03-1.20.1'
 
-	debug.verbose = true
-	debug.export = true
+    copyIdeResources = true
+    generateRunFolders = true
+
+    runs {
+        client {
+            workingDirectory project.file('run')
+            property 'forge.logging.console.level', 'debug'
+            property 'forge.enabledGameTestNamespaces', mod_id
+
+            mods {
+                "${mod_id}" {
+                    source sourceSets.main
+                }
+            }
+        }
+
+        data {
+            workingDirectory project.file('run-data')
+            args '--mod', mod_id, '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
+        }
+    }
 }
 
+// Add generated resources
+sourceSets.main.resources.srcDir 'src/generated/resources'
+
+// REQUIRED – Forge mixins: this is the ONLY refmap you should use
+sourceSets.main.ext.refMap = "libgui_forge.refmap.json"
+
+dependencies {
+    minecraft "net.minecraftforge:forge:1.20.1-47.4.0"
+
+    // Your dependencies
+    api fg.deobf("me.shedaniel.cloth:cloth-config-forge:11.1.136")
+
+    // Shade-only dependencies
+    shadow "io.github.juuxel:libninepatch:1.2.0"
+
+    // Lombok
+    compileOnly "org.projectlombok:lombok:1.18.42"
+    annotationProcessor "org.projectlombok:lombok:1.18.42"
+
+    // Mixin AP
+    annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
+}
+
+// Proper Mixin setup for Forge
+mixin {
+    add sourceSets.main, "libgui_forge.refmap.json"
+    config "mixins.libgui_forge.json"
+    defaultObfuscationEnv "searge"  // REQUIRED for Forge runtime
+}
+
+// Shadow configuration
 configurations {
     shadow
     implementation.extendsFrom(shadow)
 }
 
-tasks.withType(JavaCompile).configureEach {
-	options.encoding = 'UTF-8'
-	options.release = 17
-}
-
-tasks.named('jar', Jar).configure {
-	manifest {
-		attributes([
-			'Specification-Title'     : mod_id,
-			'Specification-Vendor'    : mod_authors,
-			'Specification-Version'   : '1',
-			'Implementation-Title'    : project.name,
-			'Implementation-Version'  : project.jar.archiveVersion,
-			'Implementation-Vendor'   : mod_authors,
-			'Implementation-Timestamp': new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
-		])
-	}
-}
-
-tasks.register('cleanJar') {
-	delete 'build/libs'
-}
-
 shadowJar {
     archiveClassifier.set('shadow')
+
     configurations = [project.configurations.shadow]
+
     relocate 'io.github.juuxel.libninepatch', 'io.github.robak132.libgui.shaded.libninepatch'
+
+    manifest {
+        attributes("MixinConfigs": "mixins.libgui_forge.json")
+    }
 }
 
-tasks.withType(net.minecraftforge.gradle.userdev.tasks.RenameJarInPlace).configureEach {
+// Ensure Forge uses the shadow jar as the published artifact
+tasks.withType(RenameJarInPlace).configureEach {
     dependsOn tasks.shadowJar
 }
 
+tasks.named('jar', Jar).configure {
+    enabled = false // We only want the shadow jar
+}
 
 publishing {
     publications {
         mavenJava(MavenPublication) {
-            artifact(shadowJar) {
-                classifier = ''
+            artifact tasks.shadowJar {
+                archiveClassifier.set("")
             }
-            artifact(tasks.sourcesJar)
+            artifact tasks.sourcesJar
 
             groupId = project.maven_group
             artifactId = project.archives_base_name
             version = project.version
         }
     }
+
 
     repositories {
         maven {

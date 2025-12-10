@@ -8,6 +8,6 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 public class LibGuiClient {
 
     public static void init() {
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(event -> ClothConfigIntegration.init());
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(ClothConfigIntegration::init);
     }
 }

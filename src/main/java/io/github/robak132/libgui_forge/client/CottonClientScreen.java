@@ -2,10 +2,10 @@ package io.github.robak132.libgui_forge.client;
 
 import io.github.robak132.libgui_forge.GuiDescription;
 import io.github.robak132.libgui_forge.MouseInputHandler;
-import io.github.robak132.libgui_forge.mixin.ScreenAccessor;
 import io.github.robak132.libgui_forge.widget.WPanel;
 import io.github.robak132.libgui_forge.widget.WWidget;
 import io.github.robak132.libgui_forge.widget.data.InputResult;
+import java.util.List;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
@@ -66,7 +66,9 @@ public class CottonClientScreen extends Screen implements CottonScreenImpl {
 
         if (root != null) {
             GuiEventListener rootPanelElement = FocusElements.ofPanel(root);
-            ((ScreenAccessor) this).libgui_forge$getChildren().add(rootPanelElement);
+            @SuppressWarnings("unchecked")
+            List<GuiEventListener> children = (List<GuiEventListener>) this.children();
+            children.add(rootPanelElement);
             setInitialFocus(rootPanelElement);
         } else {
             LOGGER.warn("No root panel found, keyboard navigation disabled");

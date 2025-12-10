@@ -4,10 +4,10 @@ import com.mojang.blaze3d.platform.Lighting;
 import io.github.robak132.libgui_forge.GuiDescription;
 import io.github.robak132.libgui_forge.MouseInputHandler;
 import io.github.robak132.libgui_forge.SyncedGuiDescription;
-import io.github.robak132.libgui_forge.mixin.ScreenAccessor;
 import io.github.robak132.libgui_forge.widget.WPanel;
 import io.github.robak132.libgui_forge.widget.WWidget;
 import io.github.robak132.libgui_forge.widget.data.InputResult;
+import java.util.List;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
@@ -94,7 +94,6 @@ public class CottonInventoryScreen<T extends SyncedGuiDescription> extends Abstr
      *   * "left" and "top" are now (1.15) "x" and "y". A bit less self-explanatory, I guess.
      * * coordinates start at 0,0 at the topleft of the screen.
      */
-
     @Override
     public void init() {
         super.init();
@@ -104,12 +103,13 @@ public class CottonInventoryScreen<T extends SyncedGuiDescription> extends Abstr
             root.addPainters();
         }
         description.addPainters();
-
         reposition(width, height);
 
         if (root != null) {
             GuiEventListener rootPanelElement = FocusElements.ofPanel(root);
-            ((ScreenAccessor) this).libgui_forge$getChildren().add(rootPanelElement);
+            @SuppressWarnings("unchecked")
+            List<GuiEventListener> children = (List<GuiEventListener>) this.children();
+            children.add(rootPanelElement);
             setInitialFocus(rootPanelElement);
         } else {
             LOGGER.warn("No root panel found, keyboard navigation disabled");

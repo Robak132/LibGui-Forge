@@ -14,6 +14,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraftforge.client.ConfigScreenHandler;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.ModLoadingContext;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
 @Slf4j(topic = MOD_ID)
 public class ClothConfigIntegration {
@@ -47,7 +48,7 @@ public class ClothConfigIntegration {
         return false;
     }
 
-    public static void init() {
+    public static void init(FMLClientSetupEvent event) {
         if (isClothConfigLoaded()) {
             log.info("Cloth Config detected, registering config screen.");
             ModLoadingContext.get().registerExtensionPoint(ConfigScreenHandler.ConfigScreenFactory.class,

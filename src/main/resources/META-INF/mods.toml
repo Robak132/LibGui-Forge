@@ -5,7 +5,7 @@ issueTrackerURL="https://github.com/Robak132/LibGui-Forge/issues"
 
 [[mods]]
 modId="libgui_forge"
-version="8.1.1"
+version="8.1.3"
 displayName="LibGui: Forgified"
 description="A library mod for creating GUIs in Minecraft Forge mods."
 authors="Robak132, Cotton"

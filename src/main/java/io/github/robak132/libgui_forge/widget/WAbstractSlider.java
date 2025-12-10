@@ -1,5 +1,7 @@
 package io.github.robak132.libgui_forge.widget;
 
+import static io.github.robak132.libgui_forge.Utilities.clampInt;
+
 import io.github.robak132.libgui_forge.NarrationMessages;
 import io.github.robak132.libgui_forge.widget.data.InputResult;
 import io.github.robak132.libgui_forge.widget.data.WidgetDirection;
@@ -37,11 +39,10 @@ public abstract class WAbstractSlider extends WWidget {
      * The minimum time between two draggingFinished events caused by scrolling ({@link #onMouseScroll}).
      */
     private static final int DRAGGING_FINISHED_RATE_LIMIT_FOR_SCROLLING = 10;
-
-    protected int min;
-    protected int max;
     @Getter
     protected final Direction.Plane axis;
+    protected int min;
+    protected int max;
     @Getter
     protected WidgetDirection widgetDirection;
     @Getter
@@ -89,6 +90,30 @@ public abstract class WAbstractSlider extends WWidget {
     }
 
     /**
+     * Tests if the key should decrease sliders with the specified direction.
+     *
+     * @param ch              the key code
+     * @param widgetDirection the direction
+     * @return true if the key should decrease sliders with the direction, false otherwise
+     * @since 2.0.0
+     */
+    public static boolean isDecreasingKey(int ch, WidgetDirection widgetDirection) {
+        return widgetDirection.isInverted() ? (ch == GLFW.GLFW_KEY_RIGHT || ch == GLFW.GLFW_KEY_UP) : (ch == GLFW.GLFW_KEY_LEFT || ch == GLFW.GLFW_KEY_DOWN);
+    }
+
+    /**
+     * Tests if the key should increase sliders with the specified direction.
+     *
+     * @param ch              the key code
+     * @param widgetDirection the direction
+     * @return true if the key should increase sliders with the direction, false otherwise
+     * @since 2.0.0
+     */
+    public static boolean isIncreasingKey(int ch, WidgetDirection widgetDirection) {
+        return widgetDirection.isInverted() ? (ch == GLFW.GLFW_KEY_LEFT || ch == GLFW.GLFW_KEY_DOWN) : (ch == GLFW.GLFW_KEY_RIGHT || ch == GLFW.GLFW_KEY_UP);
+    }
+
+    /**
      * {@return the thumb size along the slider axis}
      */
     protected abstract int getThumbWidth();
@@ -103,8 +128,8 @@ public abstract class WAbstractSlider extends WWidget {
     protected abstract boolean isMouseInsideBounds(int x, int y);
 
     /**
-     * Updates {@link #coordToValueRatio} and {@link #valueToCoordRatio}. This method should be called whenever this
-     * widget resizes or changes it min/max value boundaries.
+     * Updates {@link #coordToValueRatio} and {@link #valueToCoordRatio}. This method should be called whenever this widget resizes or changes it min/max value
+     * boundaries.
      *
      * @since 5.1.0
      */
@@ -174,7 +199,7 @@ public abstract class WAbstractSlider extends WWidget {
         int pos = axisPos - getThumbWidth() / 2;
         int rawValue = min + Math.round(valueToCoordRatio * pos);
         int previousValue = value;
-        value = Mth.clamp(rawValue, min, max);
+        value = clampInt(rawValue, min, max);
         if (value != previousValue) {
             onValueChanged(value);
         }
@@ -198,8 +223,7 @@ public abstract class WAbstractSlider extends WWidget {
         }
 
         int previous = value;
-        value = Mth.clamp(value + (int) Math.signum(amount) * Mth.ceil(valueToCoordRatio * Math.abs(amount) * 2), min,
-                max);
+        value = clampInt(value + (int) Math.signum(amount) * Mth.ceil(valueToCoordRatio * Math.abs(amount) * 2), min, max);
 
         if (previous != value) {
             onValueChanged(value);
@@ -242,7 +266,7 @@ public abstract class WAbstractSlider extends WWidget {
      */
     public void setValue(int value, boolean callListeners) {
         int previous = this.value;
-        this.value = Mth.clamp(value, min, max);
+        this.value = clampInt(value, min, max);
         if (callListeners && previous != this.value) {
             onValueChanged(this.value);
             if (draggingFinishedListener != null) {
@@ -273,10 +297,6 @@ public abstract class WAbstractSlider extends WWidget {
         return min;
     }
 
-    public int getMaxValue() {
-        return max;
-    }
-
     public void setMinValue(int min) {
         this.min = min;
         updateValueCoordRatios();
@@ -284,6 +304,10 @@ public abstract class WAbstractSlider extends WWidget {
             this.value = min;
             onValueChanged(this.value);
         }
+    }
+
+    public int getMaxValue() {
+        return max;
     }
 
     public void setMaxValue(int max) {
@@ -299,8 +323,7 @@ public abstract class WAbstractSlider extends WWidget {
      * Sets the direction of this slider.
      *
      * @param widgetDirection the new direction
-     * @throws IllegalArgumentException if the {@linkplain WidgetDirection#getAxis() direction axis} is not equal to
-     *                                  {@link #axis}.
+     * @throws IllegalArgumentException if the {@linkplain WidgetDirection#getAxis() direction axis} is not equal to {@link #axis}.
      * @since 2.0.0
      */
     public void setWidgetDirection(WidgetDirection widgetDirection) {
@@ -350,8 +373,7 @@ public abstract class WAbstractSlider extends WWidget {
     @OnlyIn(Dist.CLIENT)
     @Override
     public InputResult onKeyReleased(int ch, int key, int modifiers) {
-        if (pendingDraggingFinishedFromKeyboard && (isDecreasingKey(ch, widgetDirection) || isIncreasingKey(ch,
-                widgetDirection))) {
+        if (pendingDraggingFinishedFromKeyboard && (isDecreasingKey(ch, widgetDirection) || isIncreasingKey(ch, widgetDirection))) {
             if (draggingFinishedListener != null) {
                 draggingFinishedListener.accept(value);
             }
@@ -365,36 +387,7 @@ public abstract class WAbstractSlider extends WWidget {
     @OnlyIn(Dist.CLIENT)
     @Override
     public void addNarrations(NarrationElementOutput builder) {
-        builder.add(NarratedElementType.TITLE,
-                Component.translatable(NarrationMessages.SLIDER_MESSAGE_KEY, value, min, max));
+        builder.add(NarratedElementType.TITLE, Component.translatable(NarrationMessages.SLIDER_MESSAGE_KEY, value, min, max));
         builder.add(NarratedElementType.USAGE, NarrationMessages.SLIDER_USAGE);
-    }
-
-    /**
-     * Tests if the key should decrease sliders with the specified direction.
-     *
-     * @param ch              the key code
-     * @param widgetDirection the direction
-     * @return true if the key should decrease sliders with the direction, false otherwise
-     * @since 2.0.0
-     */
-    public static boolean isDecreasingKey(int ch, WidgetDirection widgetDirection) {
-        return widgetDirection.isInverted()
-                ? (ch == GLFW.GLFW_KEY_RIGHT || ch == GLFW.GLFW_KEY_UP)
-                : (ch == GLFW.GLFW_KEY_LEFT || ch == GLFW.GLFW_KEY_DOWN);
-    }
-
-    /**
-     * Tests if the key should increase sliders with the specified direction.
-     *
-     * @param ch              the key code
-     * @param widgetDirection the direction
-     * @return true if the key should increase sliders with the direction, false otherwise
-     * @since 2.0.0
-     */
-    public static boolean isIncreasingKey(int ch, WidgetDirection widgetDirection) {
-        return widgetDirection.isInverted()
-                ? (ch == GLFW.GLFW_KEY_LEFT || ch == GLFW.GLFW_KEY_DOWN)
-                : (ch == GLFW.GLFW_KEY_RIGHT || ch == GLFW.GLFW_KEY_UP);
     }
 }

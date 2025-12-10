@@ -1,5 +1,7 @@
 package io.github.robak132.libgui_forge.widget;
 
+import static io.github.robak132.libgui_forge.Utilities.clampInt;
+
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.BufferBuilder;
@@ -133,7 +135,7 @@ public class WTextField extends WWidget {
     }
 
     private int clampCursor(int cursor) {
-        return Mth.clamp(cursor, 0, text.length());
+        return clampInt(cursor, 0, text.length());
     }
 
     public void setCursorPos(int location) {
