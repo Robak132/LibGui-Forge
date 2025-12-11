@@ -41,10 +41,6 @@ public class WTextField extends WWidget {
     @OnlyIn(Dist.CLIENT)
     private Font font;
 
-    /**
-     * -- GETTER --
-     *
-     */
     @Getter
     private String text = "";
     @Getter

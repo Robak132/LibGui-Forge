@@ -24,7 +24,7 @@ import org.lwjgl.glfw.GLFW;
  *
  * @properties
  */
-public class WWidget {
+public abstract class WWidget {
 
     private static final VisualLogger LOGGER = new VisualLogger(WWidget.class);
     @Setter
@@ -321,8 +321,7 @@ public class WWidget {
      * @since 2.0.0
      */
     @OnlyIn(Dist.CLIENT)
-    public void paint(GuiGraphics context, int x, int y, int mouseX, int mouseY) {
-    }
+    public abstract void paint(GuiGraphics context, int x, int y, int mouseX, int mouseY);
 
     /**
      * Checks whether a location is within this widget's bounds.
@@ -570,7 +569,7 @@ public class WWidget {
      * Checks if this widget should be rendered in dark mode.
      *
      * <p>If the widget has a host that {@linkplain GuiDescription#isDarkMode() forces dark mode},
-     * the forced value is used. Otherwise, this method returns {@link LibGuiConfig#isDarkMode()}.
+     * the forced value is used. Otherwise, this method returns {@link LibGuiConfig#DARK_MODE#get()}.
      *
      * <p>{@linkplain #paint Painting} should respect this value for general-purpose widgets
      * intended for use in multiple different GUIs.
