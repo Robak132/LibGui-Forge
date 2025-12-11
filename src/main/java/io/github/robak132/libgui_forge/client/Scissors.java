@@ -1,17 +1,15 @@
 package io.github.robak132.libgui_forge.client;
 
-
+import com.google.errorprone.annotations.MustBeClosed;
+import com.mojang.blaze3d.systems.RenderSystem;
 import java.util.ArrayDeque;
 import java.util.stream.Collectors;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import org.lwjgl.opengl.GL11;
 
 /**
- * Contains a stack for GL scissors for restricting the drawn area of a widget.
- *
- * @since 2.0.0
+ * A stack-driven scissor manager for GUI rendering. Must be used exclusively with try-with-resources.
  */
 @OnlyIn(Dist.CLIENT)
 public final class Scissors {
@@ -22,86 +20,78 @@ public final class Scissors {
     }
 
     /**
-     * Pushes a new scissor frame onto the stack and refreshes the scissored area.
-     *
-     * @param x      the frame's X coordinate
-     * @param y      the frame's Y coordinate
-     * @param width  the frame's width in pixels
-     * @param height the frame's height in pixels
-     * @return the pushed frame
+     * Pushes a new scissor frame. Must be closed via try-with-resources.
      */
+    @MustBeClosed
     public static Frame push(int x, int y, int width, int height) {
         Frame frame = new Frame(x, y, width, height);
         STACK.push(frame);
         refreshScissors();
-
         return frame;
     }
 
     /**
-     * Pops the topmost scissor frame and refreshes the scissored area.
-     *
-     * @throws IllegalStateException if there are no scissor frames on the stack
+     * Pops the top frame; INTERNAL ONLY.
      */
-    public static void pop() {
+    @SuppressWarnings("resource")
+    static void internalPop(Frame frame) {
         if (STACK.isEmpty()) {
             throw new IllegalStateException("No scissors on the stack!");
+        }
+        if (STACK.peek() != frame) {
+            throw new IllegalStateException("%s is not on top of the stack!".formatted(frame));
         }
 
         STACK.pop();
         refreshScissors();
     }
 
+    /**
+     * Recomputes the scissor region based on stack intersection.
+     */
     static void refreshScissors() {
         Minecraft mc = Minecraft.getInstance();
 
         if (STACK.isEmpty()) {
-            // Just use the full window framebuffer as a scissor
-            GL11.glScissor(0, 0, mc.getWindow().getScreenWidth(), mc.getWindow().getScreenHeight());
+            RenderSystem.enableScissor(0, 0, mc.getWindow().getWidth(), mc.getWindow().getHeight());
             return;
         }
 
-        int x = Integer.MIN_VALUE;
-        int y = Integer.MIN_VALUE;
-        int width = -1;
-        int height = -1;
+        int left = Integer.MIN_VALUE;
+        int top = Integer.MIN_VALUE;
+        int right = Integer.MAX_VALUE;
+        int bottom = Integer.MAX_VALUE;
 
-        for (Frame frame : STACK) {
-            if (x < frame.x) {
-                x = frame.x;
-            }
-            if (y < frame.y) {
-                y = frame.y;
-            }
-            if (width == -1 || x + width > frame.x + frame.width) {
-                width = frame.width - (x - frame.x);
-            }
-            if (height == -1 || y + height > frame.y + frame.height) {
-                height = frame.height - (y - frame.y);
-            }
+        for (Frame f : STACK) {
+            left = Math.max(left, f.x);
+            top = Math.max(top, f.y);
+            right = Math.min(right, f.x + f.width);
+            bottom = Math.min(bottom, f.y + f.height);
         }
 
-        int windowHeight = mc.getWindow().getScreenHeight();
-        double scale = mc.getWindow().getGuiScale();
-        int scaledWidth = (int) (width * scale);
-        int scaledHeight = (int) (height * scale);
+        int width = Math.max(0, right - left);
+        int height = Math.max(0, bottom - top);
 
-        // Expression for Y coordinate adapted from vini2003's Spinnery (code snippet released under WTFPL)
-        GL11.glScissor((int) (x * scale), (int) (windowHeight - (y * scale) - scaledHeight), scaledWidth, scaledHeight);
+        double scale = mc.getWindow().getGuiScale();
+        int fbLeft = (int) Math.round(left * scale);
+        int fbWidth = (int) Math.round(width * scale);
+        int fbHeight = (int) Math.round(height * scale);
+        int fbBottom = (int) Math.round(mc.getWindow().getHeight() - (top * scale) - fbHeight);
+
+        RenderSystem.enableScissor(fbLeft, fbBottom, fbWidth, fbHeight);
     }
 
     /**
-     * Internal method. Throws an {@link IllegalStateException} if the scissor stack is not empty.
+     * Debug utility
      */
     static void checkStackIsEmpty() {
         if (!STACK.isEmpty()) {
-            throw new IllegalStateException("Unpopped scissor frames: " + STACK.stream().map(Frame::toString)
-                    .collect(Collectors.joining(", ")));
+            throw new IllegalStateException("Unpopped scissor frames: " + STACK.stream().map(Frame::toString).collect(Collectors.joining(", ")));
         }
     }
 
     /**
-     * A single scissor frame in the stack.
+     * A single scissor frame; closing it pops from the stack.
      */
     public static final class Frame implements AutoCloseable {
 
@@ -112,10 +102,10 @@ public final class Scissors {
 
         private Frame(int x, int y, int width, int height) {
             if (width < 0) {
-                throw new IllegalArgumentException("Negative width for a stack frame");
+                throw new IllegalArgumentException("Negative width");
             }
             if (height < 0) {
-                throw new IllegalArgumentException("Negative height for a stack frame");
+                throw new IllegalArgumentException("Negative height");
             }
 
             this.x = x;
@@ -124,31 +114,14 @@ public final class Scissors {
             this.height = height;
         }
 
-        /**
-         * Pops this frame from the stack.
-         *
-         * @throws IllegalStateException if: <ul>
-         *                               <li>this frame is not on the stack, or</li>
-         *                               <li>this frame is not the topmost element on the stack</li>
-         *                               </ul>
-         * @see Scissors#pop()
-         */
         @Override
         public void close() {
-            if (STACK.peekLast() != this) {
-                if (STACK.contains(this)) {
-                    throw new IllegalStateException(this + " is not on top of the stack!");
-                } else {
-                    throw new IllegalStateException(this + " is not on the stack!");
-                }
-            }
-
-            pop();
+            Scissors.internalPop(this);
         }
 
         @Override
         public String toString() {
-            return "Frame{ at = (" + x + ", " + y + "), size = (" + width + ", " + height + ") }";
+            return "Frame{ at=(" + x + ", " + y + "), size=(" + width + ", " + height + ") }";
         }
     }
 }
