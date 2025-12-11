@@ -1,0 +1,95 @@
+name: Forge Client Test
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  forge-client-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+
+    env:
+      DISPLAY: :1
+      IMGUR_CLIENT_ID: ${{ secrets.IMGUR_CLIENT_ID }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      # deps + Xvfb
+      - name: Setup system
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            xvfb x11-apps imagemagick libxtst6 libxi6
+          echo "DISPLAY=:1" >> $GITHUB_ENV
+          sudo Xvfb :1 -screen 0 854x480x24 >/dev/null 2>&1 &
+          sleep 2
+
+      # Python + portablemc
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install portablemc
+        working-directory: client
+        run: |
+          pip install --user portablemc
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
+
+      # Install Forge client (example: 1.20.1 + Forge 47.x)
+      - name: Install Forge client
+        working-directory: client
+        run: |
+          portablemc --main-dir .minecraft --work-dir profile \
+            start forge:1.20.1 --dry
+
+      # Install modpack here
+      - name: Install modpack
+        working-directory: client
+        run: |
+          echo "Install Forge modpack here"
+          # Example:
+          # mkdir -p .minecraft/mods
+          # cp your-mods/*.jar .minecraft/mods/
+
+      # Run Forge client
+      - name: Run client
+        working-directory: client
+        continue-on-error: true
+        timeout-minutes: 8
+        run: |
+          portablemc --main-dir .minecraft --work-dir profile \
+            start forge:1.20.1 \
+            --jvm "$(dirname $(which java))/java" \
+            -u Tester --window &> client.log &
+          sleep 35
+
+      # Screenshot
+      - name: Screenshot
+        run: |
+          xwd -display $DISPLAY -root -silent | convert xwd:- png:screenshot.png
+
+      # Upload to Imgur
+      - name: Upload screenshot
+        id: upload
+        run: |
+          resp=$(curl -s -H "Authorization: Client-ID $IMGUR_CLIENT_ID" \
+            -F "image=@screenshot.png" https://api.imgur.com/3/upload)
+          echo "$resp" > imgur.json
+          echo "url=$(jq -r '.data.link' imgur.json)" >> $GITHUB_OUTPUT
+
+      # Summary
+      - name: Summary
+        run: |
+          echo "## Forge Client Screenshot" >> $GITHUB_STEP_SUMMARY
+          echo "![](${{ steps.upload.outputs.url }})" >> $GITHUB_STEP_SUMMARY
+
+      # PR comment
+      - uses: mshick/add-pr-comment@v2
+        if: github.event_name == 'pull_request'
+        with:
+          message-id: "forge-client-test"
+          message: |
+            ### Forge Client Test
+            ![](${{ steps.upload.outputs.url }})
