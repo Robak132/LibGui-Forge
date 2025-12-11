@@ -12,11 +12,35 @@ jobs:
     env:
       DISPLAY: :1
       IMGUR_CLIENT_ID: ${{ secrets.IMGUR_CLIENT_ID }}
+      MC_MAIN: .minecraft
+      MC_WORK: profile
 
     steps:
       - uses: actions/checkout@v4
 
-      # deps + Xvfb
+      # Cache Minecraft installation (assets, libs, Forge files)
+      - name: Cache Minecraft data
+        id: cache-mc
+        uses: actions/cache@v4
+        with:
+          path: |
+            .minecraft
+            profile
+          key: mc-forge-1.20.1-${{ hashFiles('**/*.toml', '**/mods/**', '**/*.mrpack') }}
+          restore-keys: |
+            mc-forge-1.20.1-
+
+      # Cache pip portablemc install
+      - name: Cache pip
+        id: cache-pip
+        uses: actions/cache@v4
+        with:
+          path: ~/.local
+          key: pip-portablemc-${{ runner.os }}-${{ hashFiles('requirements.txt') }}
+          restore-keys: |
+            pip-portablemc-${{ runner.os }}-
+
+      # Install system deps + Xvfb
       - name: Setup system
         run: |
           sudo apt-get update
@@ -26,36 +50,47 @@ jobs:
           sudo Xvfb :1 -screen 0 854x480x24 >/dev/null 2>&1 &
           sleep 2
 
-      # Python + portablemc
+      # Ensure dirs exist
+      - name: Init directories
+        run: |
+          mkdir -p "$MC_MAIN"
+          mkdir -p "$MC_WORK"
+
+      # Setup Python
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
 
+      # Install portablemc (cached on next run)
       - name: Install portablemc
+        if: steps.cache-pip.outputs.cache-hit != 'true'
         run: |
           pip install --user portablemc
-          echo "$HOME/.local/bin" >> $GITHUB_PATH
+        # Add to PATH always
+      - name: Ensure portablemc PATH
+        run: echo "$HOME/.local/bin" >> $GITHUB_PATH
 
-      # Install Forge client (example: 1.20.1 + Forge 47.x)
+      # Install Forge client (skipped if cache restored)
       - name: Install Forge client
+        if: steps.cache-mc.outputs.cache-hit != 'true'
         run: |
-          portablemc --main-dir .minecraft --work-dir profile \
+          portablemc --main-dir "$MC_MAIN" --work-dir "$MC_WORK" \
             start forge:1.20.1 --dry
 
-      # Install modpack here
+      # Install modpack (runs every time; do NOT cache modpack)
       - name: Install modpack
         run: |
-          echo "Install Forge modpack here"
+          echo "Place Forge modpack installation here"
           # Example:
-          # mkdir -p .minecraft/mods
-          # cp your-mods/*.jar .minecraft/mods/
+          # mkdir -p "$MC_MAIN/mods"
+          # cp mods/*.jar "$MC_MAIN/mods/"
 
       # Run Forge client
       - name: Run client
         continue-on-error: true
         timeout-minutes: 8
         run: |
-          portablemc --main-dir .minecraft --work-dir profile \
+          portablemc --main-dir "$MC_MAIN" --work-dir "$MC_WORK" \
             start forge:1.20.1 \
             --jvm "$(dirname $(which java))/java" \
             -u Tester --window &> client.log &
