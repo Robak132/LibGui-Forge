@@ -7,7 +7,7 @@ on:
 jobs:
   forge-client-test:
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 30
 
     env:
       DISPLAY: :1
@@ -18,7 +18,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # Cache Minecraft installation (assets, libs, Forge files)
+      # Cache Minecraft installation
       - name: Cache Minecraft data
         id: cache-mc
         uses: actions/cache@v4
@@ -26,82 +26,105 @@ jobs:
           path: |
             .minecraft
             profile
-          key: mc-forge-1.20.1-${{ hashFiles('**/*.toml', '**/mods/**', '**/*.mrpack') }}
+          key: mc-forge-1.20.1-${{ hashFiles('**/mods/**', '**/*.mrpack', '**/*.toml') }}
           restore-keys: |
             mc-forge-1.20.1-
 
       # Cache pip portablemc install
-      - name: Cache pip
+      - name: Cache portablemc
         id: cache-pip
         uses: actions/cache@v4
         with:
           path: ~/.local
-          key: pip-portablemc-${{ runner.os }}-${{ hashFiles('requirements.txt') }}
+          key: pip-portablemc-${{ runner.os }}
           restore-keys: |
-            pip-portablemc-${{ runner.os }}-
+            pip-portablemc-${{ runner.os }}
 
-      # Install system deps + Xvfb
+      # System deps + Xvfb + GL libs
       - name: Setup system
         run: |
           sudo apt-get update
           sudo apt-get install -y --no-install-recommends \
-            xvfb x11-apps imagemagick libxtst6 libxi6
+            xvfb x11-apps imagemagick libxtst6 libxi6 \
+            libgl1-mesa-glx libgl1-mesa-dri libglu1-mesa
           echo "DISPLAY=:1" >> $GITHUB_ENV
-          sudo Xvfb :1 -screen 0 854x480x24 >/dev/null 2>&1 &
+          sudo Xvfb :1 -screen 0 1280x720x24 >/dev/null 2>&1 &
           sleep 2
 
       # Ensure dirs exist
-      - name: Init directories
+      - name: Init dirs
         run: |
           mkdir -p "$MC_MAIN"
           mkdir -p "$MC_WORK"
 
-      # Setup Python
+      # Python + portablemc
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
 
-      # Install portablemc (cached on next run)
       - name: Install portablemc
         if: steps.cache-pip.outputs.cache-hit != 'true'
         run: |
           pip install --user portablemc
-        # Add to PATH always
+
       - name: Ensure portablemc PATH
         run: echo "$HOME/.local/bin" >> $GITHUB_PATH
 
-      # Install Forge client (skipped if cache restored)
+      # Install Forge client (skip if cache used)
       - name: Install Forge client
         if: steps.cache-mc.outputs.cache-hit != 'true'
         run: |
           portablemc --main-dir "$MC_MAIN" --work-dir "$MC_WORK" \
             start forge:1.20.1 --dry
 
-      # Install modpack (runs every time; do NOT cache modpack)
+      # Install modpack (you customize this)
       - name: Install modpack
         run: |
-          echo "Place Forge modpack installation here"
+          echo "Place Forge modpack installation logic here"
           # Example:
           # mkdir -p "$MC_MAIN/mods"
           # cp mods/*.jar "$MC_MAIN/mods/"
 
       # Run Forge client
       - name: Run client
-        continue-on-error: true
-        timeout-minutes: 8
+        timeout-minutes: 10
         run: |
           portablemc --main-dir "$MC_MAIN" --work-dir "$MC_WORK" \
             start forge:1.20.1 \
             --jvm "$(dirname $(which java))/java" \
             -u Tester --window &> client.log &
-          sleep 35
+          
+          # Allow Forge time to fully initialize and render
+          echo "Waiting for Forge to start..."
+          sleep 300
 
-      # Screenshot
-      - name: Screenshot
+      # Detect Forge crash reports
+      - name: Check for crash
         run: |
-          xwd -display $DISPLAY -root -silent | convert xwd:- png:screenshot.png
+          if ls .minecraft/crash-reports/*.txt 2>/dev/null; then
+            echo "Forge crash detected!"
+            cat .minecraft/crash-reports/*.txt
+            exit 1
+          fi
 
-      # Upload to Imgur
+      # Screenshot actual window
+      - name: Screenshot window
+        run: |
+          echo "Looking for Minecraft window..."
+          xwininfo -root -tree > windows.txt
+          cat windows.txt
+
+          WIN_ID=$(awk '/minecraft|java|LWJGL|forge/i {print $1}' windows.txt | head -n 1)
+
+          if [ -z "$WIN_ID" ]; then
+            echo "ERROR: No Minecraft window found."
+            exit 1
+          fi
+
+          echo "Found window: $WIN_ID"
+          xwd -id "$WIN_ID" -silent | convert xwd:- png:screenshot.png
+
+      # Upload screenshot to Imgur
       - name: Upload screenshot
         id: upload
         run: |
