@@ -32,21 +32,18 @@ jobs:
           python-version: "3.11"
 
       - name: Install portablemc
-        working-directory: client
         run: |
           pip install --user portablemc
           echo "$HOME/.local/bin" >> $GITHUB_PATH
 
       # Install Forge client (example: 1.20.1 + Forge 47.x)
       - name: Install Forge client
-        working-directory: client
         run: |
           portablemc --main-dir .minecraft --work-dir profile \
             start forge:1.20.1 --dry
 
       # Install modpack here
       - name: Install modpack
-        working-directory: client
         run: |
           echo "Install Forge modpack here"
           # Example:
@@ -55,7 +52,6 @@ jobs:
 
       # Run Forge client
       - name: Run client
-        working-directory: client
         continue-on-error: true
         timeout-minutes: 8
         run: |
