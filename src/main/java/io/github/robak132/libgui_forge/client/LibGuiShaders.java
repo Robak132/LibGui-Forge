@@ -1,5 +1,7 @@
 package io.github.robak132.libgui_forge.client;
 
+import static io.github.robak132.libgui_forge.LibGui.MOD_ID;
+
 import com.google.common.collect.ImmutableMap;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormat;
@@ -19,7 +21,7 @@ import org.jetbrains.annotations.Nullable;
 import java.io.IOException;
 
 @Slf4j
-@Mod.EventBusSubscriber(modid = LibGui.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
+@Mod.EventBusSubscriber(modid = MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public final class LibGuiShaders {
     private static @Nullable ShaderInstance tiledRectangle;
 
@@ -34,7 +36,7 @@ public final class LibGuiShaders {
     public static void onRegisterShaders(RegisterShadersEvent event) {
         try {
             ShaderInstance shaderInstance = new ShaderInstance(event.getResourceProvider(),
-                    ResourceLocation.fromNamespaceAndPath(LibGui.MOD_ID, "tiled_rectangle"),
+                    ResourceLocation.fromNamespaceAndPath(MOD_ID, "tiled_rectangle"),
                     POSITION_TEX);
             log.info("Loaded shader libgui: tiled_rectangle");
             event.registerShader(shaderInstance, shader -> tiledRectangle = shader);
