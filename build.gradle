@@ -11,7 +11,7 @@ plugins {
     id "com.github.johnrengelman.shadow" version "8.1.1"
 }
 
-def secretsFile = rootProject.file(".secret.properties")
+def secretsFile = project.file(".secret.properties")
 ext.secrets = new Properties()
 if (secretsFile.exists()) {
     secretsFile.withInputStream { stream ->
@@ -24,22 +24,29 @@ def getSecret(String key) {
 }
 
 repositories {
-	maven { url "https://maven.juuxel.me/" }
 	maven { url "https://maven.shedaniel.me/" }
 	maven { url "https://maven.minecraftforge.net" }
     maven { url 'https://jitpack.io' }
     mavenCentral()
 }
 
-version = project.mod_version
-group = project.maven_group
-base.archivesName = project.archives_base_name
+def modProperties = new Properties()
+file('gradle.properties').withInputStream { stream ->
+    modProperties.load(stream)
+}
+
+version = modProperties.getProperty('mod_version')
+group = modProperties.getProperty('maven_group')
+base.archivesName = modProperties.getProperty('archives_base_name')
 
 java {
     sourceCompatibility = JavaVersion.VERSION_17
     targetCompatibility = JavaVersion.VERSION_17
-    toolchain { languageVersion = JavaLanguageVersion.of(17) }
     withSourcesJar()
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.release = 17
 }
 
 minecraft {
@@ -53,10 +60,10 @@ minecraft {
         client {
             workingDirectory project.file('run')
             property 'forge.logging.console.level', 'debug'
-            property 'forge.enabledGameTestNamespaces', mod_id
+            property 'forge.enabledGameTestNamespaces', modProperties.getProperty('mod_id')
 
             mods {
-                "${mod_id}" {
+                "${modProperties.getProperty('mod_id')}" {
                     source sourceSets.main
                 }
             }
@@ -64,7 +71,7 @@ minecraft {
 
         data {
             workingDirectory project.file('run-data')
-            args '--mod', mod_id, '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
+            args '--mod', modProperties.getProperty('mod_id'), '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
         }
     }
 }
@@ -134,8 +141,8 @@ publishing {
             }
             artifact tasks.sourcesJar
 
-            groupId = project.maven_group
-            artifactId = project.archives_base_name
+            groupId = modProperties.getProperty('maven_group')
+            artifactId = modProperties.getProperty('archives_base_name')
             version = project.version
         }
     }

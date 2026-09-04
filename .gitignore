@@ -1,33 +1,43 @@
-# gradle
-
+# Gradle build state and outputs
 .gradle/
 build/
 out/
 classes/
 
-private.gradle
+# Local Forge run directories
+run/
+run-data/
+runs/
+logs/
+crash-reports/
 
-# idea
-
+# IntelliJ IDEA
 .idea/
 *.iml
 *.ipr
 *.iws
 
-# vscode
-
-.secret.properties
-.settings/
-.vscode/
-bin/
+# Eclipse
 .classpath
 .project
+.settings/
+bin/
+*.launch
 
-# naughty filesystems
+# Visual Studio Code
+.vscode/
 
+# Local credentials and machine-specific configuration
+.secret.properties
+private.gradle
+
+# JVM diagnostics
+hs_err_*.log
+replay_*.log
+*.hprof
+*.jfr
+
+# Operating systems and file managers
+.DS_Store
+Thumbs.db
 .directory
-
-# fabric
-
-run/
-latest.log
