@@ -1,7 +1,8 @@
 package io.github.robak132.libgui_forge.widget.data;
 
 public enum WidgetAxis {
-    HORIZONTAL, VERTICAL;
+    HORIZONTAL,
+    VERTICAL;
 
     /**
      * Chooses a value based on this axis.

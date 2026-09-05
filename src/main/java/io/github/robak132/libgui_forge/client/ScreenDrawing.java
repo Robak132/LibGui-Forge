@@ -35,8 +35,7 @@ public class ScreenDrawing {
      * @param width   the width of the box on-screen
      * @param height  the height of the box on-screen
      * @param texture the Identifier for the texture
-     * @param color   a color to tint the texture. This can be transparent! Use 0xFF_FFFFFF if you don't want a color
-     *                tint
+     * @param color   a color to tint the texture. This can be transparent! Use 0xFF_FFFFFF if you don't want a color tint
      */
     public static void texturedRect(GuiGraphics context, int x, int y, int width, int height, ResourceLocation texture,
             int color) {
@@ -52,8 +51,7 @@ public class ScreenDrawing {
      * @param width   the width of the box on-screen
      * @param height  the height of the box on-screen
      * @param texture the Identifier for the texture
-     * @param color   a color to tint the texture. This can be transparent! Use 0xFF_FFFFFF if you don't want a color
-     *                tint
+     * @param color   a color to tint the texture. This can be transparent! Use 0xFF_FFFFFF if you don't want a color tint
      * @param opacity opacity of the drawn texture. (0f is fully opaque and 1f is fully visible)
      * @since 2.0.0
      */
@@ -75,8 +73,7 @@ public class ScreenDrawing {
      * @param v1      the top edge of the texture
      * @param u2      the right edge of the texture
      * @param v2      the bottom edge of the texture
-     * @param color   a color to tint the texture. This can be transparent! Use 0xFF_FFFFFF if you don't want a color
-     *                tint
+     * @param color   a color to tint the texture. This can be transparent! Use 0xFF_FFFFFF if you don't want a color tint
      */
     public static void texturedRect(GuiGraphics context, int x, int y, int width, int height, ResourceLocation texture,
             float u1, float v1, float u2, float v2, int color) {
@@ -92,8 +89,7 @@ public class ScreenDrawing {
      * @param width   the width of the box on-screen
      * @param height  the height of the box on-screen
      * @param texture the texture
-     * @param color   a color to tint the texture. This can be transparent! Use 0xFF_FFFFFF if you don't want a color
-     *                tint
+     * @param color   a color to tint the texture. This can be transparent! Use 0xFF_FFFFFF if you don't want a color tint
      * @since 3.0.0
      */
     public static void texturedRect(GuiGraphics context, int x, int y, int width, int height, Texture texture,
@@ -110,8 +106,7 @@ public class ScreenDrawing {
      * @param width   the width of the box on-screen
      * @param height  the height of the box on-screen
      * @param texture the texture
-     * @param color   a color to tint the texture. This can be transparent! Use 0xFF_FFFFFF if you don't want a color
-     *                tint
+     * @param color   a color to tint the texture. This can be transparent! Use 0xFF_FFFFFF if you don't want a color tint
      * @param opacity opacity of the drawn texture. (0f is fully opaque and 1f is fully visible)
      * @since 3.0.0
      */
@@ -134,8 +129,7 @@ public class ScreenDrawing {
      * @param v1      the top edge of the texture
      * @param u2      the right edge of the texture
      * @param v2      the bottom edge of the texture
-     * @param color   a color to tint the texture. This can be transparent! Use 0xFF_FFFFFF if you don't want a color
-     *                tint
+     * @param color   a color to tint the texture. This can be transparent! Use 0xFF_FFFFFF if you don't want a color tint
      * @param opacity opacity of the drawn texture. (0f is fully opaque and 1f is fully visible)
      * @since 2.0.0
      */
@@ -180,8 +174,7 @@ public class ScreenDrawing {
      * @param texture  the Identifier for the texture
      * @param textureX the x offset into the texture
      * @param textureY the y offset into the texture
-     * @param color    a color to tint the texture. This can be transparent! Use 0xFF_FFFFFF if you don't want a color
-     *                 tint
+     * @param color    a color to tint the texture. This can be transparent! Use 0xFF_FFFFFF if you don't want a color tint
      */
     public static void texturedGuiRect(GuiGraphics context, int x, int y, int width, int height,
             ResourceLocation texture, int textureX, int textureY, int color) {
@@ -201,8 +194,7 @@ public class ScreenDrawing {
      * @param width   the width of the box on-screen
      * @param height  the height of the box on-screen
      * @param texture the Identifier for the texture
-     * @param color   a color to tint the texture. This can be transparent! Use 0xFF_FFFFFF if you don't want a color
-     *                tint
+     * @param color   a color to tint the texture. This can be transparent! Use 0xFF_FFFFFF if you don't want a color tint
      */
     public static void texturedGuiRect(GuiGraphics context, int left, int top, int width, int height,
             ResourceLocation texture, int color) {
@@ -258,8 +250,7 @@ public class ScreenDrawing {
     }
 
     /**
-     * Draws a beveled, round rectangle with custom edge colors that is substantially similar to default Minecraft UI
-     * panels.
+     * Draws a beveled, round rectangle with custom edge colors that is substantially similar to default Minecraft UI panels.
      *
      * @param context the draw context
      * @param x       the X position of the panel

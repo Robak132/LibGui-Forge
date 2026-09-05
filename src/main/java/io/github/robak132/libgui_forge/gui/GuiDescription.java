@@ -1,5 +1,6 @@
-package io.github.robak132.libgui_forge;
+package io.github.robak132.libgui_forge.gui;
 
+import io.github.robak132.libgui_forge.ValidatedSlot;
 import io.github.robak132.libgui_forge.widget.WLabel;
 import io.github.robak132.libgui_forge.widget.WPanel;
 import io.github.robak132.libgui_forge.widget.WWidget;
@@ -31,8 +32,8 @@ public interface GuiDescription {
      * Sets the title color of this GUI.
      *
      * <p>The dark-mode title color will also be set by this method.
-     * If the specified color is {@link WLabel#DEFAULT_TEXT_COLOR}, the dark-mode color will be
-     * {@link WLabel#DEFAULT_DARKMODE_TEXT_COLOR}; otherwise it will be the specified color.
+     * If the specified color is {@link WLabel#DEFAULT_TEXT_COLOR}, the dark-mode color will be {@link WLabel#DEFAULT_DARKMODE_TEXT_COLOR}; otherwise it will be
+     * the specified color.
      *
      * @param color the new title color
      * @return this GUI
@@ -55,8 +56,7 @@ public interface GuiDescription {
     GuiDescription setPropertyDelegate(ContainerData delegate);
 
     /**
-     * Typical users won't call this. This adds a Slot to Container/Controller-based guis, and does nothing on
-     * lightweight guis.
+     * Typical users won't call this. This adds a Slot to Container/Controller-based guis, and does nothing on lightweight guis.
      */
     void addSlotPeer(ValidatedSlot slot);
 

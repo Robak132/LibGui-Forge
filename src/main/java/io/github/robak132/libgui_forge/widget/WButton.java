@@ -1,7 +1,7 @@
 package io.github.robak132.libgui_forge.widget;
 
 import io.github.robak132.libgui_forge.LibGui;
-import io.github.robak132.libgui_forge.NarrationMessages;
+import io.github.robak132.libgui_forge.client.Localisation;
 import io.github.robak132.libgui_forge.client.ScreenDrawing;
 import io.github.robak132.libgui_forge.widget.data.HorizontalAlignment;
 import io.github.robak132.libgui_forge.widget.data.InputResult;
@@ -23,7 +23,6 @@ import org.jetbrains.annotations.Nullable;
 public class WButton extends WWidget {
 
     private static final ResourceLocation DARK_WIDGETS_LOCATION = ResourceLocation.fromNamespaceAndPath(LibGui.MOD_ID, "textures/widget/dark_widgets.png");
-    private static final int BUTTON_HEIGHT = 20;
     private static final int ICON_SPACING = 2;
     protected int color = WLabel.DEFAULT_TEXT_COLOR;
     @Getter
@@ -111,17 +110,16 @@ public class WButton extends WWidget {
             halfWidth = 198;
         }
         float buttonWidth = halfWidth * px;
-        float buttonHeight = 20 * px;
         float buttonEndLeft = (200 - ((float) getWidth() / 2)) * px;
 
         ResourceLocation texture = getTexture(this);
-        ScreenDrawing.texturedRect(context, x, y, getWidth() / 2, 20, texture, buttonLeft, buttonTop, buttonLeft + buttonWidth, buttonTop + buttonHeight,
-                0xFFFFFFFF);
-        ScreenDrawing.texturedRect(context, x + (getWidth() / 2), y, getWidth() / 2, 20, texture, buttonEndLeft, buttonTop, 200 * px, buttonTop + buttonHeight,
-                0xFFFFFFFF);
+        paintButtonHalf(context, texture, x, y, getWidth() / 2, buttonLeft, buttonLeft + buttonWidth,
+                buttonTop);
+        paintButtonHalf(context, texture, x + (getWidth() / 2), y, getWidth() / 2, buttonEndLeft,
+                200 * px, buttonTop);
 
         if (icon != null) {
-            icon.paint(context, x + ICON_SPACING, y + (BUTTON_HEIGHT - iconSize) / 2, iconSize);
+            icon.paint(context, x + ICON_SPACING, y + (getHeight() - iconSize) / 2, iconSize);
         }
 
         if (label != null) {
@@ -131,13 +129,32 @@ public class WButton extends WWidget {
             }
 
             int xOffset = (icon != null && alignment == HorizontalAlignment.LEFT) ? ICON_SPACING + iconSize + ICON_SPACING : 0;
-            ScreenDrawing.drawStringWithShadow(context, label.getVisualOrderText(), alignment, x + xOffset, y + ((20 - 8) / 2), width, color);
+            ScreenDrawing.drawStringWithShadow(context, label.getVisualOrderText(), alignment, x + xOffset, y + ((getHeight() - 8) / 2), width, color);
         }
     }
 
-    @Override
-    public void setSize(int x, int y) {
-        super.setSize(x, BUTTON_HEIGHT);
+    private void paintButtonHalf(GuiGraphics context, ResourceLocation texture, int x, int y, int width,
+            float u1, float u2, float v1) {
+        if (width <= 0 || getHeight() <= 0) {
+            return;
+        }
+
+        float px = 1 / 256f;
+        int capHeight = Math.min(2, getHeight() / 2);
+        int middleHeight = getHeight() - 2 * capHeight;
+
+        if (capHeight > 0) {
+            ScreenDrawing.texturedRect(context, x, y, width, capHeight, texture, u1, v1, u2,
+                    v1 + capHeight * px, 0xFFFFFFFF);
+        }
+        if (middleHeight > 0) {
+            ScreenDrawing.texturedRect(context, x, y + capHeight, width, middleHeight, texture, u1,
+                    v1 + 2 * px, u2, v1 + 18 * px, 0xFFFFFFFF);
+        }
+        if (capHeight > 0) {
+            ScreenDrawing.texturedRect(context, x, y + capHeight + middleHeight, width, capHeight, texture, u1,
+                    v1 + (20 - capHeight) * px, u2, v1 + 20 * px, 0xFFFFFFFF);
+        }
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -251,9 +268,9 @@ public class WButton extends WWidget {
 
         if (isEnabled()) {
             if (isFocused()) {
-                builder.add(NarratedElementType.USAGE, NarrationMessages.Vanilla.BUTTON_USAGE_FOCUSED);
+                builder.add(NarratedElementType.USAGE, Component.translatable(Localisation.VANILLA_BUTTON_USAGE_FOCUSED));
             } else if (isHovered()) {
-                builder.add(NarratedElementType.USAGE, NarrationMessages.Vanilla.BUTTON_USAGE_HOVERED);
+                builder.add(NarratedElementType.USAGE, Component.translatable(Localisation.VANILLA_BUTTON_USAGE_HOVERED));
             }
         }
     }

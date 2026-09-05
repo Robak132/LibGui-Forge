@@ -1,6 +1,5 @@
 package io.github.robak132.libgui_forge.client;
 
-import io.github.robak132.libgui_forge.NarrationMessages;
 import io.github.robak132.libgui_forge.widget.WPanel;
 import io.github.robak132.libgui_forge.widget.WWidget;
 import java.util.List;
@@ -28,10 +27,10 @@ public final class NarrationHelper {
             // replicates Screen.addElementNarrations
             if (narratableWidgets.size() > 1) {
                 builder.add(NarratedElementType.POSITION,
-                        Component.translatable(NarrationMessages.Vanilla.SCREEN_POSITION_KEY, i + 1, childCount));
+                        Component.translatable(Localisation.VANILLA_SCREEN_POSITION, i + 1, childCount));
 
                 if (child.isFocused()) {
-                    builder.add(NarratedElementType.USAGE, NarrationMessages.Vanilla.COMPONENT_LIST_USAGE);
+                    builder.add(NarratedElementType.USAGE, Component.translatable(Localisation.VANILLA_COMPONENT_LIST_USAGE));
                 }
             }
 

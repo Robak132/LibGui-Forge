@@ -143,8 +143,7 @@ public class WSprite extends WWidget {
     }
 
     /**
-     * Sets the tint for this sprite to the following color-with-alpha. If you don't want to specify alpha, use
-     * {@link #setOpaqueTint(int)} instead.
+     * Sets the tint for this sprite to the following color-with-alpha. If you don't want to specify alpha, use {@link #setOpaqueTint(int)} instead.
      *
      * @param tint the new tint
      * @return this sprite

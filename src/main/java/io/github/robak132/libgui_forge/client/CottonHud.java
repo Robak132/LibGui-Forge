@@ -152,9 +152,7 @@ public final class CottonHud {
          * @return an offsetting positioner
          */
         static Positioner of(int x, int y) {
-            return (widget, hudWidth, hudHeight) -> {
-                widget.setLocation((hudWidth + x) % hudWidth, (hudHeight + y) % hudHeight);
-            };
+            return (widget, hudWidth, hudHeight) -> widget.setLocation((hudWidth + x) % hudWidth, (hudHeight + y) % hudHeight);
         }
 
         /**
@@ -166,9 +164,7 @@ public final class CottonHud {
          * @return a centering positioner
          */
         static Positioner horizontallyCentered(int y) {
-            return (widget, hudWidth, hudHeight) -> {
-                widget.setLocation((hudWidth - widget.getWidth()) / 2, (hudHeight + y) % hudHeight);
-            };
+            return (widget, hudWidth, hudHeight) -> widget.setLocation((hudWidth - widget.getWidth()) / 2, (hudHeight + y) % hudHeight);
         }
     }
 }

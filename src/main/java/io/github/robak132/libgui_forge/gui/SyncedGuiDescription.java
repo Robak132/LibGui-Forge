@@ -1,6 +1,8 @@
-package io.github.robak132.libgui_forge;
+package io.github.robak132.libgui_forge.gui;
 
-
+import io.github.robak132.libgui_forge.EmptyInventory;
+import io.github.robak132.libgui_forge.PropertyDelegateHolder;
+import io.github.robak132.libgui_forge.ValidatedSlot;
 import io.github.robak132.libgui_forge.client.BackgroundPainter;
 import io.github.robak132.libgui_forge.client.LibGuiConfig;
 import io.github.robak132.libgui_forge.widget.WGridPanel;
@@ -16,7 +18,6 @@ import java.util.function.Supplier;
 import lombok.Getter;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
-import net.minecraft.world.WorldlyContainer;
 import net.minecraft.world.WorldlyContainerHolder;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -41,9 +42,9 @@ import org.jetbrains.annotations.Nullable;
  */
 public class SyncedGuiDescription extends AbstractContainerMenu implements GuiDescription {
 
-    protected Container blockInventory;
-    protected Inventory playerInventory;
-    protected Level world;
+    protected final Container blockInventory;
+    protected final Inventory playerInventory;
+    protected final Level world;
     protected ContainerData propertyDelegate;
 
     @Getter
@@ -78,10 +79,8 @@ public class SyncedGuiDescription extends AbstractContainerMenu implements GuiDe
      * @param type             the {@link MenuType} of this GUI description
      * @param syncId           the current sync ID
      * @param playerInventory  the player inventory of the player viewing this screen
-     * @param blockInventory   the block inventory of a corresponding container block, or null if not found or
-     *                         applicable
-     * @param propertyDelegate a property delegate whose properties, if any, will automatically be
-     *                         {@linkplain #addDataSlots(ContainerData) added}
+     * @param blockInventory   the block inventory of a corresponding container block, or null if not found or applicable
+     * @param propertyDelegate a property delegate whose properties, if any, will automatically be {@linkplain #addDataSlots(ContainerData) added}
      */
     public SyncedGuiDescription(MenuType<?> type, int syncId, Inventory playerInventory,
             @Nullable Inventory blockInventory, @Nullable ContainerData propertyDelegate) {
@@ -145,19 +144,13 @@ public class SyncedGuiDescription extends AbstractContainerMenu implements GuiDe
             Block b = state.getBlock();
 
             if (b instanceof WorldlyContainerHolder worldlyContainerHolder) {
-                Container inventory = worldlyContainerHolder.getContainer(state, world, pos);
-                if (inventory != null) {
-                    return inventory;
-                }
+                return worldlyContainerHolder.getContainer(state, world, pos);
             }
 
             BlockEntity be = world.getBlockEntity(pos);
             if (be != null) {
                 if (be instanceof WorldlyContainerHolder worldlyContainerHolder) {
-                    WorldlyContainer inventory = worldlyContainerHolder.getContainer(state, world, pos);
-                    if (inventory != null) {
-                        return inventory;
-                    }
+                    return worldlyContainerHolder.getContainer(state, world, pos);
                 } else if (be instanceof Container container) {
                     return container;
                 }
@@ -260,12 +253,12 @@ public class SyncedGuiDescription extends AbstractContainerMenu implements GuiDe
 
             if (blockInventory != null) {
                 if (slot.container == blockInventory) {
-                    //Try to transfer the item from the block into the player's inventory
+                    // Try to transfer the item from the block into the player's inventory
                     if (!this.insertItem(slotStack, this.playerInventory, true, player)) {
                         return ItemStack.EMPTY;
                     }
-                } else if (!this.insertItem(slotStack, this.blockInventory, false,
-                        player)) { //Try to transfer the item from the player to the block
+                } else if (!this.insertItem(slotStack, this.blockInventory, false, player)) {
+                    // Try to transfer the item from the player to the block
                     return ItemStack.EMPTY;
                 }
             } else {

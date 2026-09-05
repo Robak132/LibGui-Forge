@@ -1,6 +1,6 @@
 package io.github.robak132.libgui_forge.widget;
 
-import io.github.robak132.libgui_forge.NarrationMessages;
+import io.github.robak132.libgui_forge.client.Localisation;
 import io.github.robak132.libgui_forge.LibGui;
 import io.github.robak132.libgui_forge.client.ScreenDrawing;
 import io.github.robak132.libgui_forge.widget.data.InputResult;
@@ -213,21 +213,23 @@ public class WToggleButton extends WWidget {
     @OnlyIn(Dist.CLIENT)
     @Override
     public void addNarrations(NarrationElementOutput builder) {
-        Component onOff = isOn ? NarrationMessages.TOGGLE_BUTTON_ON : NarrationMessages.TOGGLE_BUTTON_OFF;
+        Component onOff = Component.translatable(isOn
+                ? Localisation.WIDGET_TOGGLE_BUTTON_NARRATION_ON
+                : Localisation.WIDGET_TOGGLE_BUTTON_NARRATION_OFF);
         Component title;
 
         if (label != null) {
-            title = Component.translatable(NarrationMessages.TOGGLE_BUTTON_NAMED_KEY, label, onOff);
+            title = Component.translatable(Localisation.WIDGET_TOGGLE_BUTTON_NARRATION_NAMED, label, onOff);
         } else {
-            title = Component.translatable(NarrationMessages.TOGGLE_BUTTON_UNNAMED_KEY, onOff);
+            title = Component.translatable(Localisation.WIDGET_TOGGLE_BUTTON_NARRATION_UNNAMED, onOff);
         }
 
         builder.add(NarratedElementType.TITLE, title);
 
         if (isFocused()) {
-            builder.add(NarratedElementType.USAGE, NarrationMessages.Vanilla.BUTTON_USAGE_FOCUSED);
+            builder.add(NarratedElementType.USAGE, Component.translatable(Localisation.VANILLA_BUTTON_USAGE_FOCUSED));
         } else if (isHovered()) {
-            builder.add(NarratedElementType.USAGE, NarrationMessages.Vanilla.BUTTON_USAGE_HOVERED);
+            builder.add(NarratedElementType.USAGE, Component.translatable(Localisation.VANILLA_BUTTON_USAGE_HOVERED));
         }
     }
 }

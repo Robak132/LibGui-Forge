@@ -1,6 +1,6 @@
 package io.github.robak132.libgui_forge.widget;
 
-import io.github.robak132.libgui_forge.GuiDescription;
+import io.github.robak132.libgui_forge.gui.GuiDescription;
 import io.github.robak132.libgui_forge.widget.data.InputResult;
 import java.util.ArrayList;
 import java.util.HashMap;

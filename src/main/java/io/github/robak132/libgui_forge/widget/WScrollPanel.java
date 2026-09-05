@@ -1,6 +1,6 @@
 package io.github.robak132.libgui_forge.widget;
 
-import io.github.robak132.libgui_forge.GuiDescription;
+import io.github.robak132.libgui_forge.gui.GuiDescription;
 import io.github.robak132.libgui_forge.widget.data.InputResult;
 import java.util.Objects;
 import net.minecraft.client.gui.GuiGraphics;
@@ -49,8 +49,7 @@ public class WScrollPanel extends WClippedPanel {
     /**
      * Returns whether this scroll panel has a horizontal scroll bar.
      *
-     * @return true if there is a horizontal scroll bar, default if a scroll bar should be added if needed, and false
-     * otherwise
+     * @return true if there is a horizontal scroll bar, default if a scroll bar should be added if needed, and false otherwise
      */
     public Boolean isScrollingHorizontally() {
         return scrollingHorizontally;
@@ -68,8 +67,7 @@ public class WScrollPanel extends WClippedPanel {
     /**
      * Returns whether this scroll panel has a vertical scroll bar.
      *
-     * @return true if there is a vertical scroll bar, *         default if a scroll bar should be added if needed, *
-     * and false otherwise
+     * @return true if there is a vertical scroll bar, *         default if a scroll bar should be added if needed, * and false otherwise
      */
     public Boolean isScrollingVertically() {
         return scrollingVertically;

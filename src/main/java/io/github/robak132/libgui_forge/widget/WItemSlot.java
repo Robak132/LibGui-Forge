@@ -1,9 +1,9 @@
 package io.github.robak132.libgui_forge.widget;
 
-import io.github.robak132.libgui_forge.GuiDescription;
-import io.github.robak132.libgui_forge.NarrationMessages;
+import io.github.robak132.libgui_forge.gui.GuiDescription;
 import io.github.robak132.libgui_forge.ValidatedSlot;
 import io.github.robak132.libgui_forge.client.BackgroundPainter;
+import io.github.robak132.libgui_forge.client.Localisation;
 import io.github.robak132.libgui_forge.LibGui;
 import io.github.robak132.libgui_forge.client.VisualLogger;
 import io.github.robak132.libgui_forge.widget.data.InputResult;
@@ -18,6 +18,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
+import lombok.Getter;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.narration.NarratedElementType;
@@ -43,8 +44,8 @@ import org.jetbrains.annotations.Nullable;
  * They are instances of {@link ValidatedSlot} that handle the interactions between the player and the widget.
  *
  * <h2>Filters</h2>
- * Item slots can have filters that check whether a player is allowed to insert or take out an item or not. The filters
- * can be set with {@link #setInputFilter(Predicate)} and {@link #setOutputFilter(Predicate)}. For example:
+ * Item slots can have filters that check whether a player is allowed to insert or take out an item or not. The filters can be set with
+ * {@link #setInputFilter(Predicate)} and {@link #setOutputFilter(Predicate)}. For example:
  *
  * <pre>
  * {@code
@@ -57,8 +58,7 @@ import org.jetbrains.annotations.Nullable;
  * </pre>
  *
  * <h2>Listeners</h2>
- * Slot change listeners are instances of {@link WItemSlot.ChangeListener} that can handle changes to item stacks in
- * slots. For example:
+ * Slot change listeners are instances of {@link WItemSlot.ChangeListener} that can handle changes to item stacks in slots. For example:
  *
  * <pre>
  * {@code
@@ -91,11 +91,16 @@ public class WItemSlot extends WWidget {
     private int slotsWide = 1;
     private int slotsHigh = 1;
     private boolean big = false;
+    @Getter
     private boolean insertingAllowed = true;
+    @Getter
     private boolean takingAllowed = true;
+    @Getter
     private int focusedSlot = -1;
     private int hoveredSlot = -1;
+    @Getter
     private Predicate<ItemStack> inputFilter = ValidatedSlot.DEFAULT_ITEM_FILTER;
+    @Getter
     private Predicate<ItemStack> outputFilter = ValidatedSlot.DEFAULT_ITEM_FILTER;
     private final Set<ChangeListener> listeners = new HashSet<>();
     private final FocusModel<Integer> focusModel = new FocusModel<>() {
@@ -162,9 +167,7 @@ public class WItemSlot extends WWidget {
     }
 
     public static WItemSlot of(Container inventory, int startIndex, int slotsWide, int slotsHigh) {
-        WItemSlot w = new WItemSlot();
-        w.inventory = inventory;
-        w.startIndex = startIndex;
+        WItemSlot w = of(inventory, startIndex);
         w.slotsWide = slotsWide;
         w.slotsHigh = slotsHigh;
 
@@ -172,9 +175,7 @@ public class WItemSlot extends WWidget {
     }
 
     public static WItemSlot outputOf(Container inventory, int index) {
-        WItemSlot w = new WItemSlot();
-        w.inventory = inventory;
-        w.startIndex = index;
+        WItemSlot w = of(inventory, index);
         w.big = true;
 
         return w;
@@ -191,7 +192,7 @@ public class WItemSlot extends WWidget {
         WItemSlot w = new WItemSlot() {
             @Override
             protected Component getNarrationName() {
-                return inventory instanceof Inventory inv ? inv.getDisplayName() : NarrationMessages.Vanilla.INVENTORY;
+                return inventory instanceof Inventory inv ? inv.getDisplayName() : Component.translatable(Localisation.VANILLA_INVENTORY);
             }
         };
         w.inventory = inventory;
@@ -270,16 +271,6 @@ public class WItemSlot extends WWidget {
     }
 
     /**
-     * Returns whether items can be inserted into this slot.
-     *
-     * @return true if items can be inserted, false otherwise
-     * @since 1.10.0
-     */
-    public boolean isInsertingAllowed() {
-        return insertingAllowed;
-    }
-
-    /**
      * Sets whether inserting items into this slot is allowed.
      *
      * @param insertingAllowed true if items can be inserted, false otherwise
@@ -295,16 +286,6 @@ public class WItemSlot extends WWidget {
     }
 
     /**
-     * Returns whether items can be taken from this slot.
-     *
-     * @return true if items can be taken, false otherwise
-     * @since 1.10.0
-     */
-    public boolean isTakingAllowed() {
-        return takingAllowed;
-    }
-
-    /**
      * Sets whether taking items from this slot is allowed.
      *
      * @param takingAllowed true if items can be taken, false otherwise
@@ -317,16 +298,6 @@ public class WItemSlot extends WWidget {
             peer.setTakingAllowed(takingAllowed);
         }
         return this;
-    }
-
-    /**
-     * Gets the currently focused slot index.
-     *
-     * @return the currently focused slot, or -1 if this widget isn't focused
-     * @since 2.0.0
-     */
-    public int getFocusedSlot() {
-        return focusedSlot;
     }
 
     @Override
@@ -406,16 +377,6 @@ public class WItemSlot extends WWidget {
     }
 
     /**
-     * Gets the item stack input filter of this slot.
-     *
-     * @return the item input filter
-     * @since 8.1.0
-     */
-    public Predicate<ItemStack> getInputFilter() {
-        return inputFilter;
-    }
-
-    /**
      * Sets the item input filter of this item slot.
      *
      * @param inputFilter the new item input filter
@@ -428,16 +389,6 @@ public class WItemSlot extends WWidget {
             peer.setInputFilter(inputFilter);
         }
         return this;
-    }
-
-    /**
-     * Gets the item stack output filter of this slot.
-     *
-     * @return the item output filter
-     * @since 8.1.0
-     */
-    public Predicate<ItemStack> getOutputFilter() {
-        return outputFilter;
     }
 
     /**
@@ -559,10 +510,10 @@ public class WItemSlot extends WWidget {
         }
 
         if (focusedSlot >= 0) {
-            parts.add(Component.translatable(NarrationMessages.ITEM_SLOT_TITLE_KEY, focusedSlot + 1,
+            parts.add(Component.translatable(Localisation.WIDGET_ITEM_SLOT_NARRATION_TITLE, focusedSlot + 1,
                     slotsWide * slotsHigh));
         } else if (hoveredSlot >= 0) {
-            parts.add(Component.translatable(NarrationMessages.ITEM_SLOT_TITLE_KEY, hoveredSlot + 1,
+            parts.add(Component.translatable(Localisation.WIDGET_ITEM_SLOT_NARRATION_TITLE, hoveredSlot + 1,
                     slotsWide * slotsHigh));
         }
 
@@ -570,8 +521,8 @@ public class WItemSlot extends WWidget {
     }
 
     /**
-     * Returns a "narration name" for this slot. It's narrated before the slot index. One example of a narration name
-     * would be "hotbar" for the player's hotbar.
+     * Returns a "narration name" for this slot. It's narrated before the slot index. One example of a narration name would be "hotbar" for the player's
+     * hotbar.
      *
      * @return the narration name, or null if there's none for this slot
      * @since 4.2.0

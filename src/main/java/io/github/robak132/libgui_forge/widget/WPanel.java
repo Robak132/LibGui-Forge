@@ -1,6 +1,6 @@
 package io.github.robak132.libgui_forge.widget;
 
-import io.github.robak132.libgui_forge.GuiDescription;
+import io.github.robak132.libgui_forge.gui.GuiDescription;
 import io.github.robak132.libgui_forge.client.BackgroundPainter;
 import io.github.robak132.libgui_forge.widget.data.Insets;
 import java.util.AbstractList;

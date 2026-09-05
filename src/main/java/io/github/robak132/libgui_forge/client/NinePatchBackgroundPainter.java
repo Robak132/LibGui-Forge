@@ -11,13 +11,12 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 /**
- * Nine-patch background painters paint rectangles using a special nine-patch texture. The texture is divided into nine
- * sections: four corners, four edges and a center part. The edges and the center are either tiled or stretched,
- * depending on the mode of the painter, to fill the area between the corners. By default, the texture is tiled.
+ * Nine-patch background painters paint rectangles using a special nine-patch texture. The texture is divided into nine sections: four corners, four edges and a
+ * center part. The edges and the center are either tiled or stretched, depending on the mode of the painter, to fill the area between the corners. By default,
+ * the texture is tiled.
  *
  * <p>Nine-patch background painters can be created using {@link BackgroundPainter#createNinePatch(ResourceLocation)},
- * {@link #createNinePatch(Texture, Consumer)}, or with the constructor directly. The latter two let you customise the
- * look of the background more finely.
+ * {@link #createNinePatch(Texture, Consumer)}, or with the constructor directly. The latter two let you customise the look of the background more finely.
  *
  * <p>{@code NinePatchBackgroundPainter} has a customizable padding that can be applied.
  * By default there is no padding, but you can set it using {@link NinePatchBackgroundPainter#setPadding(int)}.

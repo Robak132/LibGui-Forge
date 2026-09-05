@@ -1,9 +1,9 @@
 package io.github.robak132.libgui_forge.widget;
 
-import io.github.robak132.libgui_forge.GuiDescription;
-import io.github.robak132.libgui_forge.NarrationMessages;
-import io.github.robak132.libgui_forge.SyncedGuiDescription;
+import io.github.robak132.libgui_forge.gui.GuiDescription;
+import io.github.robak132.libgui_forge.gui.SyncedGuiDescription;
 import io.github.robak132.libgui_forge.client.BackgroundPainter;
+import io.github.robak132.libgui_forge.client.Localisation;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraftforge.api.distmarker.Dist;
@@ -82,7 +82,7 @@ public class WPlayerInvPanel extends WPlainPanel {
         hotbar = new WItemSlot(playerInventory, 0, 9, 1, false) {
             @Override
             protected Component getNarrationName() {
-                return NarrationMessages.Vanilla.HOTBAR;
+                return Component.translatable(Localisation.VANILLA_HOTBAR);
             }
         };
         this.add(inventory, 0, y);

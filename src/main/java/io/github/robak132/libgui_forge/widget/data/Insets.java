@@ -1,8 +1,8 @@
 package io.github.robak132.libgui_forge.widget.data;
 
 /**
- * The layout insets of a panel. The insets describe how many pixels should be around the panel's contents. For example,
- * root panels have 7 pixels around their contents, which is set via {@link #ROOT_PANEL}.
+ * The layout insets of a panel. The insets describe how many pixels should be around the panel's contents. For example, root panels have 7 pixels around their
+ * contents, which is set via {@link #ROOT_PANEL}.
  *
  * @param top    the top (Y-) inset size
  * @param left   the left (X-) inset size

@@ -1,9 +1,11 @@
 package io.github.robak132.libgui_forge.widget;
 
-import io.github.robak132.libgui_forge.GuiDescription;
+import io.github.robak132.libgui_forge.gui.GuiDescription;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
+import lombok.Getter;
+import lombok.Setter;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -12,6 +14,8 @@ import net.minecraftforge.api.distmarker.OnlyIn;
  *
  * @since 3.0.0
  */
+@Getter
+@Setter
 public class WCardPanel extends WPanel {
 
     private final List<WWidget> cards = new ArrayList<>();
@@ -65,15 +69,6 @@ public class WCardPanel extends WPanel {
         }
 
         add(index, card);
-    }
-
-    /**
-     * Gets the index of the selected card in this panel.
-     *
-     * @return the selected card's index
-     */
-    public int getSelectedIndex() {
-        return selectedIndex;
     }
 
     /**

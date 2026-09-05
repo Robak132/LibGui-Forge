@@ -2,7 +2,7 @@ package io.github.robak132.libgui_forge.widget;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
-import io.github.robak132.libgui_forge.NarrationMessages;
+import io.github.robak132.libgui_forge.client.Localisation;
 import io.github.robak132.libgui_forge.client.ScreenDrawing;
 import io.github.robak132.libgui_forge.widget.data.HorizontalAlignment;
 import io.github.robak132.libgui_forge.widget.data.WidgetDirection;
@@ -226,8 +226,8 @@ public class WLabeledSlider extends WAbstractSlider {
     public void addNarrations(NarrationElementOutput builder) {
         if (getLabel() != null) {
             builder.add(NarratedElementType.TITLE,
-                    Component.translatable(NarrationMessages.LABELED_SLIDER_TITLE_KEY, getLabel(), value, min, max));
-            builder.add(NarratedElementType.USAGE, NarrationMessages.SLIDER_USAGE);
+                    Component.translatable(Localisation.WIDGET_LABELED_SLIDER_NARRATION_TITLE, getLabel(), value, min, max));
+            builder.add(NarratedElementType.USAGE, Component.translatable(Localisation.WIDGET_SLIDER_NARRATION_USAGE));
         } else {
             super.addNarrations(builder);
         }

@@ -1,6 +1,6 @@
 package io.github.robak132.libgui_forge.client;
 
-import io.github.robak132.libgui_forge.GuiDescription;
+import io.github.robak132.libgui_forge.gui.GuiDescription;
 import io.github.robak132.libgui_forge.LibGui;
 import io.github.robak132.libgui_forge.widget.WItemSlot;
 import io.github.robak132.libgui_forge.widget.WWidget;
@@ -12,8 +12,8 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
 
 /**
- * Background painters are used to paint the background of a widget. The background painter instance of a widget can be
- * changed to customize the look of a widget.
+ * Background painters are used to paint the background of a widget. The background painter instance of a widget can be changed to customize the look of a
+ * widget.
  */
 @FunctionalInterface
 public interface BackgroundPainter {
@@ -135,8 +135,8 @@ public interface BackgroundPainter {
     }
 
     /**
-     * Creates a background painter that uses either the {@code light} or the {@code dark} background painter depending
-     * on the {@linkplain WWidget#shouldRenderInDarkMode current setting}.
+     * Creates a background painter that uses either the {@code light} or the {@code dark} background painter depending on the
+     * {@linkplain WWidget#shouldRenderInDarkMode current setting}.
      *
      * @param light the light mode background painter
      * @param dark  the dark mode background painter

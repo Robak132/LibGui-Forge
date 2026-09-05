@@ -3,6 +3,8 @@ package io.github.robak132.libgui_forge.widget.icon;
 
 import io.github.robak132.libgui_forge.client.ScreenDrawing;
 import io.github.robak132.libgui_forge.widget.data.Texture;
+import lombok.Getter;
+import lombok.Setter;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
@@ -13,6 +15,8 @@ import net.minecraftforge.api.distmarker.OnlyIn;
  *
  * @since 2.2.0
  */
+@Getter
+@Setter
 public class TextureIcon implements Icon {
 
     private final Texture texture;
@@ -39,15 +43,6 @@ public class TextureIcon implements Icon {
     }
 
     /**
-     * Gets the opacity of the texture.
-     *
-     * @return the opacity
-     */
-    public float getOpacity() {
-        return opacity;
-    }
-
-    /**
      * Sets the opacity of the texture.
      *
      * @param opacity the new opacity between 0 (fully transparent) and 1 (fully opaque)
@@ -56,15 +51,6 @@ public class TextureIcon implements Icon {
     public TextureIcon setOpacity(float opacity) {
         this.opacity = opacity;
         return this;
-    }
-
-    /**
-     * Gets the color tint of the texture.
-     *
-     * @return the color tint
-     */
-    public int getColor() {
-        return color;
     }
 
     /**

@@ -1,8 +1,6 @@
 package io.github.robak132.libgui_forge.widget;
 
-import static io.github.robak132.libgui_forge.Utilities.clampInt;
-
-import io.github.robak132.libgui_forge.NarrationMessages;
+import io.github.robak132.libgui_forge.client.Localisation;
 import io.github.robak132.libgui_forge.widget.data.InputResult;
 import io.github.robak132.libgui_forge.widget.data.WidgetDirection;
 import java.util.function.IntConsumer;
@@ -199,7 +197,7 @@ public abstract class WAbstractSlider extends WWidget {
         int pos = axisPos - getThumbWidth() / 2;
         int rawValue = min + Math.round(valueToCoordRatio * pos);
         int previousValue = value;
-        value = clampInt(rawValue, min, max);
+        value = Mth.clamp(rawValue, min, max);
         if (value != previousValue) {
             onValueChanged(value);
         }
@@ -223,7 +221,7 @@ public abstract class WAbstractSlider extends WWidget {
         }
 
         int previous = value;
-        value = clampInt(value + (int) Math.signum(amount) * Mth.ceil(valueToCoordRatio * Math.abs(amount) * 2), min, max);
+        value = Mth.clamp(value + (int) Math.signum(amount) * Mth.ceil(valueToCoordRatio * Math.abs(amount) * 2), min, max);
 
         if (previous != value) {
             onValueChanged(value);
@@ -266,7 +264,7 @@ public abstract class WAbstractSlider extends WWidget {
      */
     public void setValue(int value, boolean callListeners) {
         int previous = this.value;
-        this.value = clampInt(value, min, max);
+        this.value = Mth.clamp(value, min, max);
         if (callListeners && previous != this.value) {
             onValueChanged(this.value);
             if (draggingFinishedListener != null) {
@@ -387,7 +385,7 @@ public abstract class WAbstractSlider extends WWidget {
     @OnlyIn(Dist.CLIENT)
     @Override
     public void addNarrations(NarrationElementOutput builder) {
-        builder.add(NarratedElementType.TITLE, Component.translatable(NarrationMessages.SLIDER_MESSAGE_KEY, value, min, max));
-        builder.add(NarratedElementType.USAGE, NarrationMessages.SLIDER_USAGE);
+        builder.add(NarratedElementType.TITLE, Component.translatable(Localisation.WIDGET_SLIDER_NARRATION_TITLE, value, min, max));
+        builder.add(NarratedElementType.USAGE, Component.translatable(Localisation.WIDGET_SLIDER_NARRATION_USAGE));
     }
 }

@@ -8,10 +8,7 @@ import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.BufferUploader;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.Tesselator;
-import juuxel.libninepatch.ContextualTextureRenderer;
-import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.resources.ResourceLocation;
 import org.joml.Matrix4f;
 
 public enum NinePatchTextureRendererImpl implements ContextualTextureRenderer<ResourceLocation, GuiGraphics> {
@@ -19,7 +16,7 @@ public enum NinePatchTextureRendererImpl implements ContextualTextureRenderer<Re
 
     @Override
     public void draw(ResourceLocation texture, GuiGraphics context, int x, int y, int width, int height, float u1,
-        float v1, float u2, float v2) {
+            float v1, float u2, float v2) {
         if (width <= 0 || height <= 0) return;
 
         Matrix4f pose = context.pose().last().pose();
@@ -44,9 +41,9 @@ public enum NinePatchTextureRendererImpl implements ContextualTextureRenderer<Re
 
     @Override
     public void drawTiled(ResourceLocation texture, GuiGraphics context, int x, int y, int regionWidth,
-        int regionHeight, int tileWidth, int tileHeight, float u1, float v1, float u2, float v2) {
+            int regionHeight, int tileWidth, int tileHeight, float u1, float v1, float u2, float v2) {
         if (regionWidth <= 0 || regionHeight <= 0 || tileWidth <= 0 || tileHeight <= 0) return;
-        
+
         // Precompute u/v deltas for a full tile
         final float du = u2 - u1;
         final float dv = v2 - v1;

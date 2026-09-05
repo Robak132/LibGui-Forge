@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import lombok.Getter;
+import lombok.Setter;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
@@ -22,14 +23,11 @@ import net.minecraftforge.api.distmarker.OnlyIn;
  *
  * @since 1.8.0
  */
+@Getter
+@Setter
 public class WItem extends WWidget {
 
-    @Getter
     private List<ItemStack> items;
-    /**
-     * -- GETTER -- Returns the animation duration of this. Defaults to 25 screen ticks.
-     */
-    @Getter
     private int duration = 25;
     private int ticks = 0;
     private int current = 0;

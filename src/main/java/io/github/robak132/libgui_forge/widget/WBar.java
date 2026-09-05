@@ -1,6 +1,6 @@
 package io.github.robak132.libgui_forge.widget;
 
-import io.github.robak132.libgui_forge.GuiDescription;
+import io.github.robak132.libgui_forge.gui.GuiDescription;
 import io.github.robak132.libgui_forge.client.ScreenDrawing;
 import io.github.robak132.libgui_forge.widget.data.Texture;
 import net.minecraft.client.gui.GuiGraphics;
@@ -75,8 +75,8 @@ public class WBar extends WWidget {
     protected String tooltipLabel;
 
     /**
-     * A tooltip text component. This can be used instead of {@link #tooltipLabel}, or together with it. In that case,
-     * this component will be drawn after the other label.
+     * A tooltip text component. This can be used instead of {@link #tooltipLabel}, or together with it. In that case, this component will be drawn after the
+     * other label.
      */
     protected Component tooltipTextComponent;
 

@@ -1,7 +1,7 @@
 package io.github.robak132.libgui_forge.widget;
 
-import io.github.robak132.libgui_forge.NarrationMessages;
 import io.github.robak132.libgui_forge.client.BackgroundPainter;
+import io.github.robak132.libgui_forge.client.Localisation;
 import io.github.robak132.libgui_forge.LibGui;
 import io.github.robak132.libgui_forge.client.ScreenDrawing;
 import io.github.robak132.libgui_forge.widget.data.HorizontalAlignment;
@@ -445,11 +445,11 @@ public class WTabPanel extends WPanel {
             Component label = data.title();
 
             if (label != null) {
-                builder.add(NarratedElementType.TITLE, Component.translatable(NarrationMessages.TAB_TITLE_KEY, label));
+                builder.add(NarratedElementType.TITLE, Component.translatable(Localisation.WIDGET_TAB_NARRATION_TITLE, label));
             }
 
             builder.add(NarratedElementType.POSITION,
-                    Component.translatable(NarrationMessages.TAB_POSITION_KEY, tabWidgets.indexOf(this) + 1,
+                    Component.translatable(Localisation.WIDGET_TAB_NARRATION_POSITION, tabWidgets.indexOf(this) + 1,
                             tabWidgets.size()));
         }
     }

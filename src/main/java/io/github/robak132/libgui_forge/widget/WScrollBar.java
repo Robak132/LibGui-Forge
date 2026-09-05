@@ -3,8 +3,8 @@ package io.github.robak132.libgui_forge.widget;
 
 import static io.github.robak132.libgui_forge.client.BackgroundPainter.createNinePatch;
 
-import io.github.robak132.libgui_forge.NarrationMessages;
 import io.github.robak132.libgui_forge.client.BackgroundPainter;
+import io.github.robak132.libgui_forge.client.Localisation;
 import io.github.robak132.libgui_forge.LibGui;
 import io.github.robak132.libgui_forge.client.NinePatchTextureRendererImpl;
 import io.github.robak132.libgui_forge.widget.data.InputResult;
@@ -15,6 +15,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.narration.NarratedElementType;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -247,8 +248,8 @@ public class WScrollBar extends WWidget {
     @OnlyIn(Dist.CLIENT)
     @Override
     public void addNarrations(NarrationElementOutput builder) {
-        builder.add(NarratedElementType.TITLE, NarrationMessages.SCROLL_BAR_TITLE);
-        builder.add(NarratedElementType.USAGE, NarrationMessages.SLIDER_USAGE);
+        builder.add(NarratedElementType.TITLE, Component.translatable(Localisation.WIDGET_SCROLL_BAR_NARRATION_TITLE));
+        builder.add(NarratedElementType.USAGE, Component.translatable(Localisation.WIDGET_SLIDER_NARRATION_USAGE));
     }
 
     @OnlyIn(Dist.CLIENT)

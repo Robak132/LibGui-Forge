@@ -24,9 +24,9 @@ def getSecret(String key) {
 }
 
 repositories {
-	maven { url "https://maven.shedaniel.me/" }
-	maven { url "https://maven.minecraftforge.net" }
-    maven { url 'https://jitpack.io' }
+    maven { url = uri("https://maven.shedaniel.me/") }
+    maven { url = uri("https://maven.minecraftforge.net") }
+    maven { url = uri('https://jitpack.io') }
     mavenCentral()
 }
 
@@ -103,7 +103,7 @@ dependencies {
 mixin {
     add sourceSets.main, "libgui_forge.refmap.json"
     config "mixins.libgui_forge.json"
-    defaultObfuscationEnv "searge"  // REQUIRED for Forge runtime
+    defaultObfuscationEnv = "searge"  // REQUIRED for Forge runtime
 }
 
 // Shadow configuration

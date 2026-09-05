@@ -7,8 +7,7 @@ import org.jetbrains.annotations.Nullable;
  * A focus is a focusable area in a widget.
  *
  * <p>Foci can also carry a "key", which is a custom data value
- * used to identify a specific focus. For example, an item slot grid widget might use {@code K = Integer} to identify
- * each individual slot.
+ * used to identify a specific focus. For example, an item slot grid widget might use {@code K = Integer} to identify each individual slot.
  *
  * @param key  the key
  * @param area the focusable area in widget space

@@ -3,6 +3,7 @@ package io.github.robak132.libgui_forge;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * An empty inventory that cannot hold any items.
@@ -29,22 +30,22 @@ public class EmptyInventory implements Container {
     }
 
     @Override
-    public ItemStack getItem(int slot) {
+    public @NotNull ItemStack getItem(int slot) {
         return ItemStack.EMPTY;
     }
 
     @Override
-    public ItemStack removeItem(int slot, int count) {
+    public @NotNull ItemStack removeItem(int slot, int count) {
         return ItemStack.EMPTY;
     }
 
     @Override
-    public ItemStack removeItemNoUpdate(int slot) {
+    public @NotNull ItemStack removeItemNoUpdate(int slot) {
         return ItemStack.EMPTY;
     }
 
     @Override
-    public void setItem(int slot, ItemStack stack) {
+    public void setItem(int slot, @NotNull ItemStack stack) {
     }
 
     @Override
@@ -52,7 +53,7 @@ public class EmptyInventory implements Container {
     }
 
     @Override
-    public boolean stillValid(Player player) {
+    public boolean stillValid(@NotNull Player player) {
         return true;
     }
 

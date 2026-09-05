@@ -1,7 +1,5 @@
 package io.github.robak132.libgui_forge.widget;
 
-import static io.github.robak132.libgui_forge.Utilities.clampInt;
-
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.BufferBuilder;
@@ -9,8 +7,8 @@ import com.mojang.blaze3d.vertex.BufferUploader;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexFormat;
-import io.github.robak132.libgui_forge.NarrationMessages;
 import io.github.robak132.libgui_forge.client.BackgroundPainter;
+import io.github.robak132.libgui_forge.client.Localisation;
 import io.github.robak132.libgui_forge.client.ScreenDrawing;
 import io.github.robak132.libgui_forge.widget.data.InputResult;
 import java.util.function.Consumer;
@@ -33,6 +31,7 @@ import org.lwjgl.glfw.GLFW;
 
 public class WTextField extends WWidget {
 
+    public static final int DEFAULT_HEIGHT = 20;
     public static final int TEXT_PADDING_X = 4;
     public static final int TEXT_PADDING_Y = 6;
     public static final int CURSOR_PADDING_Y = 4;
@@ -47,6 +46,7 @@ public class WTextField extends WWidget {
     private int maxLength = 16;
     @Getter
     private boolean editable = true;
+    private final int fieldHeight;
     private int tickCount = 0;
 
     private int disabledColor = 0x707070;
@@ -67,10 +67,9 @@ public class WTextField extends WWidget {
     @Getter
     private int cursor = 0;
     /**
-     * If not -1, select is the "anchor point" of a selection. That is, if you hit shift+left with no existing
-     * selection, the selection will be anchored to where you were, but the cursor will move left, expanding the
-     * selection as you continue to move left. If you move to the right, eventually you'll overtake the anchor, drop the
-     * anchor at the same place and start expanding the selection rightwards instead.
+     * If not -1, select is the "anchor point" of a selection. That is, if you hit shift+left with no existing selection, the selection will be anchored to
+     * where you were, but the cursor will move left, expanding the selection as you continue to move left. If you move to the right, eventually you'll overtake
+     * the anchor, drop the anchor at the same place and start expanding the selection rightwards instead.
      */
     private int select = -1;
 
@@ -83,15 +82,28 @@ public class WTextField extends WWidget {
     private BackgroundPainter backgroundPainter;
 
     public WTextField() {
+        this(null, DEFAULT_HEIGHT);
     }
 
     public WTextField(@Nullable Component suggestion) {
+        this(suggestion, DEFAULT_HEIGHT);
+    }
+
+    public WTextField(int height) {
+        this(null, height);
+    }
+
+    public WTextField(@Nullable Component suggestion, int height) {
+        if (height <= 0) {
+            throw new IllegalArgumentException("Text field height must be positive");
+        }
         this.suggestion = suggestion;
+        this.fieldHeight = height;
+        super.setSize(0, height);
     }
 
     /**
-     * Sets the text of this text field. If the text is more than the {@linkplain #getMaxLength() max length}, it'll be
-     * shortened to the max length.
+     * Sets the text of this text field. If the text is more than the {@linkplain #getMaxLength() max length}, it'll be shortened to the max length.
      *
      * @param s the new text
      */
@@ -120,18 +132,22 @@ public class WTextField extends WWidget {
     }
 
     @Override
+    public void setSize(int width, int height) {
+        super.setSize(width, fieldHeight);
+    }
+
+    @Override
     public void tick() {
         super.tick();
         this.tickCount++;
     }
 
-    @Override
-    public void setSize(int x, int y) {
-        super.setSize(x, 20);
+    private int clampCursor(int cursor) {
+        return Mth.clamp(cursor, 0, text.length());
     }
 
-    private int clampCursor(int cursor) {
-        return clampInt(cursor, 0, text.length());
+    private int getVerticalOffset() {
+        return (height - DEFAULT_HEIGHT) / 2;
     }
 
     public void setCursorPos(int location) {
@@ -191,7 +207,7 @@ public class WTextField extends WWidget {
     @OnlyIn(Dist.CLIENT)
     protected void renderText(GuiGraphics context, int x, int y, String visibleText) {
         int textColor = this.editable ? this.enabledColor : this.disabledColor;
-        context.drawString(font, visibleText, x + TEXT_PADDING_X, y + TEXT_PADDING_Y, textColor, true);
+        context.drawString(font, visibleText, x + TEXT_PADDING_X, y + TEXT_PADDING_Y + getVerticalOffset(), textColor, true);
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -206,7 +222,8 @@ public class WTextField extends WWidget {
             return;
         }
         int cursorOffset = this.font.width(visibleText.substring(0, this.cursor - this.scrollOffset));
-        ScreenDrawing.coloredRect(context, x + TEXT_PADDING_X + cursorOffset, y + CURSOR_PADDING_Y, 1, CURSOR_HEIGHT,
+        ScreenDrawing.coloredRect(context, x + TEXT_PADDING_X + cursorOffset,
+                y + CURSOR_PADDING_Y + getVerticalOffset(), 1, CURSOR_HEIGHT,
                 CURSOR_COLOR);
     }
 
@@ -215,7 +232,8 @@ public class WTextField extends WWidget {
         if (this.suggestion == null) {
             return;
         }
-        context.drawString(font, suggestion, x + TEXT_PADDING_X, y + TEXT_PADDING_Y, this.suggestionColor, true);
+        context.drawString(font, suggestion, x + TEXT_PADDING_X, y + TEXT_PADDING_Y + getVerticalOffset(),
+                this.suggestionColor, true);
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -239,7 +257,8 @@ public class WTextField extends WWidget {
         int leftCaret = font.width(visibleText.substring(0, normalizedLeft));
         int selectionWidth = font.width(visibleText.substring(normalizedLeft, normalizedRight));
 
-        invertedRect(context, x + TEXT_PADDING_X + leftCaret, y + CURSOR_PADDING_Y, selectionWidth, CURSOR_HEIGHT);
+        invertedRect(context, x + TEXT_PADDING_X + leftCaret,
+                y + CURSOR_PADDING_Y + getVerticalOffset(), selectionWidth, CURSOR_HEIGHT);
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -523,11 +542,11 @@ public class WTextField extends WWidget {
 
     @Override
     public void addNarrations(NarrationElementOutput builder) {
-        builder.add(NarratedElementType.TITLE, Component.translatable(NarrationMessages.TEXT_FIELD_TITLE_KEY, text));
+        builder.add(NarratedElementType.TITLE, Component.translatable(Localisation.WIDGET_TEXT_FIELD_NARRATION_TITLE, text));
 
         if (suggestion != null) {
             builder.add(NarratedElementType.HINT,
-                    Component.translatable(NarrationMessages.TEXT_FIELD_SUGGESTION_KEY, suggestion));
+                    Component.translatable(Localisation.WIDGET_TEXT_FIELD_NARRATION_SUGGESTION, suggestion));
         }
     }
 }

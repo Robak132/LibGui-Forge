@@ -1,4 +1,4 @@
-package io.github.robak132.libgui_forge;
+package io.github.robak132.libgui_forge.gui;
 
 import java.util.Objects;
 import net.minecraft.world.Container;
@@ -49,12 +49,10 @@ public class ItemSyncedGuiDescription extends SyncedGuiDescription {
      * {@inheritDoc}
      *
      * <p>The default implementation for {@code ItemSyncedGuiDescription} returns {@code true} if and only if
-     * the {@linkplain #owner current owning item stack} is {@linkplain ItemStack#matches fully equal} to the
-     * {@linkplain #ownerStack original owner}.
+     * the {@linkplain #owner current owning item stack} is {@linkplain ItemStack#matches fully equal} to the {@linkplain #ownerStack original owner}.
      *
      * <p>If the item NBT is intended to change, subclasses should override this method to only check
-     * the item and the count. Those subclasses should also take care to respond properly to any NBT changes in the
-     * owning item stack.
+     * the item and the count. Those subclasses should also take care to respond properly to any NBT changes in the owning item stack.
      */
     @Override
     public boolean stillValid(@NotNull Player entity) {

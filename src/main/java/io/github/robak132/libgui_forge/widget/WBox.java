@@ -94,8 +94,7 @@ public class WBox extends WPanelWithInsets {
             if (axis == Direction.Plane.HORIZONTAL) {
                 int y = switch (verticalAlignment) {
                     case TOP -> insets.top();
-                    case CENTER ->
-                            insets.top() + (getHeight() - insets.top() - insets.bottom() - child.getHeight()) / 2;
+                    case CENTER -> insets.top() + (getHeight() - insets.top() - insets.bottom() - child.getHeight()) / 2;
                     case BOTTOM -> getHeight() - insets.bottom() - child.getHeight();
                 };
 

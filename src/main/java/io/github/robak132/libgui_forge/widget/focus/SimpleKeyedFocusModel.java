@@ -12,8 +12,8 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * A {@link FocusModel} implementation that wraps a {@link List} of foci. New instances can be created with the
- * constructor or the {@linkplain Builder builder}.
+ * A {@link FocusModel} implementation that wraps a {@link List} of foci. New instances can be created with the constructor or the
+ * {@linkplain Builder builder}.
  *
  * @param <K> the focus key type
  * @since 7.0.0

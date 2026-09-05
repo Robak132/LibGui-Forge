@@ -15,8 +15,7 @@ import java.util.stream.Stream;
 public interface FocusModel<K> {
 
     /**
-     * Checks if a focus is focused in the target widget. If the target widget is not focused itself, none of its foci
-     * should have focus.
+     * Checks if a focus is focused in the target widget. If the target widget is not focused itself, none of its foci should have focus.
      *
      * @param focus the focus to check
      * @return {@code true} if the focus is focused, {@code false} otherwise
@@ -39,8 +38,7 @@ public interface FocusModel<K> {
     Stream<Focus<K>> foci();
 
     /**
-     * Creates a simple focus model for a focusable widget. The focus model provides the whole widget area as its only
-     * focus area.
+     * Creates a simple focus model for a focusable widget. The focus model provides the whole widget area as its only focus area.
      *
      * @param widget the widget
      * @return the focus model

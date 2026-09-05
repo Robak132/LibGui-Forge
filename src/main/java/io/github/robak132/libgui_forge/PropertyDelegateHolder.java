@@ -1,5 +1,7 @@
 package io.github.robak132.libgui_forge;
 
+import io.github.robak132.libgui_forge.gui.SyncedGuiDescription;
+
 
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.ContainerLevelAccess;

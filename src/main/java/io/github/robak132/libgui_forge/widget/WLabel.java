@@ -1,11 +1,11 @@
 package io.github.robak132.libgui_forge.widget;
 
 
-import io.github.robak132.libgui_forge.client.LibGuiConfig;
 import io.github.robak132.libgui_forge.client.ScreenDrawing;
 import io.github.robak132.libgui_forge.widget.data.HorizontalAlignment;
 import io.github.robak132.libgui_forge.widget.data.InputResult;
 import io.github.robak132.libgui_forge.widget.data.VerticalAlignment;
+import lombok.Getter;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
@@ -21,6 +21,7 @@ import org.jetbrains.annotations.Nullable;
 /**
  * A single-line label widget.
  */
+@Getter
 public class WLabel extends WWidget {
 
     protected Component text;
@@ -33,9 +34,8 @@ public class WLabel extends WWidget {
      * The default text color for light mode labels.
      */
     public static final int DEFAULT_TEXT_COLOR = 0x404040;
-
     /**
-     * The default text color for {@linkplain LibGuiConfig#isDarkMode()} dark mode} labels.
+     * The default text color for labels rendered in {@linkplain #shouldRenderInDarkMode() dark mode}.
      */
     public static final int DEFAULT_DARKMODE_TEXT_COLOR = 0xbcbcbc;
 
@@ -66,13 +66,14 @@ public class WLabel extends WWidget {
     public void paint(GuiGraphics context, int x, int y, int mouseX, int mouseY) {
         Minecraft mc = Minecraft.getInstance();
         Font renderer = mc.font;
+        Component renderedText = getRenderedText(mouseX, mouseY);
         int yOffset = switch (verticalAlignment) {
             case CENTER -> height / 2 - renderer.lineHeight / 2;
             case BOTTOM -> height - renderer.lineHeight;
             case TOP -> 0;
         };
 
-        ScreenDrawing.drawString(context, text.getVisualOrderText(), horizontalAlignment, x, y + yOffset,
+        ScreenDrawing.drawString(context, renderedText.getVisualOrderText(), horizontalAlignment, x, y + yOffset,
                 this.getWidth(), shouldRenderInDarkMode() ? darkmodeColor : color);
 
         Style hoveredTextStyle = getTextStyleAt(mouseX, mouseY);
@@ -104,9 +105,13 @@ public class WLabel extends WWidget {
     @Nullable
     public Style getTextStyleAt(int x, int y) {
         if (isWithinBounds(x, y)) {
-            return Minecraft.getInstance().font.getSplitter().componentStyleAtWidth(text, x);
+            return Minecraft.getInstance().font.getSplitter().componentStyleAtWidth(getRenderedText(x, y), x);
         }
         return null;
+    }
+
+    protected Component getRenderedText(int mouseX, int mouseY) {
+        return text;
     }
 
     @Override
@@ -117,16 +122,6 @@ public class WLabel extends WWidget {
     @Override
     public void setSize(int x, int y) {
         super.setSize(x, Math.max(8, y));
-    }
-
-    /**
-     * Gets the dark mode color of this label.
-     *
-     * @return the color
-     * @since 2.0.0
-     */
-    public int getDarkmodeColor() {
-        return darkmodeColor;
     }
 
     /**
@@ -148,15 +143,6 @@ public class WLabel extends WWidget {
     public WLabel disableDarkmode() {
         this.darkmodeColor = this.color;
         return this;
-    }
-
-    /**
-     * Gets the light mode color of this label.
-     *
-     * @return the color
-     */
-    public int getColor() {
-        return color;
     }
 
     /**
@@ -184,15 +170,6 @@ public class WLabel extends WWidget {
     }
 
     /**
-     * Gets the text of this label.
-     *
-     * @return the text
-     */
-    public Component getText() {
-        return text;
-    }
-
-    /**
      * Sets the text of this label.
      *
      * @param text the new text
@@ -204,16 +181,6 @@ public class WLabel extends WWidget {
     }
 
     /**
-     * Gets the horizontal text alignment of this label.
-     *
-     * @return the alignment
-     * @since 2.0.0
-     */
-    public HorizontalAlignment getHorizontalAlignment() {
-        return horizontalAlignment;
-    }
-
-    /**
      * Sets the horizontal text alignment of this label.
      *
      * @param align the new text alignment
@@ -222,16 +189,6 @@ public class WLabel extends WWidget {
     public WLabel setHorizontalAlignment(HorizontalAlignment align) {
         this.horizontalAlignment = align;
         return this;
-    }
-
-    /**
-     * Gets the vertical text alignment of this label.
-     *
-     * @return the alignment
-     * @since 2.0.0
-     */
-    public VerticalAlignment getVerticalAlignment() {
-        return verticalAlignment;
     }
 
     /**

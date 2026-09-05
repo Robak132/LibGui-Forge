@@ -1,5 +1,6 @@
-package io.github.robak132.libgui_forge;
+package io.github.robak132.libgui_forge.gui;
 
+import io.github.robak132.libgui_forge.ValidatedSlot;
 import io.github.robak132.libgui_forge.client.BackgroundPainter;
 import io.github.robak132.libgui_forge.client.LibGuiConfig;
 import io.github.robak132.libgui_forge.widget.WGridPanel;

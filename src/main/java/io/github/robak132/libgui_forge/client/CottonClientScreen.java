@@ -1,6 +1,6 @@
 package io.github.robak132.libgui_forge.client;
 
-import io.github.robak132.libgui_forge.GuiDescription;
+import io.github.robak132.libgui_forge.gui.GuiDescription;
 import io.github.robak132.libgui_forge.MouseInputHandler;
 import io.github.robak132.libgui_forge.widget.WPanel;
 import io.github.robak132.libgui_forge.widget.WWidget;
@@ -20,7 +20,7 @@ public class CottonClientScreen extends Screen implements CottonScreenImpl {
 
     private static final VisualLogger LOGGER = new VisualLogger(CottonInventoryScreen.class);
     private final MouseInputHandler<CottonClientScreen> mouseInputHandler = new MouseInputHandler<>(this);
-    protected GuiDescription description;
+    protected final GuiDescription description;
     protected int left = 0;
     protected int top = 0;
     /**
@@ -131,7 +131,7 @@ public class CottonClientScreen extends Screen implements CottonScreenImpl {
                 Scissors.checkStackIsEmpty();
             }
 
-            if (getTitle() != null && description.isTitleVisible()) {
+            if (description.isTitleVisible()) {
                 int width = description.getRootPanel().getWidth();
                 ScreenDrawing.drawString(context, getTitle().getVisualOrderText(), description.getTitleAlignment(),
                         left + titleX, top + titleY, width - 2 * titleX, description.getTitleColor());
