@@ -23,23 +23,24 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 public class WListPanel<D, W extends WWidget> extends WClippedPanel {
 
     /**
-     * The widgets whose host hasn't been set yet.
-     */
-    private final List<W> requiresHost = new ArrayList<>();
-    /**
      * The list of data that this list represents.
      */
-    protected List<D> data;
+    protected final List<D> data;
     /**
      * The supplier of new empty widgets.
      */
-    protected Supplier<W> supplier;
+    protected final Supplier<W> supplier;
     /**
      * The widget configurator that configures the passed widget to display the passed data.
      */
-    protected BiConsumer<D, W> configurator;
-    protected HashMap<D, W> configured = new HashMap<>();
-    protected List<W> unconfigured = new ArrayList<>();
+    protected final BiConsumer<D, W> configurator;
+    protected final HashMap<D, W> configured = new HashMap<>();
+    protected final List<W> unconfigured = new ArrayList<>();
+    protected static final int margin = 4;
+    /**
+     * The widgets whose host hasn't been set yet.
+     */
+    private final List<W> requiresHost = new ArrayList<>();
     /**
      * The height of each child cell.
      */
@@ -48,7 +49,6 @@ public class WListPanel<D, W extends WWidget> extends WClippedPanel {
      * Whether this list has a fixed height for items.
      */
     protected boolean fixedHeight = false;
-    protected int margin = 4;
     @Getter
     protected WScrollBar scrollBar = new WScrollBar(Direction.Plane.VERTICAL);
     private int lastScroll = -1;

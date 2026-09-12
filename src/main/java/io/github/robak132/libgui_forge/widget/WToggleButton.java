@@ -1,7 +1,7 @@
 package io.github.robak132.libgui_forge.widget;
 
-import io.github.robak132.libgui_forge.client.Localisation;
 import io.github.robak132.libgui_forge.LibGui;
+import io.github.robak132.libgui_forge.client.Localisation;
 import io.github.robak132.libgui_forge.client.ScreenDrawing;
 import io.github.robak132.libgui_forge.widget.data.InputResult;
 import io.github.robak132.libgui_forge.widget.data.Texture;

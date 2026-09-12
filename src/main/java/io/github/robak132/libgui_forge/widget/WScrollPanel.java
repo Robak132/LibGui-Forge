@@ -49,7 +49,8 @@ public class WScrollPanel extends WClippedPanel {
     /**
      * Returns whether this scroll panel has a horizontal scroll bar.
      *
-     * @return true if there is a horizontal scroll bar, default if a scroll bar should be added if needed, and false otherwise
+     * @return true if there is a horizontal scroll bar, default if a scroll bar should be added if needed, and false
+     * otherwise
      */
     public Boolean isScrollingHorizontally() {
         return scrollingHorizontally;
@@ -67,7 +68,8 @@ public class WScrollPanel extends WClippedPanel {
     /**
      * Returns whether this scroll panel has a vertical scroll bar.
      *
-     * @return true if there is a vertical scroll bar, *         default if a scroll bar should be added if needed, * and false otherwise
+     * @return true if there is a vertical scroll bar, *         default if a scroll bar should be added if needed, *
+     * and false otherwise
      */
     public Boolean isScrollingVertically() {
         return scrollingVertically;

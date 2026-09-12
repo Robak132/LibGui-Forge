@@ -79,8 +79,10 @@ public class SyncedGuiDescription extends AbstractContainerMenu implements GuiDe
      * @param type             the {@link MenuType} of this GUI description
      * @param syncId           the current sync ID
      * @param playerInventory  the player inventory of the player viewing this screen
-     * @param blockInventory   the block inventory of a corresponding container block, or null if not found or applicable
-     * @param propertyDelegate a property delegate whose properties, if any, will automatically be {@linkplain #addDataSlots(ContainerData) added}
+     * @param blockInventory   the block inventory of a corresponding container block, or null if not found or
+     *                         applicable
+     * @param propertyDelegate a property delegate whose properties, if any, will automatically be
+     *                         {@linkplain #addDataSlots(ContainerData) added}
      */
     public SyncedGuiDescription(MenuType<?> type, int syncId, Inventory playerInventory,
             @Nullable Inventory blockInventory, @Nullable ContainerData propertyDelegate) {

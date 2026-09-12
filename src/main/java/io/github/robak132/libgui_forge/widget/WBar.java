@@ -1,7 +1,7 @@
 package io.github.robak132.libgui_forge.widget;
 
-import io.github.robak132.libgui_forge.gui.GuiDescription;
 import io.github.robak132.libgui_forge.client.ScreenDrawing;
+import io.github.robak132.libgui_forge.gui.GuiDescription;
 import io.github.robak132.libgui_forge.widget.data.Texture;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
@@ -43,7 +43,10 @@ public class WBar extends WWidget {
      * <p>If {@code max} is negative, the {@link #maxValue} constant will be used instead.
      */
     protected final int max;
-
+    /**
+     * The direction of this bar, representing where the bar will grow when the field increases.
+     */
+    protected final Direction direction;
     /**
      * The constant maximum value of the {@link #field}.
      *
@@ -52,7 +55,6 @@ public class WBar extends WWidget {
      * @see #withConstantMaximum(ResourceLocation, ResourceLocation, int, int, Direction)
      */
     protected int maxValue;
-
     /**
      * The properties used for painting this bar.
      *
@@ -60,25 +62,18 @@ public class WBar extends WWidget {
      * and the maximum value is usually read from the property with ID {@link #max}.
      */
     protected ContainerData properties;
-    private boolean manuallySetProperties = false;
-
-    /**
-     * The direction of this bar, representing where the bar will grow when the field increases.
-     */
-    protected final Direction direction;
-
     /**
      * The translation key of the tooltip.
      *
      * @see #withTooltip(String) formatting instructions
      */
     protected String tooltipLabel;
-
     /**
-     * A tooltip text component. This can be used instead of {@link #tooltipLabel}, or together with it. In that case, this component will be drawn after the
-     * other label.
+     * A tooltip text component. This can be used instead of {@link #tooltipLabel}, or together with it. In that case,
+     * this component will be drawn after the other label.
      */
     protected Component tooltipTextComponent;
+    private boolean manuallySetProperties = false;
 
     public WBar(@Nullable Texture bg, @Nullable Texture bar, int field, int maxField) {
         this(bg, bar, field, maxField, Direction.UP);
@@ -99,6 +94,40 @@ public class WBar extends WWidget {
 
     public WBar(ResourceLocation bg, ResourceLocation bar, int field, int maxField, Direction dir) {
         this(new Texture(bg), new Texture(bar), field, maxField, dir);
+    }
+
+    /**
+     * Creates a WBar that has a constant maximum-value instead of getting the maximum from a field.
+     *
+     * @param bg       the background image to use for the bar
+     * @param bar      the foreground image that represents the filled bar
+     * @param field    the field index for bar values
+     * @param maxValue the constant maximum value for the bar
+     * @param dir      the direction the bar should grow towards
+     * @return a new WBar with a constant maximum value
+     */
+    public static WBar withConstantMaximum(ResourceLocation bg, ResourceLocation bar, int field, int maxValue,
+            Direction dir) {
+        WBar result = new WBar(bg, bar, field, -1, dir);
+        result.maxValue = maxValue;
+        return result;
+    }
+
+    /**
+     * Creates a WBar that has a constant maximum-value instead of getting the maximum from a field.
+     *
+     * @param bg       the background image to use for the bar
+     * @param bar      the foreground image that represents the filled bar
+     * @param field    the field index for bar values
+     * @param maxValue the constant maximum value for the bar
+     * @param dir      the direction the bar should grow towards
+     * @return a new WBar with a constant maximum value
+     * @since 4.1.0
+     */
+    public static WBar withConstantMaximum(Texture bg, Texture bar, int field, int maxValue, Direction dir) {
+        WBar result = new WBar(bg, bar, field, -1, dir);
+        result.maxValue = maxValue;
+        return result;
     }
 
     /**
@@ -258,40 +287,6 @@ public class WBar extends WWidget {
         this.properties = properties;
         manuallySetProperties = properties != null;
         return this;
-    }
-
-    /**
-     * Creates a WBar that has a constant maximum-value instead of getting the maximum from a field.
-     *
-     * @param bg       the background image to use for the bar
-     * @param bar      the foreground image that represents the filled bar
-     * @param field    the field index for bar values
-     * @param maxValue the constant maximum value for the bar
-     * @param dir      the direction the bar should grow towards
-     * @return a new WBar with a constant maximum value
-     */
-    public static WBar withConstantMaximum(ResourceLocation bg, ResourceLocation bar, int field, int maxValue,
-            Direction dir) {
-        WBar result = new WBar(bg, bar, field, -1, dir);
-        result.maxValue = maxValue;
-        return result;
-    }
-
-    /**
-     * Creates a WBar that has a constant maximum-value instead of getting the maximum from a field.
-     *
-     * @param bg       the background image to use for the bar
-     * @param bar      the foreground image that represents the filled bar
-     * @param field    the field index for bar values
-     * @param maxValue the constant maximum value for the bar
-     * @param dir      the direction the bar should grow towards
-     * @return a new WBar with a constant maximum value
-     * @since 4.1.0
-     */
-    public static WBar withConstantMaximum(Texture bg, Texture bar, int field, int maxValue, Direction dir) {
-        WBar result = new WBar(bg, bar, field, -1, dir);
-        result.maxValue = maxValue;
-        return result;
     }
 
     /**

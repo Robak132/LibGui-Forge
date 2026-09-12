@@ -3,9 +3,9 @@ package io.github.robak132.libgui_forge.widget;
 
 import static io.github.robak132.libgui_forge.client.BackgroundPainter.createNinePatch;
 
+import io.github.robak132.libgui_forge.LibGui;
 import io.github.robak132.libgui_forge.client.BackgroundPainter;
 import io.github.robak132.libgui_forge.client.Localisation;
-import io.github.robak132.libgui_forge.LibGui;
 import io.github.robak132.libgui_forge.client.NinePatchTextureRendererImpl;
 import io.github.robak132.libgui_forge.widget.data.InputResult;
 import io.github.robak132.libgui_forge.widget.data.WidgetDirection;
@@ -262,23 +262,31 @@ public class WScrollBar extends WWidget {
                         ResourceLocation.fromNamespaceAndPath(LibGui.MOD_ID, "textures/widget/scroll_bar/scroll_bar_dark.png"))
                 .cornerSize(4).cornerUv(0.25f).build();
         static final NinePatch<ResourceLocation> SCROLL_BAR_PRESSED = NinePatch.builder(
-                        ResourceLocation.fromNamespaceAndPath(LibGui.MOD_ID, "textures/widget/scroll_bar/scroll_bar_pressed_light.png"))
+                        ResourceLocation.fromNamespaceAndPath(LibGui.MOD_ID,
+                                "textures/widget/scroll_bar/scroll_bar_pressed_light.png"))
                 .cornerSize(4).cornerUv(0.25f).build();
         static final NinePatch<ResourceLocation> SCROLL_BAR_PRESSED_DARK = NinePatch.builder(
-                        ResourceLocation.fromNamespaceAndPath(LibGui.MOD_ID, "textures/widget/scroll_bar/scroll_bar_pressed_dark.png"))
+                        ResourceLocation.fromNamespaceAndPath(LibGui.MOD_ID,
+                                "textures/widget/scroll_bar/scroll_bar_pressed_dark.png"))
                 .cornerSize(4).cornerUv(0.25f).build();
         static final NinePatch<ResourceLocation> SCROLL_BAR_HOVERED = NinePatch.builder(
-                        ResourceLocation.fromNamespaceAndPath(LibGui.MOD_ID, "textures/widget/scroll_bar/scroll_bar_hovered_light.png"))
+                        ResourceLocation.fromNamespaceAndPath(LibGui.MOD_ID,
+                                "textures/widget/scroll_bar/scroll_bar_hovered_light.png"))
                 .cornerSize(4).cornerUv(0.25f).build();
         static final NinePatch<ResourceLocation> SCROLL_BAR_HOVERED_DARK = NinePatch.builder(
-                        ResourceLocation.fromNamespaceAndPath(LibGui.MOD_ID, "textures/widget/scroll_bar/scroll_bar_hovered_dark.png"))
+                        ResourceLocation.fromNamespaceAndPath(LibGui.MOD_ID,
+                                "textures/widget/scroll_bar/scroll_bar_hovered_dark.png"))
                 .cornerSize(4).cornerUv(0.25f).build();
         static final BackgroundPainter BACKGROUND = BackgroundPainter.createLightDarkVariants(createNinePatch(
-                        ResourceLocation.fromNamespaceAndPath(LibGui.MOD_ID, "textures/widget/scroll_bar/background_light.png")),
+                        ResourceLocation.fromNamespaceAndPath(LibGui.MOD_ID,
+                                "textures/widget/scroll_bar/background_light.png")),
                 createNinePatch(
-                        ResourceLocation.fromNamespaceAndPath(LibGui.MOD_ID, "textures/widget/scroll_bar/background_dark.png")));
+                        ResourceLocation.fromNamespaceAndPath(LibGui.MOD_ID,
+                                "textures/widget/scroll_bar/background_dark.png")));
         static final NinePatch<ResourceLocation> FOCUS = NinePatch.builder(
-                        ResourceLocation.fromNamespaceAndPath(LibGui.MOD_ID, "textures/widget/scroll_bar/focus.png")).cornerSize(4)
-                .cornerUv(0.25f).build();
+                        ResourceLocation.fromNamespaceAndPath(LibGui.MOD_ID, "textures/widget/scroll_bar/focus.png"))
+                .cornerSize(4)
+                .cornerUv(0.25f)
+                .build();
     }
 }

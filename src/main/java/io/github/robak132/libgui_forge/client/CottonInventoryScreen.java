@@ -1,8 +1,8 @@
 package io.github.robak132.libgui_forge.client;
 
 import com.mojang.blaze3d.platform.Lighting;
-import io.github.robak132.libgui_forge.gui.GuiDescription;
 import io.github.robak132.libgui_forge.MouseInputHandler;
+import io.github.robak132.libgui_forge.gui.GuiDescription;
 import io.github.robak132.libgui_forge.gui.SyncedGuiDescription;
 import io.github.robak132.libgui_forge.widget.WPanel;
 import io.github.robak132.libgui_forge.widget.WWidget;
@@ -30,8 +30,8 @@ public class CottonInventoryScreen<T extends SyncedGuiDescription> extends Abstr
         CottonScreenImpl {
 
     private static final VisualLogger LOGGER = new VisualLogger(CottonInventoryScreen.class);
-    private final MouseInputHandler<CottonInventoryScreen<T>> mouseInputHandler = new MouseInputHandler<>(this);
     protected final SyncedGuiDescription description;
+    private final MouseInputHandler<CottonInventoryScreen<T>> mouseInputHandler = new MouseInputHandler<>(this);
     @Nullable
     protected WWidget lastResponder = null;
 

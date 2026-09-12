@@ -18,7 +18,8 @@ public abstract class WPanelWithInsets extends WPanel {
     protected Insets insets = Insets.NONE;
 
     /**
-     * Sets the layout insets of this panel. Subclasses are encouraged to override this method to return their more specific type (such as {@link WGridPanel}).
+     * Sets the layout insets of this panel. Subclasses are encouraged to override this method to return their more
+     * specific type (such as {@link WGridPanel}).
      *
      * <p>If there are already widgets in this panel when the insets are modified,
      * the panel is resized and the widgets are moved according to the insets.

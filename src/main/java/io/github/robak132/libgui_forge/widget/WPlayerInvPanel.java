@@ -1,9 +1,9 @@
 package io.github.robak132.libgui_forge.widget;
 
-import io.github.robak132.libgui_forge.gui.GuiDescription;
-import io.github.robak132.libgui_forge.gui.SyncedGuiDescription;
 import io.github.robak132.libgui_forge.client.BackgroundPainter;
 import io.github.robak132.libgui_forge.client.Localisation;
+import io.github.robak132.libgui_forge.gui.GuiDescription;
+import io.github.robak132.libgui_forge.gui.SyncedGuiDescription;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraftforge.api.distmarker.Dist;
@@ -89,11 +89,6 @@ public class WPlayerInvPanel extends WPlainPanel {
         this.add(hotbar, 0, y + 58);
     }
 
-    @Override
-    public boolean canResize() {
-        return false;
-    }
-
     /**
      * Creates a vanilla-style inventory label for a player inventory.
      *
@@ -105,6 +100,11 @@ public class WPlayerInvPanel extends WPlainPanel {
         WLabel label = new WLabel(playerInventory.getDisplayName());
         label.setSize(9 * 18, 11);
         return label;
+    }
+
+    @Override
+    public boolean canResize() {
+        return false;
     }
 
     /**

@@ -24,12 +24,6 @@ import org.jetbrains.annotations.Nullable;
 @Getter
 public class WLabel extends WWidget {
 
-    protected Component text;
-    protected HorizontalAlignment horizontalAlignment = HorizontalAlignment.LEFT;
-    protected VerticalAlignment verticalAlignment = VerticalAlignment.TOP;
-    protected int color;
-    protected int darkmodeColor;
-
     /**
      * The default text color for light mode labels.
      */
@@ -38,6 +32,11 @@ public class WLabel extends WWidget {
      * The default text color for labels rendered in {@linkplain #shouldRenderInDarkMode() dark mode}.
      */
     public static final int DEFAULT_DARKMODE_TEXT_COLOR = 0xbcbcbc;
+    protected Component text;
+    protected HorizontalAlignment horizontalAlignment = HorizontalAlignment.LEFT;
+    protected VerticalAlignment verticalAlignment = VerticalAlignment.TOP;
+    protected int color;
+    protected int darkmodeColor;
 
     /**
      * Constructs a new label.

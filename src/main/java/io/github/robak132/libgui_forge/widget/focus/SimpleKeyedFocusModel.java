@@ -12,8 +12,8 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * A {@link FocusModel} implementation that wraps a {@link List} of foci. New instances can be created with the constructor or the
- * {@linkplain Builder builder}.
+ * A {@link FocusModel} implementation that wraps a {@link List} of foci. New instances can be created with the
+ * constructor or the {@linkplain Builder builder}.
  *
  * @param <K> the focus key type
  * @since 7.0.0
@@ -41,6 +41,17 @@ public final class SimpleKeyedFocusModel<K> implements FocusModel<K> {
     }
 
     /**
+     * Creates a builder for {@code SimpleKeyedFocusModel}.
+     *
+     * @param <K> the focus key type
+     * @return the builder
+     */
+    @Contract("-> new")
+    public static <K> Builder<K> builder() {
+        return new Builder<>();
+    }
+
+    /**
      * {@return the focused key, or {@code null} if not available}
      */
     public @Nullable K getFocusedKey() {
@@ -60,17 +71,6 @@ public final class SimpleKeyedFocusModel<K> implements FocusModel<K> {
     @Override
     public Stream<Focus<K>> foci() {
         return foci.stream();
-    }
-
-    /**
-     * Creates a builder for {@code SimpleKeyedFocusModel}.
-     *
-     * @param <K> the focus key type
-     * @return the builder
-     */
-    @Contract("-> new")
-    public static <K> Builder<K> builder() {
-        return new Builder<>();
     }
 
     /**

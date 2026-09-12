@@ -16,6 +16,7 @@ import org.lwjgl.opengl.GL11;
  */
 public class WPickableTexture extends WSprite {
 
+    protected boolean transparent;
     private float texU1;
     private float texV1;
     private float texU2;
@@ -26,7 +27,6 @@ public class WPickableTexture extends WSprite {
     @Nullable
     private Integer pixelColor;
     private int lastButton = -1;
-    protected boolean transparent;
     @Nullable
     private BiConsumer<Integer, Integer> colorPickListener;
 

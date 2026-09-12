@@ -1,7 +1,7 @@
 package io.github.robak132.libgui_forge.client;
 
-import io.github.robak132.libgui_forge.gui.GuiDescription;
 import io.github.robak132.libgui_forge.MouseInputHandler;
+import io.github.robak132.libgui_forge.gui.GuiDescription;
 import io.github.robak132.libgui_forge.widget.WPanel;
 import io.github.robak132.libgui_forge.widget.WWidget;
 import io.github.robak132.libgui_forge.widget.data.InputResult;
@@ -19,8 +19,8 @@ import org.lwjgl.opengl.GL11;
 public class CottonClientScreen extends Screen implements CottonScreenImpl {
 
     private static final VisualLogger LOGGER = new VisualLogger(CottonInventoryScreen.class);
-    private final MouseInputHandler<CottonClientScreen> mouseInputHandler = new MouseInputHandler<>(this);
     protected final GuiDescription description;
+    private final MouseInputHandler<CottonClientScreen> mouseInputHandler = new MouseInputHandler<>(this);
     protected int left = 0;
     protected int top = 0;
     /**

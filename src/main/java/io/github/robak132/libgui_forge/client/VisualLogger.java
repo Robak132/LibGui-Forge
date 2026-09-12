@@ -32,26 +32,6 @@ public final class VisualLogger {
         this.clazz = clazz;
     }
 
-    public void error(String message, Object... params) {
-        log(message, params, Level.ERROR, ChatFormatting.RED);
-    }
-
-    public void warn(String message, Object... params) {
-        log(message, params, Level.WARN, ChatFormatting.GOLD);
-    }
-
-    private void log(String message, Object[] params, Level level, ChatFormatting formatting) {
-        logger.log(level, message, params);
-
-        if (FMLLoader.getDist().isClient()) {
-            MutableComponent text = Component.literal(clazz.getSimpleName() + '/');
-            text.append(Component.literal(level.name()).withStyle(formatting));
-            text.append(Component.literal(": " + ParameterizedMessage.format(message, params)));
-
-            WARNINGS.add(text);
-        }
-    }
-
     @OnlyIn(Dist.CLIENT)
     public static void render(GuiGraphics context) {
         Minecraft client = Minecraft.getInstance();
@@ -75,5 +55,25 @@ public final class VisualLogger {
 
     public static void reset() {
         WARNINGS.clear();
+    }
+
+    public void error(String message, Object... params) {
+        log(message, params, Level.ERROR, ChatFormatting.RED);
+    }
+
+    public void warn(String message, Object... params) {
+        log(message, params, Level.WARN, ChatFormatting.GOLD);
+    }
+
+    private void log(String message, Object[] params, Level level, ChatFormatting formatting) {
+        logger.log(level, message, params);
+
+        if (FMLLoader.getDist().isClient()) {
+            MutableComponent text = Component.literal(clazz.getSimpleName() + '/');
+            text.append(Component.literal(level.name()).withStyle(formatting));
+            text.append(Component.literal(": " + ParameterizedMessage.format(message, params)));
+
+            WARNINGS.add(text);
+        }
     }
 }

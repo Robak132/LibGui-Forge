@@ -1,8 +1,8 @@
 package io.github.robak132.libgui_forge.widget;
 
+import io.github.robak132.libgui_forge.LibGui;
 import io.github.robak132.libgui_forge.client.BackgroundPainter;
 import io.github.robak132.libgui_forge.client.Localisation;
-import io.github.robak132.libgui_forge.LibGui;
 import io.github.robak132.libgui_forge.client.ScreenDrawing;
 import io.github.robak132.libgui_forge.widget.data.HorizontalAlignment;
 import io.github.robak132.libgui_forge.widget.data.InputResult;
@@ -335,9 +335,11 @@ public class WTabPanel extends WPanel {
                         .setTopPadding(2));
         static final BackgroundPainter UNSELECTED_TAB = BackgroundPainter.createLightDarkVariants(
                 BackgroundPainter.createNinePatch(
-                        ResourceLocation.fromNamespaceAndPath(LibGui.MOD_ID, "textures/widget/tab/unselected_light.png")),
+                        ResourceLocation.fromNamespaceAndPath(LibGui.MOD_ID,
+                                "textures/widget/tab/unselected_light.png")),
                 BackgroundPainter.createNinePatch(
-                        ResourceLocation.fromNamespaceAndPath(LibGui.MOD_ID, "textures/widget/tab/unselected_dark.png")));
+                        ResourceLocation.fromNamespaceAndPath(LibGui.MOD_ID,
+                                "textures/widget/tab/unselected_dark.png")));
         static final BackgroundPainter SELECTED_TAB_FOCUS_BORDER = BackgroundPainter.createNinePatch(
                 ResourceLocation.fromNamespaceAndPath(LibGui.MOD_ID, "textures/widget/tab/focus.png")).setTopPadding(2);
         static final BackgroundPainter UNSELECTED_TAB_FOCUS_BORDER = BackgroundPainter.createNinePatch(
@@ -445,7 +447,8 @@ public class WTabPanel extends WPanel {
             Component label = data.title();
 
             if (label != null) {
-                builder.add(NarratedElementType.TITLE, Component.translatable(Localisation.WIDGET_TAB_NARRATION_TITLE, label));
+                builder.add(NarratedElementType.TITLE,
+                        Component.translatable(Localisation.WIDGET_TAB_NARRATION_TITLE, label));
             }
 
             builder.add(NarratedElementType.POSITION,

@@ -28,100 +28,6 @@ public final class MouseInputHandler<S extends Screen & CottonScreenImpl> {
         });
     }
 
-    public void onMouseDown(int containerX, int containerY, int mouseButton) {
-        if (screen.getLastResponder() == null) {
-            WWidget lastResponder = screen.getDescription().getRootPanel().hit(containerX, containerY);
-            screen.setLastResponder(lastResponder);
-            if (lastResponder != null) {
-                runTree(
-                        lastResponder,
-                        widget -> widget.onMouseDown(containerX - widget.getAbsoluteX(),
-                                containerY - widget.getAbsoluteY(), mouseButton)
-                );
-            }
-        } else {
-            // This is a drag instead
-        }
-    }
-
-    public void onMouseUp(int containerX, int containerY, int mouseButton) {
-        WWidget lastResponder = screen.getLastResponder();
-
-        if (lastResponder != null) {
-            int width = screen.width;
-            int height = screen.height;
-
-            runTree(
-                    lastResponder,
-                    widget -> widget.onMouseUp(containerX - widget.getAbsoluteX(), containerY - widget.getAbsoluteY(),
-                            mouseButton)
-            );
-
-            if (containerX >= 0 && containerY >= 0 && containerX < width && containerY < height) {
-                runTree(
-                        lastResponder,
-                        widget -> widget.onClick(containerX - widget.getAbsoluteX(), containerY - widget.getAbsoluteY(),
-                                mouseButton)
-                );
-            }
-        } else {
-            runTree(
-                    screen.getDescription().getRootPanel().hit(containerX, containerY),
-                    widget -> widget.onMouseUp(containerX - widget.getAbsoluteX(), containerY - widget.getAbsoluteY(),
-                            mouseButton)
-            );
-        }
-
-        screen.setLastResponder(null);
-    }
-
-    public void onMouseDrag(int containerX, int containerY, int mouseButton, double deltaX, double deltaY) {
-        WWidget lastResponder = screen.getLastResponder();
-
-        if (lastResponder != null) {
-            lastResponder.onMouseDrag(containerX - lastResponder.getAbsoluteX(),
-                    containerY - lastResponder.getAbsoluteY(), mouseButton, deltaX, deltaY);
-        } else {
-            int width = screen.width;
-            int height = screen.height;
-
-            if (containerX < 0 || containerY < 0 || containerX >= width || containerY >= height) {
-                return;
-            }
-
-            runTree(
-                    screen.getDescription().getRootPanel().hit(containerX, containerY),
-                    widget -> widget.onMouseDrag(containerX - widget.getAbsoluteX(), containerY - widget.getAbsoluteY(),
-                            mouseButton, deltaX, deltaY)
-            );
-        }
-    }
-
-    public void onMouseScroll(int containerX, int containerY, double amount) {
-        runTree(
-                screen.getDescription().getRootPanel().hit(containerX, containerY),
-                widget -> widget.onMouseScroll(containerX - widget.getAbsoluteX(), containerY - widget.getAbsoluteY(),
-                        amount)
-        );
-    }
-
-    public void onMouseMove(int containerX, int containerY) {
-        WWidget hit = screen.getDescription().getRootPanel().hit(containerX, containerY);
-
-        runTree(
-                hit,
-                widget -> widget.onMouseMove(containerX - widget.getAbsoluteX(), containerY - widget.getAbsoluteY())
-        );
-
-        @Nullable
-        WWidget hoveredWidget = runTree(
-                hit,
-                widget -> InputResult.of(widget.canHover() && widget.isWithinBounds(containerX - widget.getAbsoluteX(),
-                        containerY - widget.getAbsoluteY()))
-        );
-        hovered.set(hoveredWidget);
-    }
-
     /**
      * Traverses the {@code function} up the widget tree until it finds a {@link InputResult#PROCESSED} result.
      *
@@ -144,6 +50,82 @@ public final class MouseInputHandler<S extends Screen & CottonScreenImpl> {
         }
 
         return current;
+    }
+
+    public void onMouseDown(int containerX, int containerY, int mouseButton) {
+        if (screen.getLastResponder() != null) {
+            return;
+        }
+        WWidget lastResponder = screen.getDescription().getRootPanel().hit(containerX, containerY);
+        screen.setLastResponder(lastResponder);
+        if (lastResponder != null) {
+            runTree(lastResponder,
+                    widget -> widget.onMouseDown(containerX - widget.getAbsoluteX(), containerY - widget.getAbsoluteY(),
+                            mouseButton));
+        }
+    }
+
+    public void onMouseUp(int containerX, int containerY, int mouseButton) {
+        WWidget lastResponder = screen.getLastResponder();
+
+        if (lastResponder != null) {
+            int width = screen.width;
+            int height = screen.height;
+
+            runTree(lastResponder,
+                    widget -> widget.onMouseUp(containerX - widget.getAbsoluteX(), containerY - widget.getAbsoluteY(),
+                            mouseButton));
+
+            if (containerX >= 0 && containerY >= 0 && containerX < width && containerY < height) {
+                runTree(lastResponder,
+                        widget -> widget.onClick(containerX - widget.getAbsoluteX(), containerY - widget.getAbsoluteY(),
+                                mouseButton));
+            }
+        } else {
+            runTree(screen.getDescription().getRootPanel().hit(containerX, containerY),
+                    widget -> widget.onMouseUp(containerX - widget.getAbsoluteX(), containerY - widget.getAbsoluteY(),
+                            mouseButton));
+        }
+
+        screen.setLastResponder(null);
+    }
+
+    public void onMouseDrag(int containerX, int containerY, int mouseButton, double deltaX, double deltaY) {
+        WWidget lastResponder = screen.getLastResponder();
+
+        if (lastResponder != null) {
+            lastResponder.onMouseDrag(containerX - lastResponder.getAbsoluteX(),
+                    containerY - lastResponder.getAbsoluteY(), mouseButton, deltaX, deltaY);
+        } else {
+            int width = screen.width;
+            int height = screen.height;
+
+            if (containerX < 0 || containerY < 0 || containerX >= width || containerY >= height) {
+                return;
+            }
+
+            runTree(screen.getDescription().getRootPanel().hit(containerX, containerY),
+                    widget -> widget.onMouseDrag(containerX - widget.getAbsoluteX(), containerY - widget.getAbsoluteY(),
+                            mouseButton, deltaX, deltaY));
+        }
+    }
+
+    public void onMouseScroll(int containerX, int containerY, double amount) {
+        runTree(screen.getDescription().getRootPanel().hit(containerX, containerY),
+                widget -> widget.onMouseScroll(containerX - widget.getAbsoluteX(), containerY - widget.getAbsoluteY(),
+                        amount));
+    }
+
+    public void onMouseMove(int containerX, int containerY) {
+        WWidget hit = screen.getDescription().getRootPanel().hit(containerX, containerY);
+
+        runTree(hit,
+                widget -> widget.onMouseMove(containerX - widget.getAbsoluteX(), containerY - widget.getAbsoluteY()));
+
+        @Nullable WWidget hoveredWidget = runTree(hit, widget -> InputResult.of(
+                widget.canHover() && widget.isWithinBounds(containerX - widget.getAbsoluteX(),
+                        containerY - widget.getAbsoluteY())));
+        hovered.set(hoveredWidget);
     }
 
     /**

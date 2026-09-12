@@ -24,16 +24,16 @@ public interface GuiDescription {
 
     WPanel getRootPanel();
 
-    int getTitleColor();
-
     GuiDescription setRootPanel(WPanel panel);
+
+    int getTitleColor();
 
     /**
      * Sets the title color of this GUI.
      *
      * <p>The dark-mode title color will also be set by this method.
-     * If the specified color is {@link WLabel#DEFAULT_TEXT_COLOR}, the dark-mode color will be {@link WLabel#DEFAULT_DARKMODE_TEXT_COLOR}; otherwise it will be
-     * the specified color.
+     * If the specified color is {@link WLabel#DEFAULT_TEXT_COLOR}, the dark-mode color will be
+     * {@link WLabel#DEFAULT_DARKMODE_TEXT_COLOR}; otherwise it will be the specified color.
      *
      * @param color the new title color
      * @return this GUI
@@ -51,12 +51,8 @@ public interface GuiDescription {
     GuiDescription setTitleColor(int lightColor, int darkColor);
 
     /**
-     * Sets the object which manages the integer properties used by WBars
-     */
-    GuiDescription setPropertyDelegate(ContainerData delegate);
-
-    /**
-     * Typical users won't call this. This adds a Slot to Container/Controller-based guis, and does nothing on lightweight guis.
+     * Typical users won't call this. This adds a Slot to Container/Controller-based guis, and does nothing on
+     * lightweight guis.
      */
     void addSlotPeer(ValidatedSlot slot);
 
@@ -70,6 +66,11 @@ public interface GuiDescription {
      * Gets the object which manages the integer properties used by WBars and such.
      */
     @Nullable ContainerData getPropertyDelegate();
+
+    /**
+     * Sets the object which manages the integer properties used by WBars
+     */
+    GuiDescription setPropertyDelegate(ContainerData delegate);
 
     /**
      * Tests whether the widget is the currently-focused one.

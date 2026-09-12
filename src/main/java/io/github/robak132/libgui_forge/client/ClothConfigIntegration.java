@@ -25,13 +25,16 @@ public final class ClothConfigIntegration {
     }
 
     private static Screen getConfigScreen(Screen parent) {
-        ConfigBuilder builder = ConfigBuilder.create().setParentScreen(parent).setTitle(Component.translatable(Localisation.OPTIONS_SETTINGS))
+        ConfigBuilder builder = ConfigBuilder.create()
+                .setParentScreen(parent)
+                .setTitle(Component.translatable(Localisation.OPTIONS_SETTINGS))
                 .setDoesConfirmSave(true);
 
         ConfigEntryBuilder entryBuilder = builder.entryBuilder();
         ConfigCategory configs = builder.getOrCreateCategory(Component.translatable(Localisation.OPTIONS_SETTINGS));
 
-        BooleanToggleBuilder darkMode = entryBuilder.startBooleanToggle(Component.translatable(Localisation.OPTION_DARK_MODE), DARK_MODE.get());
+        BooleanToggleBuilder darkMode = entryBuilder.startBooleanToggle(
+                Component.translatable(Localisation.OPTION_DARK_MODE), DARK_MODE.get());
         darkMode.setDefaultValue(DARK_MODE.getDefault()).setSaveConsumer(DARK_MODE::set)
                 .setTooltip(Component.translatable(Localisation.OPTION_DARK_MODE_TOOLTIP));
         configs.addEntry(darkMode.build());

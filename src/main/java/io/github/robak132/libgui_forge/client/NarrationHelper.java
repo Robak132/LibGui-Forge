@@ -30,7 +30,8 @@ public final class NarrationHelper {
                         Component.translatable(Localisation.VANILLA_SCREEN_POSITION, i + 1, childCount));
 
                 if (child.isFocused()) {
-                    builder.add(NarratedElementType.USAGE, Component.translatable(Localisation.VANILLA_COMPONENT_LIST_USAGE));
+                    builder.add(NarratedElementType.USAGE,
+                            Component.translatable(Localisation.VANILLA_COMPONENT_LIST_USAGE));
                 }
             }
 

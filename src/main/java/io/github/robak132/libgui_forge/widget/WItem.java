@@ -44,6 +44,21 @@ public class WItem extends WWidget {
         this(Collections.singletonList(stack));
     }
 
+    /**
+     * Gets the default stacks ({@link Item#getDefaultInstance()}) of each item in a tag.
+     */
+    @SuppressWarnings("unchecked")
+    private static List<ItemStack> getRenderStacks(TagKey<? extends ItemLike> tag) {
+        Registry<ItemLike> registry = (Registry<ItemLike>) BuiltInRegistries.REGISTRY.get(tag.registry().location());
+        ImmutableList.Builder<ItemStack> builder = ImmutableList.builder();
+
+        for (Holder<ItemLike> item : registry.getOrCreateTag((TagKey<ItemLike>) tag)) {
+            builder.add(item.value().asItem().getDefaultInstance());
+        }
+
+        return builder.build();
+    }
+
     @Override
     public boolean canResize() {
         return true;
@@ -89,20 +104,5 @@ public class WItem extends WWidget {
         ticks = 0;
 
         return this;
-    }
-
-    /**
-     * Gets the default stacks ({@link Item#getDefaultInstance()}) of each item in a tag.
-     */
-    @SuppressWarnings("unchecked")
-    private static List<ItemStack> getRenderStacks(TagKey<? extends ItemLike> tag) {
-        Registry<ItemLike> registry = (Registry<ItemLike>) BuiltInRegistries.REGISTRY.get(tag.registry().location());
-        ImmutableList.Builder<ItemStack> builder = ImmutableList.builder();
-
-        for (Holder<ItemLike> item : registry.getOrCreateTag((TagKey<ItemLike>) tag)) {
-            builder.add(item.value().asItem().getDefaultInstance());
-        }
-
-        return builder.build();
     }
 }

@@ -127,6 +127,18 @@ public final class RGB extends Color {
         return b;
     }
 
+    /**
+     * Returns the squared Euclidean distance between two colors in RGB space.
+     */
+    public int distanceSquared(RGB other) {
+        int redDifference = r - other.r;
+        int greenDifference = g - other.g;
+        int blueDifference = b - other.b;
+        return redDifference * redDifference
+                + greenDifference * greenDifference
+                + blueDifference * blueDifference;
+    }
+
     @Override
     public Number ch0() {
         return r;

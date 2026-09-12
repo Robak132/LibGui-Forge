@@ -9,7 +9,8 @@ import lombok.Setter;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * An observable mutable property. Observable properties are containers for values that can be modified and listened to.
+ * An observable mutable property. Observable properties are containers for values that can be modified and listened
+ * to.
  *
  * <p>The naming convention for {@code ObservableProperty} getters follows the convention
  * {@code <property name>Property}. For example, the {@code WWidget.hovered} property can be retrieved with
@@ -23,11 +24,11 @@ import org.jetbrains.annotations.Nullable;
 public final class ObservableProperty<T> implements ObservableView<T> {
 
     private static final String DEFAULT_NAME = "<unnamed>";
-    private boolean hasValue;
-    private T value;
     private final List<ChangeListener<? super T>> listeners = new ArrayList<>();
     private final boolean allowNull;
     private final String name;
+    private boolean hasValue;
+    private T value;
 
     private ObservableProperty(@Nullable T value, boolean hasValue, boolean allowNull, String name) {
         this.value = value;
@@ -41,7 +42,8 @@ public final class ObservableProperty<T> implements ObservableView<T> {
     }
 
     /**
-     * Creates a "late init" property without an initial value. The created property will throw an exception if it has not been initialised yet.
+     * Creates a "late init" property without an initial value. The created property will throw an exception if it has
+     * not been initialised yet.
      *
      * @param <T> the contained value type
      * @return the created empty property builder
@@ -97,7 +99,8 @@ public final class ObservableProperty<T> implements ObservableView<T> {
     }
 
     /**
-     * Returns a read-only view of this property. The result is not an instance of {@link ObservableProperty}, and thus can't be mutated.
+     * Returns a read-only view of this property. The result is not an instance of {@link ObservableProperty}, and thus
+     * can't be mutated.
      *
      * @return an observable view of this property
      */

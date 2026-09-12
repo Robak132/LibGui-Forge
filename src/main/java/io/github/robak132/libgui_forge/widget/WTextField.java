@@ -36,30 +36,25 @@ public class WTextField extends WWidget {
     public static final int TEXT_PADDING_Y = 6;
     public static final int CURSOR_PADDING_Y = 4;
     public static final int CURSOR_HEIGHT = 12;
-
+    private static final int BACKGROUND_COLOR = 0xFF000000;
+    private static final int BORDER_COLOR_SELECTED = 0xFFFFFFA0;
+    private static final int BORDER_COLOR_UNSELECTED = 0xFFA0A0A0;
+    private static final int CURSOR_COLOR = 0xFFD0D0D0;
+    private final int fieldHeight;
     @OnlyIn(Dist.CLIENT)
     private Font font;
-
     @Getter
     private String text = "";
     @Getter
     private int maxLength = 16;
     @Getter
     private boolean editable = true;
-    private final int fieldHeight;
     private int tickCount = 0;
-
     private int disabledColor = 0x707070;
     private int enabledColor = 0xE0E0E0;
     private int suggestionColor = 0x808080;
-
-    private static final int BACKGROUND_COLOR = 0xFF000000;
-    private static final int BORDER_COLOR_SELECTED = 0xFFFFFFA0;
-    private static final int BORDER_COLOR_UNSELECTED = 0xFFA0A0A0;
-    private static final int CURSOR_COLOR = 0xFFD0D0D0;
-
     @Nullable
-    private Component suggestion = null;
+    private Component suggestion;
 
     // Index of the leftmost character to be rendered.
     private int scrollOffset = 0;
@@ -67,9 +62,10 @@ public class WTextField extends WWidget {
     @Getter
     private int cursor = 0;
     /**
-     * If not -1, select is the "anchor point" of a selection. That is, if you hit shift+left with no existing selection, the selection will be anchored to
-     * where you were, but the cursor will move left, expanding the selection as you continue to move left. If you move to the right, eventually you'll overtake
-     * the anchor, drop the anchor at the same place and start expanding the selection rightwards instead.
+     * If not -1, select is the "anchor point" of a selection. That is, if you hit shift+left with no existing
+     * selection, the selection will be anchored to where you were, but the cursor will move left, expanding the
+     * selection as you continue to move left. If you move to the right, eventually you'll overtake the anchor, drop the
+     * anchor at the same place and start expanding the selection rightwards instead.
      */
     private int select = -1;
 
@@ -103,7 +99,8 @@ public class WTextField extends WWidget {
     }
 
     /**
-     * Sets the text of this text field. If the text is more than the {@linkplain #getMaxLength() max length}, it'll be shortened to the max length.
+     * Sets the text of this text field. If the text is more than the {@linkplain #getMaxLength() max length}, it'll be
+     * shortened to the max length.
      *
      * @param s the new text
      */
@@ -207,7 +204,8 @@ public class WTextField extends WWidget {
     @OnlyIn(Dist.CLIENT)
     protected void renderText(GuiGraphics context, int x, int y, String visibleText) {
         int textColor = this.editable ? this.enabledColor : this.disabledColor;
-        context.drawString(font, visibleText, x + TEXT_PADDING_X, y + TEXT_PADDING_Y + getVerticalOffset(), textColor, true);
+        context.drawString(font, visibleText, x + TEXT_PADDING_X, y + TEXT_PADDING_Y + getVerticalOffset(), textColor,
+                true);
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -542,7 +540,8 @@ public class WTextField extends WWidget {
 
     @Override
     public void addNarrations(NarrationElementOutput builder) {
-        builder.add(NarratedElementType.TITLE, Component.translatable(Localisation.WIDGET_TEXT_FIELD_NARRATION_TITLE, text));
+        builder.add(NarratedElementType.TITLE,
+                Component.translatable(Localisation.WIDGET_TEXT_FIELD_NARRATION_TITLE, text));
 
         if (suggestion != null) {
             builder.add(NarratedElementType.HINT,

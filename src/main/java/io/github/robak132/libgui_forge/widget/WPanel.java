@@ -1,7 +1,7 @@
 package io.github.robak132.libgui_forge.widget;
 
-import io.github.robak132.libgui_forge.gui.GuiDescription;
 import io.github.robak132.libgui_forge.client.BackgroundPainter;
+import io.github.robak132.libgui_forge.gui.GuiDescription;
 import io.github.robak132.libgui_forge.widget.data.Insets;
 import java.util.AbstractList;
 import java.util.ArrayList;
@@ -41,6 +41,16 @@ public abstract class WPanel extends WWidget {
     }
 
     /**
+     * Gets the current {@link BackgroundPainter} of this panel.
+     *
+     * @return the painter
+     */
+    @OnlyIn(Dist.CLIENT)
+    public BackgroundPainter getBackgroundPainter() {
+        return this.backgroundPainter;
+    }
+
+    /**
      * Sets the {@link BackgroundPainter} of this panel.
      *
      * @param painter the new painter
@@ -50,16 +60,6 @@ public abstract class WPanel extends WWidget {
     public WPanel setBackgroundPainter(BackgroundPainter painter) {
         this.backgroundPainter = painter;
         return this;
-    }
-
-    /**
-     * Gets the current {@link BackgroundPainter} of this panel.
-     *
-     * @return the painter
-     */
-    @OnlyIn(Dist.CLIENT)
-    public BackgroundPainter getBackgroundPainter() {
-        return this.backgroundPainter;
     }
 
     /**

@@ -86,7 +86,9 @@ public final class Scissors {
      */
     static void checkStackIsEmpty() {
         if (!STACK.isEmpty()) {
-            throw new IllegalStateException("Unpopped scissor frames: " + STACK.stream().map(Frame::toString).collect(Collectors.joining(", ")));
+            throw new IllegalStateException("Unpopped scissor frames: " + STACK.stream()
+                    .map(Frame::toString)
+                    .collect(Collectors.joining(", ")));
         }
     }
 

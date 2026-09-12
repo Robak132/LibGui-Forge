@@ -18,7 +18,7 @@ import org.jetbrains.annotations.Nullable;
 
 public final class FocusElements {
 
-    public static PanelFocusElement ofPanel(WPanel panel) {
+    public static FocusElement<WPanel> ofPanel(WPanel panel) {
         PanelFocusElement result = new PanelFocusElement(panel);
         result.refreshChildren();
         return result;

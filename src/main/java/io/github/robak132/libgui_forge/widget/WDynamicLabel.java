@@ -9,13 +9,12 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class WDynamicLabel extends WWidget {
 
+    public static final int DEFAULT_TEXT_COLOR = 0x404040;
+    public static final int DEFAULT_DARKMODE_TEXT_COLOR = 0xbcbcbc;
     protected Supplier<String> text;
     protected HorizontalAlignment alignment = HorizontalAlignment.LEFT;
     protected int color;
     protected int darkmodeColor;
-
-    public static final int DEFAULT_TEXT_COLOR = 0x404040;
-    public static final int DEFAULT_DARKMODE_TEXT_COLOR = 0xbcbcbc;
 
     public WDynamicLabel(Supplier<String> text, int color) {
         this.text = text;

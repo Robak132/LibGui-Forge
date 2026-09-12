@@ -96,7 +96,8 @@ public abstract class WAbstractSlider extends WWidget {
      * @since 2.0.0
      */
     public static boolean isDecreasingKey(int ch, WidgetDirection widgetDirection) {
-        return widgetDirection.isInverted() ? (ch == GLFW.GLFW_KEY_RIGHT || ch == GLFW.GLFW_KEY_UP) : (ch == GLFW.GLFW_KEY_LEFT || ch == GLFW.GLFW_KEY_DOWN);
+        return widgetDirection.isInverted() ? (ch == GLFW.GLFW_KEY_RIGHT || ch == GLFW.GLFW_KEY_UP)
+                : (ch == GLFW.GLFW_KEY_LEFT || ch == GLFW.GLFW_KEY_DOWN);
     }
 
     /**
@@ -108,7 +109,8 @@ public abstract class WAbstractSlider extends WWidget {
      * @since 2.0.0
      */
     public static boolean isIncreasingKey(int ch, WidgetDirection widgetDirection) {
-        return widgetDirection.isInverted() ? (ch == GLFW.GLFW_KEY_LEFT || ch == GLFW.GLFW_KEY_DOWN) : (ch == GLFW.GLFW_KEY_RIGHT || ch == GLFW.GLFW_KEY_UP);
+        return widgetDirection.isInverted() ? (ch == GLFW.GLFW_KEY_LEFT || ch == GLFW.GLFW_KEY_DOWN)
+                : (ch == GLFW.GLFW_KEY_RIGHT || ch == GLFW.GLFW_KEY_UP);
     }
 
     /**
@@ -126,8 +128,8 @@ public abstract class WAbstractSlider extends WWidget {
     protected abstract boolean isMouseInsideBounds(int x, int y);
 
     /**
-     * Updates {@link #coordToValueRatio} and {@link #valueToCoordRatio}. This method should be called whenever this widget resizes or changes it min/max value
-     * boundaries.
+     * Updates {@link #coordToValueRatio} and {@link #valueToCoordRatio}. This method should be called whenever this
+     * widget resizes or changes it min/max value boundaries.
      *
      * @since 5.1.0
      */
@@ -221,7 +223,8 @@ public abstract class WAbstractSlider extends WWidget {
         }
 
         int previous = value;
-        value = Mth.clamp(value + (int) Math.signum(amount) * Mth.ceil(valueToCoordRatio * Math.abs(amount) * 2), min, max);
+        value = Mth.clamp(value + (int) Math.signum(amount) * Mth.ceil(valueToCoordRatio * Math.abs(amount) * 2), min,
+                max);
 
         if (previous != value) {
             onValueChanged(value);
@@ -321,7 +324,8 @@ public abstract class WAbstractSlider extends WWidget {
      * Sets the direction of this slider.
      *
      * @param widgetDirection the new direction
-     * @throws IllegalArgumentException if the {@linkplain WidgetDirection#getAxis() direction axis} is not equal to {@link #axis}.
+     * @throws IllegalArgumentException if the {@linkplain WidgetDirection#getAxis() direction axis} is not equal to
+     *                                  {@link #axis}.
      * @since 2.0.0
      */
     public void setWidgetDirection(WidgetDirection widgetDirection) {
@@ -371,7 +375,8 @@ public abstract class WAbstractSlider extends WWidget {
     @OnlyIn(Dist.CLIENT)
     @Override
     public InputResult onKeyReleased(int ch, int key, int modifiers) {
-        if (pendingDraggingFinishedFromKeyboard && (isDecreasingKey(ch, widgetDirection) || isIncreasingKey(ch, widgetDirection))) {
+        if (pendingDraggingFinishedFromKeyboard && (isDecreasingKey(ch, widgetDirection) || isIncreasingKey(ch,
+                widgetDirection))) {
             if (draggingFinishedListener != null) {
                 draggingFinishedListener.accept(value);
             }
@@ -385,7 +390,8 @@ public abstract class WAbstractSlider extends WWidget {
     @OnlyIn(Dist.CLIENT)
     @Override
     public void addNarrations(NarrationElementOutput builder) {
-        builder.add(NarratedElementType.TITLE, Component.translatable(Localisation.WIDGET_SLIDER_NARRATION_TITLE, value, min, max));
+        builder.add(NarratedElementType.TITLE,
+                Component.translatable(Localisation.WIDGET_SLIDER_NARRATION_TITLE, value, min, max));
         builder.add(NarratedElementType.USAGE, Component.translatable(Localisation.WIDGET_SLIDER_NARRATION_USAGE));
     }
 }

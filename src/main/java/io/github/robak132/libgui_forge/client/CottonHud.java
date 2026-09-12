@@ -134,15 +134,6 @@ public final class CottonHud {
     public interface Positioner {
 
         /**
-         * Repositions the widget according to the HUD dimensions.
-         *
-         * @param widget    the widget
-         * @param hudWidth  the width of the HUD
-         * @param hudHeight the height of the HUD
-         */
-        void reposition(WWidget widget, int hudWidth, int hudHeight);
-
-        /**
          * Creates a new positioner that offsets widgets.
          *
          * <p>If an offset is negative, the offset is subtracted from the HUD dimension on that axis.
@@ -152,7 +143,8 @@ public final class CottonHud {
          * @return an offsetting positioner
          */
         static Positioner of(int x, int y) {
-            return (widget, hudWidth, hudHeight) -> widget.setLocation((hudWidth + x) % hudWidth, (hudHeight + y) % hudHeight);
+            return (widget, hudWidth, hudHeight) -> widget.setLocation((hudWidth + x) % hudWidth,
+                    (hudHeight + y) % hudHeight);
         }
 
         /**
@@ -164,7 +156,17 @@ public final class CottonHud {
          * @return a centering positioner
          */
         static Positioner horizontallyCentered(int y) {
-            return (widget, hudWidth, hudHeight) -> widget.setLocation((hudWidth - widget.getWidth()) / 2, (hudHeight + y) % hudHeight);
+            return (widget, hudWidth, hudHeight) -> widget.setLocation((hudWidth - widget.getWidth()) / 2,
+                    (hudHeight + y) % hudHeight);
         }
+
+        /**
+         * Repositions the widget according to the HUD dimensions.
+         *
+         * @param widget    the widget
+         * @param hudWidth  the width of the HUD
+         * @param hudHeight the height of the HUD
+         */
+        void reposition(WWidget widget, int hudWidth, int hudHeight);
     }
 }

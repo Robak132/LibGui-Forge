@@ -40,12 +40,20 @@ public final class OkLAB extends Color {
         return Mth.clamp(Math.round(v * 255f), 0, 255);
     }
 
-    public double distanceWeighted(OkLAB other) {
-        double dL = (this.L - other.L) * 0.6;   // weaken brightness
-        double da = (this.a - other.a);
-        double db = (this.b - other.b);
+    public double distanceSquared(OkLAB other) {
+        double dL = this.L - other.L;
+        double da = this.a - other.a;
+        double db = this.b - other.b;
 
-        return (da * da + db * db) * 1.6 + (dL * dL) * 0.5;
+        return dL * dL + da * da + db * db;
+    }
+
+    /**
+     * @deprecated Use {@link #distanceSquared(OkLAB)}. The metric is no longer axis-weighted.
+     */
+    @Deprecated
+    public double distanceWeighted(OkLAB other) {
+        return distanceSquared(other);
     }
 
     @Override

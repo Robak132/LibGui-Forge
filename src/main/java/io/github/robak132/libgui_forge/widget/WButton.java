@@ -22,7 +22,8 @@ import org.jetbrains.annotations.Nullable;
 
 public class WButton extends WWidget {
 
-    private static final ResourceLocation DARK_WIDGETS_LOCATION = ResourceLocation.fromNamespaceAndPath(LibGui.MOD_ID, "textures/widget/dark_widgets.png");
+    private static final ResourceLocation DARK_WIDGETS_LOCATION = ResourceLocation.fromNamespaceAndPath(LibGui.MOD_ID,
+            "textures/widget/dark_widgets.png");
     private static final int ICON_SPACING = 2;
     protected int color = WLabel.DEFAULT_TEXT_COLOR;
     @Getter
@@ -128,8 +129,11 @@ public class WButton extends WWidget {
                 color = 0xA0A0A0;
             }
 
-            int xOffset = (icon != null && alignment == HorizontalAlignment.LEFT) ? ICON_SPACING + iconSize + ICON_SPACING : 0;
-            ScreenDrawing.drawStringWithShadow(context, label.getVisualOrderText(), alignment, x + xOffset, y + ((getHeight() - 8) / 2), width, color);
+            int xOffset =
+                    (icon != null && alignment == HorizontalAlignment.LEFT) ? ICON_SPACING + iconSize + ICON_SPACING
+                            : 0;
+            ScreenDrawing.drawStringWithShadow(context, label.getVisualOrderText(), alignment, x + xOffset,
+                    y + ((getHeight() - 8) / 2), width, color);
         }
     }
 
@@ -163,7 +167,9 @@ public class WButton extends WWidget {
         super.onClick(x, y, button);
 
         if (enabled && isWithinBounds(x, y)) {
-            Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+            Minecraft.getInstance()
+                    .getSoundManager()
+                    .play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
 
             if (onClick != null) {
                 onClick.run();
@@ -268,9 +274,11 @@ public class WButton extends WWidget {
 
         if (isEnabled()) {
             if (isFocused()) {
-                builder.add(NarratedElementType.USAGE, Component.translatable(Localisation.VANILLA_BUTTON_USAGE_FOCUSED));
+                builder.add(NarratedElementType.USAGE,
+                        Component.translatable(Localisation.VANILLA_BUTTON_USAGE_FOCUSED));
             } else if (isHovered()) {
-                builder.add(NarratedElementType.USAGE, Component.translatable(Localisation.VANILLA_BUTTON_USAGE_HOVERED));
+                builder.add(NarratedElementType.USAGE,
+                        Component.translatable(Localisation.VANILLA_BUTTON_USAGE_HOVERED));
             }
         }
     }

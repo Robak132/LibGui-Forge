@@ -62,6 +62,11 @@ public abstract class Color {
         return String.format("#%02X%02X%02X", rgb.red(), rgb.green(), rgb.blue());
     }
 
+    public int rgb() {
+        RGB rgb = toRGB();
+        return rgb.red() << 16 | rgb.green() << 8 | rgb.blue();
+    }
+
     public int argb() {
         RGB rgb = toRGB();
         return (rgb.alpha() << 24) | (rgb.red() << 16) | (rgb.green() << 8) | rgb.blue();

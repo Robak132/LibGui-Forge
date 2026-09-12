@@ -226,7 +226,8 @@ public class WLabeledSlider extends WAbstractSlider {
     public void addNarrations(NarrationElementOutput builder) {
         if (getLabel() != null) {
             builder.add(NarratedElementType.TITLE,
-                    Component.translatable(Localisation.WIDGET_LABELED_SLIDER_NARRATION_TITLE, getLabel(), value, min, max));
+                    Component.translatable(Localisation.WIDGET_LABELED_SLIDER_NARRATION_TITLE, getLabel(), value, min,
+                            max));
             builder.add(NarratedElementType.USAGE, Component.translatable(Localisation.WIDGET_SLIDER_NARRATION_USAGE));
         } else {
             super.addNarrations(builder);

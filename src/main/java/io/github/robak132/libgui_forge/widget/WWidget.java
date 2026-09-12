@@ -1,10 +1,10 @@
 package io.github.robak132.libgui_forge.widget;
 
 
-import io.github.robak132.libgui_forge.gui.GuiDescription;
 import io.github.robak132.libgui_forge.client.CottonHud;
 import io.github.robak132.libgui_forge.client.LibGuiConfig;
 import io.github.robak132.libgui_forge.client.VisualLogger;
+import io.github.robak132.libgui_forge.gui.GuiDescription;
 import io.github.robak132.libgui_forge.widget.data.InputResult;
 import io.github.robak132.libgui_forge.widget.data.ObservableProperty;
 import io.github.robak132.libgui_forge.widget.focus.FocusModel;
@@ -25,10 +25,11 @@ import org.lwjgl.glfw.GLFW;
 public abstract class WWidget {
 
     private static final VisualLogger LOGGER = new VisualLogger(WWidget.class);
+    private final ObservableProperty<Boolean> hovered = ObservableProperty.of(false).nonnull().name("WWidget.hovered")
+            .build();
     @Setter
     @Nullable
     protected WPanel parent;
-
     /**
      * The X coordinate of this widget relative to its parent.
      */
@@ -49,15 +50,26 @@ public abstract class WWidget {
      */
     @Getter
     protected int height = 18;
-
     /**
-     * The containing {@link GuiDescription} of this widget. Can be null if this widget is a {@linkplain CottonHud HUD} widget.
+     * The containing {@link GuiDescription} of this widget. Can be null if this widget is a {@linkplain CottonHud HUD}
+     * widget.
      */
     @Nullable
     protected GuiDescription host;
 
-    private final ObservableProperty<Boolean> hovered = ObservableProperty.of(false).nonnull().name("WWidget.hovered")
-            .build();
+    /**
+     * Tests if the provided key code is an activation key for widgets.
+     *
+     * <p>The activation keys are Enter, keypad Enter, and Space.
+     *
+     * @param ch the key code
+     * @return whether the key is an activation key
+     * @since 2.0.0
+     */
+    @OnlyIn(Dist.CLIENT)
+    public static boolean isActivationKey(int ch) {
+        return ch == GLFW.GLFW_KEY_ENTER || ch == GLFW.GLFW_KEY_KP_ENTER || ch == GLFW.GLFW_KEY_SPACE;
+    }
 
     /**
      * Sets the location of this widget relative to its parent.
@@ -135,7 +147,8 @@ public abstract class WWidget {
      *
      * @param x      The X coordinate of the event, in widget-space (0 is the left edge of this widget)
      * @param y      The Y coordinate of the event, in widget-space (0 is the top edge of this widget)
-     * @param button The mouse button that was used. Button numbering is consistent with LWJGL Mouse (0=left, 1=right, 2=mousewheel click)
+     * @param button The mouse button that was used. Button numbering is consistent with LWJGL Mouse (0=left, 1=right,
+     *               2=mousewheel click)
      * @return {@link InputResult#PROCESSED} if the event is handled, {@link InputResult#IGNORED} otherwise.
      */
     @OnlyIn(Dist.CLIENT)
@@ -148,7 +161,8 @@ public abstract class WWidget {
      *
      * @param x      The X coordinate of the event, in widget-space (0 is the left edge of this widget)
      * @param y      The Y coordinate of the event, in widget-space (0 is the top edge of this widget)
-     * @param button The mouse button that was used. Button numbering is consistent with LWJGL Mouse (0=left, 1=right, 2=mousewheel click)
+     * @param button The mouse button that was used. Button numbering is consistent with LWJGL Mouse (0=left, 1=right,
+     *               2=mousewheel click)
      * @param deltaX The amount of dragging on the X axis
      * @param deltaY The amount of dragging on the Y axis
      * @return {@link InputResult#PROCESSED} if the event is handled, {@link InputResult#IGNORED} otherwise.
@@ -164,7 +178,8 @@ public abstract class WWidget {
      *
      * @param x      The X coordinate of the event, in widget-space (0 is the left edge of this widget)
      * @param y      The Y coordinate of the event, in widget-space (0 is the top edge of this widget)
-     * @param button The mouse button that was used. Button numbering is consistent with LWJGL Mouse (0=left, 1=right, 2=mousewheel click)
+     * @param button The mouse button that was used. Button numbering is consistent with LWJGL Mouse (0=left, 1=right,
+     *               2=mousewheel click)
      * @return {@link InputResult#PROCESSED} if the event is handled, {@link InputResult#IGNORED} otherwise.
      */
     @OnlyIn(Dist.CLIENT)
@@ -177,7 +192,8 @@ public abstract class WWidget {
      *
      * @param x      The X coordinate of the event, in widget-space (0 is the left edge of this widget)
      * @param y      The Y coordinate of the event, in widget-space (0 is the top edge of this widget)
-     * @param button The mouse button that was used. Button numbering is consistent with LWJGL Mouse (0=left, 1=right, 2=mousewheel click)
+     * @param button The mouse button that was used. Button numbering is consistent with LWJGL Mouse (0=left, 1=right,
+     *               2=mousewheel click)
      * @return {@link InputResult#PROCESSED} if the event is handled, {@link InputResult#IGNORED} otherwise.
      */
     @OnlyIn(Dist.CLIENT)
@@ -212,8 +228,8 @@ public abstract class WWidget {
     }
 
     /**
-     * Notifies this widget that a character has been typed. This method is subject to key repeat, and may be called for characters that do not directly have a
-     * corresponding keyboard key.
+     * Notifies this widget that a character has been typed. This method is subject to key repeat, and may be called for
+     * characters that do not directly have a corresponding keyboard key.
      *
      * @param ch the character typed
      * @return {@link InputResult#PROCESSED} if the event is handled, {@link InputResult#IGNORED} otherwise.
@@ -330,8 +346,9 @@ public abstract class WWidget {
     }
 
     /**
-     * Internal method to render tooltip data. This requires an overridden {@link #addTooltip(TooltipBuilder) addTooltip} method to insert data into the tooltip
-     * - without this, the method returns early because of no work.
+     * Internal method to render tooltip data. This requires an overridden
+     * {@link #addTooltip(TooltipBuilder) addTooltip} method to insert data into the tooltip - without this, the method
+     * returns early because of no work.
      *
      * @param context the draw context
      * @param x       the X coordinate of this widget on screen
@@ -353,8 +370,9 @@ public abstract class WWidget {
     }
 
     /**
-     * Creates component peers and initializes animation data for this Widget and all its children. The host {@linkplain GuiDescription screen handler} must
-     * clear any heavyweight peers from its records before this method is called.
+     * Creates component peers and initializes animation data for this Widget and all its children. The host
+     * {@linkplain GuiDescription screen handler} must clear any heavyweight peers from its records before this method
+     * is called.
      *
      * <p>This method must be called on the root panel of any screen once the widgets have been initialized.
      *
@@ -419,10 +437,12 @@ public abstract class WWidget {
     }
 
     /**
-     * Returns the focus model of this widget. The focus model provides the focusable areas of this widget, and handles switching through them.
+     * Returns the focus model of this widget. The focus model provides the focusable areas of this widget, and handles
+     * switching through them.
      *
      * <p>If this widget {@linkplain #canFocus() can focus}, it should return
-     * a nonnull focus model. The default implementation returns {@link FocusModel#simple FocusModel.simple(this)} when the widget can be focused.
+     * a nonnull focus model. The default implementation returns {@link FocusModel#simple FocusModel.simple(this)} when
+     * the widget can be focused.
      *
      * @return the focus model, or {@code null} if not available
      * @since 7.0.0
@@ -473,14 +493,16 @@ public abstract class WWidget {
     }
 
     /**
-     * Returns whether the user is hovering over this widget. The result is an <i>observable property</i> that can be modified and listened to.
+     * Returns whether the user is hovering over this widget. The result is an <i>observable property</i> that can be
+     * modified and listened to.
      *
      * <p>This property takes into account {@link #isWithinBounds(int, int)} to check
      * if the cursor is within the bounds, as well as {@link #canHover()} to enable hovering at all.
      *
      * <p>Hovering is used by LibGui itself mostly for narration support.
-     * For rendering, it might be preferable that you check the mouse coordinates in {@link #paint(GuiGraphics, int, int, int, int) paint()} directly. That lets
-     * you react to different parts of the widget being hovered over.
+     * For rendering, it might be preferable that you check the mouse coordinates in
+     * {@link #paint(GuiGraphics, int, int, int, int) paint()} directly. That lets you react to different parts of the
+     * widget being hovered over.
      *
      * @return the {@code hovered} property
      * @see #canHover()
@@ -525,7 +547,8 @@ public abstract class WWidget {
     }
 
     /**
-     * Adds the narrations of this widget to a narration builder. Narrations will only apply if this widget {@linkplain #isNarratable() is narratable}.
+     * Adds the narrations of this widget to a narration builder. Narrations will only apply if this widget
+     * {@linkplain #isNarratable() is narratable}.
      *
      * <p>The widget needs to be {@linkplain #canFocus() focusable} or {@linkplain #canHover() hoverable},
      * and also be focused/hovered for narrations to be added.
@@ -535,20 +558,6 @@ public abstract class WWidget {
      */
     @OnlyIn(Dist.CLIENT)
     public void addNarrations(NarrationElementOutput builder) {
-    }
-
-    /**
-     * Tests if the provided key code is an activation key for widgets.
-     *
-     * <p>The activation keys are Enter, keypad Enter, and Space.
-     *
-     * @param ch the key code
-     * @return whether the key is an activation key
-     * @since 2.0.0
-     */
-    @OnlyIn(Dist.CLIENT)
-    public static boolean isActivationKey(int ch) {
-        return ch == GLFW.GLFW_KEY_ENTER || ch == GLFW.GLFW_KEY_KP_ENTER || ch == GLFW.GLFW_KEY_SPACE;
     }
 
     /**
